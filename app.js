@@ -299,6 +299,7 @@ const MONTH_SHORT = [
 const COUNTRY_OPTIONS = COUNTRIES.map(([name]) => name);
 
 let state = { people: [], locations: [] };
+let fileSnapshot = "";
 let colorMap = {}; // "Country||Location" -> hsl string
 let selectedPeople = new Set(["B", "M"]);
 let currentYear = null; // active/visible year, synced with #hash
@@ -380,6 +381,37 @@ function applyData(raw) {
   };
 }
 
+function canonicalData(data) {
+  return JSON.stringify({
+    people: (data.people || []).map((p) => ({
+      id: p.id,
+      name: p.name,
+      icon: p.icon,
+    })),
+    locations: [...(data.locations || [])]
+      .map((l) => ({
+        id: l.id,
+        person: l.person || "B",
+        start: l.start,
+        end: l.end,
+        location: l.location || "",
+        country: l.country || "",
+        comments: l.comments || "",
+      }))
+      .sort((a, b) => (a.id || "").localeCompare(b.id || "")),
+  });
+}
+
+function hasUnsavedChanges() {
+  return canonicalData(state) !== fileSnapshot;
+}
+
+function updateUnsavedBanner() {
+  const el = document.getElementById("unsaved-banner");
+  if (!el) return;
+  el.classList.toggle("hidden", !hasUnsavedChanges());
+}
+
 async function loadData() {
   let base = { people: [], locations: [] };
   try {
@@ -388,6 +420,12 @@ async function loadData() {
   } catch (e) {
     // ignore; localStorage overlay may still have data
   }
+
+  const fileState = {
+    people: base.people && base.people.length ? base.people : [],
+    locations: normalizeLocations(base.locations),
+  };
+  fileSnapshot = canonicalData(fileState);
 
   const local = localStorage.getItem(STORAGE_KEY);
   if (local) {
@@ -399,11 +437,13 @@ async function loadData() {
       // corrupted local copy, fall through to base
     }
   }
-  applyData(JSON.parse(JSON.stringify(base)));
+  applyData(JSON.parse(JSON.stringify(fileState)));
+  updateUnsavedBanner();
 }
 
 function persist() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  updateUnsavedBanner();
 }
 
 function applyPeopleFilter(ids) {
@@ -411,21 +451,43 @@ function applyPeopleFilter(ids) {
   selectedPeople = new Set(valid);
 }
 
+const DEFAULT_TRIP_MID_OPACITY = 32;
+
+function clampTripMidOpacity(n) {
+  const v = Number(n);
+  if (!Number.isFinite(v)) return DEFAULT_TRIP_MID_OPACITY;
+  return Math.min(100, Math.max(0, Math.round(v)));
+}
+
+function applyTripMidOpacity(n) {
+  const v = clampTripMidOpacity(n);
+  settings.tripMidOpacity = v;
+  document.documentElement.style.setProperty("--trip-mid-mix", v + "%");
+  const slider = document.getElementById("s-trip-mid");
+  const label = document.getElementById("s-trip-mid-val");
+  if (slider && slider.value !== String(v)) slider.value = String(v);
+  if (label) label.textContent = v + "%";
+}
+
 function loadSettings() {
   try {
     const raw = localStorage.getItem(SETTINGS_KEY);
-    if (!raw) return;
-    const parsed = JSON.parse(raw);
-    if (!parsed || typeof parsed !== "object") return;
-    settings = parsed;
-    if (Array.isArray(parsed.people)) applyPeopleFilter(parsed.people);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === "object") {
+        settings = parsed;
+        if (Array.isArray(parsed.people)) applyPeopleFilter(parsed.people);
+      }
+    }
   } catch (e) {
     // ignore corrupt settings
   }
+  applyTripMidOpacity(settings.tripMidOpacity);
 }
 
 function persistSettings() {
   settings.people = ["B", "M"].filter((p) => selectedPeople.has(p));
+  settings.tripMidOpacity = clampTripMidOpacity(settings.tripMidOpacity);
   localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
 }
 
@@ -731,8 +793,9 @@ function buildMonthCard(year, month, locations) {
 
     if (dayLocations.length) {
       const tripStart = dayLocations.find((l) => l.start === dateStr);
-      cell.style.background = stayColor(dayLocations[0]);
+      cell.style.setProperty("--stay-bg", stayColor(dayLocations[0]));
       cell.style.color = "#111";
+      if (!tripStart) cell.classList.add("trip-mid");
       const flag = tripStart ? countryFlag(tripStart.country) : "";
       if (flag) {
         cell.classList.add("trip-start");
@@ -1312,6 +1375,7 @@ function populateCountrySelect(selected) {
     sel.appendChild(opt);
   });
   sel.value = selected || "";
+  updateLocationModalFlag();
 }
 
 function pastLocations() {
@@ -1477,6 +1541,14 @@ function setupLocationCombo() {
   });
 }
 
+function updateLocationModalFlag() {
+  const el = document.getElementById("location-modal-flag");
+  if (!el) return;
+  const flag = countryFlag(document.getElementById("f-country").value);
+  el.textContent = flag;
+  el.classList.toggle("hidden", !flag);
+}
+
 function openLocationModal(loc, prefillStart, prefillEnd) {
   const overlay = document.getElementById("location-modal-overlay");
   const title = document.getElementById("location-modal-title");
@@ -1540,6 +1612,9 @@ document.getElementById("location-form").addEventListener("submit", (e) => {
   showToast(idx >= 0 ? "Location updated" : "Location added");
 });
 
+document
+  .getElementById("f-country")
+  .addEventListener("change", updateLocationModalFlag);
 document
   .getElementById("f-cancel")
   .addEventListener("click", closeLocationModal);
@@ -1661,6 +1736,9 @@ function openJsonModal() {
 document
   .getElementById("btn-copy-json")
   .addEventListener("click", openJsonModal);
+document
+  .getElementById("unsaved-copy")
+  .addEventListener("click", openJsonModal);
 document.getElementById("json-close").addEventListener("click", () => {
   document.getElementById("json-modal-overlay").classList.add("hidden");
 });
@@ -1684,7 +1762,16 @@ document.getElementById("json-copy-btn").addEventListener("click", async () => {
 // ---------- settings ----------
 
 function openSettingsModal() {
+  applyTripMidOpacity(settings.tripMidOpacity);
   document.getElementById("settings-modal-overlay").classList.remove("hidden");
+}
+
+function setupSettingsControls() {
+  const slider = document.getElementById("s-trip-mid");
+  slider.addEventListener("input", () => {
+    applyTripMidOpacity(slider.value);
+    persistSettings();
+  });
 }
 
 function closeSettingsModal() {
@@ -1782,6 +1869,7 @@ window.addEventListener("hashchange", () => {
   await loadData();
   setupPersonChips();
   setupYearControls();
+  setupSettingsControls();
   setupLocationCombo();
   setupStickyOffset();
   setupDragToAdd();

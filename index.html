@@ -9,6 +9,10 @@
 <body>
 
 <div class="sticky-top">
+  <div id="unsaved-banner" class="unsaved-banner hidden" role="status">
+    <span>Unsaved changes — not written to <code>data.json</code> yet.</span>
+    <button type="button" id="unsaved-copy">Copy JSON</button>
+  </div>
   <header class="app-header">
     <div class="header-row">
       <h1>Life Calendars</h1>
@@ -70,28 +74,9 @@
 <div class="overlay hidden" id="location-modal-overlay">
   <div class="modal">
     <h2 id="location-modal-title">Add Location</h2>
+    <div id="location-modal-flag" class="location-modal-flag hidden" aria-hidden="true"></div>
     <form id="location-form">
       <input type="hidden" id="f-id">
-
-      <div class="form-row">
-        <label for="f-person">Person</label>
-        <select id="f-person">
-          <option value="B">Bharath</option>
-          <option value="M">Mariana</option>
-          <option value="Both" selected>Both</option>
-        </select>
-      </div>
-
-      <div class="form-row-inline">
-        <div class="form-row">
-          <label for="f-start">Start date</label>
-          <input type="date" id="f-start" required>
-        </div>
-        <div class="form-row">
-          <label for="f-end">End date</label>
-          <input type="date" id="f-end" required>
-        </div>
-      </div>
 
       <div class="form-row-inline">
         <div class="form-row">
@@ -107,6 +92,26 @@
           <select id="f-country">
             <option value="">Select country</option>
           </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label for="f-person">Person</label>
+        <select id="f-person">
+          <option value="B">Bharath</option>
+          <option value="M">Mariana</option>
+          <option value="Both" selected>Both</option>
+        </select>
+      </div>
+
+      <div class="form-row-inline">
+        <div class="form-row">
+          <label for="f-start">From</label>
+          <input type="date" id="f-start" required>
+        </div>
+        <div class="form-row">
+          <label for="f-end">To</label>
+          <input type="date" id="f-end" required>
         </div>
       </div>
 
@@ -164,6 +169,10 @@
 <div class="overlay hidden" id="settings-modal-overlay">
   <div class="modal settings-modal" role="dialog" aria-labelledby="settings-title">
     <h2 id="settings-title">Settings</h2>
+    <div class="form-row setting-slider">
+      <label for="s-trip-mid">Non-first day opacity <span id="s-trip-mid-val">32%</span></label>
+      <input type="range" id="s-trip-mid" min="0" max="100" step="1" value="32">
+    </div>
     <div class="form-actions">
       <button type="button" id="btn-reset" class="danger" title="Discard local edits, reload from data.json">Reset</button>
       <div class="right">

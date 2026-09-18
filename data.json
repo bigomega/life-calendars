@@ -14,7 +14,7 @@
   "locations": [
     {
       "id": "loc-001",
-      "person": "Both",
+      "person": "B",
       "start": "2024-09-28",
       "end": "2024-10-02",
       "location": "Bir",
@@ -23,12 +23,30 @@
     },
     {
       "id": "loc-002",
-      "person": "Both",
+      "person": "M",
       "start": "2024-10-30",
       "end": "2024-11-14",
       "location": "Mumbai",
       "country": "India",
       "comments": "Mariana - Mumbai"
+    },
+    {
+      "id": "loc-6dqcj7n",
+      "person": "Both",
+      "start": "2025-05-19",
+      "end": "2025-05-31",
+      "location": "Karnal",
+      "country": "India",
+      "comments": "with Hardik"
+    },
+    {
+      "id": "loc-4jx4gz2",
+      "person": "Both",
+      "start": "2025-06-01",
+      "end": "2025-07-19",
+      "location": "Bir",
+      "country": "India",
+      "comments": ""
     },
     {
       "id": "loc-005",
@@ -42,7 +60,7 @@
     {
       "id": "loc-006",
       "person": "Both",
-      "start": "2025-07-23",
+      "start": "2025-07-21",
       "end": "2025-07-26",
       "location": "Kolkata",
       "country": "India",
@@ -58,6 +76,15 @@
       "comments": "Delhi transit day"
     },
     {
+      "id": "loc-ne4o2nm",
+      "person": "Both",
+      "start": "2025-07-28",
+      "end": "2025-08-22",
+      "location": "Bir",
+      "country": "India",
+      "comments": ""
+    },
+    {
       "id": "loc-009",
       "person": "B",
       "start": "2025-08-23",
@@ -68,7 +95,7 @@
     },
     {
       "id": "loc-011",
-      "person": "Both",
+      "person": "B",
       "start": "2025-10-27",
       "end": "2025-10-31",
       "location": "Mexico City",
@@ -77,7 +104,7 @@
     },
     {
       "id": "loc-012",
-      "person": "Both",
+      "person": "B",
       "start": "2025-11-01",
       "end": "2025-11-01",
       "location": "Patzcuaro",
@@ -86,7 +113,7 @@
     },
     {
       "id": "loc-013",
-      "person": "Both",
+      "person": "B",
       "start": "2025-11-02",
       "end": "2025-11-15",
       "location": "Morelia",
@@ -95,7 +122,7 @@
     },
     {
       "id": "loc-014",
-      "person": "Both",
+      "person": "B",
       "start": "2025-11-16",
       "end": "2025-11-30",
       "location": "Guanajuato",
@@ -141,11 +168,11 @@
     {
       "id": "loc-023",
       "person": "Both",
-      "start": "2026-02-14",
+      "start": "2026-02-15",
       "end": "2026-02-27",
       "location": "Gudauri",
       "country": "Georgia",
-      "comments": ""
+      "comments": "Ski"
     },
     {
       "id": "loc-025",
@@ -154,7 +181,7 @@
       "end": "2026-03-03",
       "location": "Tbilisi",
       "country": "Georgia",
-      "comments": ""
+      "comments": "iran war flight cancellations"
     },
     {
       "id": "loc-g6plxz2",
@@ -169,15 +196,24 @@
       "id": "loc-029",
       "person": "Both",
       "start": "2026-03-05",
-      "end": "2026-03-21",
+      "end": "2026-03-14",
       "location": "Almaty",
       "country": "Kazakhstan",
+      "comments": "unexpected skiing"
+    },
+    {
+      "id": "loc-yjtvyel",
+      "person": "Both",
+      "start": "2026-03-15",
+      "end": "2026-03-15",
+      "location": "Delhi",
+      "country": "India",
       "comments": ""
     },
     {
       "id": "loc-psf2rmu",
       "person": "Both",
-      "start": "2026-03-22",
+      "start": "2026-03-16",
       "end": "2026-05-24",
       "location": "Bir",
       "country": "India",
@@ -212,7 +248,7 @@
     },
     {
       "id": "loc-6qorlsu",
-      "person": "Both",
+      "person": "B",
       "start": "2026-09-21",
       "end": "2026-10-04",
       "location": "New York",
@@ -235,11 +271,11 @@
       "end": "2027-01-16",
       "location": "Cypress",
       "country": "Cyprus",
-      "comments": ""
+      "comments": "visiting Ari"
     },
     {
       "id": "loc-rbmb0if",
-      "person": "Both",
+      "person": "M",
       "start": "2027-01-17",
       "end": "2027-02-13",
       "location": "Bir",
