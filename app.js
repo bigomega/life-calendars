@@ -27,31 +27,31 @@ const FALLBACK_DATA = {
     { "id": "loc-006", "person": "B", "type": "stay", "start": "2025-07-23", "end": "2025-07-26", "location": "Kolkata", "country": "India", "label": "Kolkata US Visa interview", "emoji": "" },
     { "id": "loc-007", "person": "B", "type": "stay", "start": "2025-07-27", "end": "2025-07-27", "location": "Delhi", "country": "India", "label": "Delhi transit day", "emoji": "" },
     { "id": "loc-008", "person": "B", "type": "flight", "start": "2025-08-22", "end": "2025-08-23", "from": "Delhi", "to": "NYC", "label": "Fly Delhi to NYC", "emoji": "✈️" },
-    { "id": "loc-009", "person": "B", "type": "stay", "start": "2025-08-23", "end": "2025-10-26", "location": "New York", "country": "USA", "label": "New York", "emoji": "", "inferred": true },
+    { "id": "loc-009", "person": "B", "type": "stay", "start": "2025-08-23", "end": "2025-10-26", "location": "New York", "country": "USA", "label": "New York", "emoji": "" },
     { "id": "loc-010", "person": "B", "type": "flight", "start": "2025-10-26", "end": "2025-10-26", "from": "New York", "to": "Mexico", "label": "Fly New York to Mexico", "emoji": "✈️" },
     { "id": "loc-011", "person": "B", "type": "stay", "start": "2025-10-27", "end": "2025-10-31", "location": "Mexico City", "country": "Mexico", "label": "Mexico City", "emoji": "🏡" },
     { "id": "loc-012", "person": "B", "type": "stay", "start": "2025-11-01", "end": "2025-11-01", "location": "Patzcuaro", "country": "Mexico", "label": "Patzcuaro", "emoji": "" },
     { "id": "loc-013", "person": "B", "type": "stay", "start": "2025-11-02", "end": "2025-11-15", "location": "Morelia", "country": "Mexico", "label": "Morelia", "emoji": "🏡" },
     { "id": "loc-014", "person": "B", "type": "stay", "start": "2025-11-16", "end": "2025-11-30", "location": "Guanajuato", "country": "Mexico", "label": "Guanajuato", "emoji": "🏡" },
-    { "id": "loc-015", "person": "B", "type": "stay", "start": "2025-12-01", "end": "2026-01-25", "location": "Mexico", "country": "Mexico", "label": "Mexico", "emoji": "", "inferred": true },
+    { "id": "loc-015", "person": "B", "type": "stay", "start": "2025-12-01", "end": "2026-01-25", "location": "Mexico", "country": "Mexico", "label": "Mexico", "emoji": "" },
     { "id": "loc-016", "person": "B", "type": "flight", "start": "2026-01-25", "end": "2026-01-25", "from": "Mexico", "to": "Orlando", "label": "Fly Mexico to Orlando", "emoji": "✈️" },
-    { "id": "loc-017", "person": "B", "type": "stay", "start": "2026-01-25", "end": "2026-01-29", "location": "Florida", "country": "USA", "label": "Orlando / Fort Lauderdale", "emoji": "", "inferred": true },
+    { "id": "loc-017", "person": "B", "type": "stay", "start": "2026-01-25", "end": "2026-01-29", "location": "Florida", "country": "USA", "label": "Orlando / Fort Lauderdale", "emoji": "" },
     { "id": "loc-018", "person": "B", "type": "flight", "start": "2026-01-29", "end": "2026-01-29", "from": "Fort-Lauderdale", "to": "Seattle", "label": "Fly Fort-Lauderdale to Seattle", "emoji": "✈️" },
-    { "id": "loc-019", "person": "B", "type": "stay", "start": "2026-01-29", "end": "2026-02-01", "location": "Seattle", "country": "USA", "label": "Seattle", "emoji": "", "inferred": true },
+    { "id": "loc-019", "person": "B", "type": "stay", "start": "2026-01-29", "end": "2026-02-01", "location": "Seattle", "country": "USA", "label": "Seattle", "emoji": "" },
     { "id": "loc-020", "person": "B", "type": "flight", "start": "2026-02-01", "end": "2026-02-02", "from": "Seattle", "to": "Dubai", "label": "Fly Seattle to Dubai", "emoji": "✈️" },
-    { "id": "loc-021", "person": "B", "type": "stay", "start": "2026-02-02", "end": "2026-02-14", "location": "Dubai", "country": "UAE", "label": "Dubai", "emoji": "", "inferred": true },
+    { "id": "loc-021", "person": "B", "type": "stay", "start": "2026-02-02", "end": "2026-02-14", "location": "Dubai", "country": "UAE", "label": "Dubai", "emoji": "" },
     { "id": "loc-022", "person": "B", "type": "flight", "start": "2026-02-14", "end": "2026-02-14", "from": "Dubai", "to": "Tbilisi", "label": "Fly Dubai to Tbilisi", "emoji": "✈️" },
-    { "id": "loc-023", "person": "B", "type": "stay", "start": "2026-02-14", "end": "2026-02-27", "location": "Tbilisi", "country": "Georgia", "label": "Tbilisi", "emoji": "", "inferred": true },
+    { "id": "loc-023", "person": "B", "type": "stay", "start": "2026-02-14", "end": "2026-02-27", "location": "Tbilisi", "country": "Georgia", "label": "Tbilisi", "emoji": "" },
     { "id": "loc-024", "person": "B", "type": "flight", "start": "2026-02-28", "end": "2026-02-28", "from": "Tbilisi", "to": "Dubai", "label": "Fly Tbilisi to Dubai", "emoji": "✈️", "cancelled": true },
     { "id": "loc-025", "person": "B", "type": "stay", "start": "2026-02-28", "end": "2026-03-03", "location": "Tbilisi", "country": "Georgia", "label": "Stay in Tbilisi", "emoji": "🏨" },
     { "id": "loc-026", "person": "B", "type": "flight", "start": "2026-03-01", "end": "2026-03-01", "from": "Dubai", "to": "Delhi", "label": "Fly Dubai to Delhi", "emoji": "✈️", "cancelled": true },
     { "id": "loc-027", "person": "B", "type": "flight", "start": "2026-03-01", "end": "2026-03-01", "from": "Tbilisi", "to": "Delhi", "label": "Fly Tbilisi to Delhi", "emoji": "✈️" },
     { "id": "loc-028", "person": "B", "type": "flight", "start": "2026-03-05", "end": "2026-03-05", "from": "Istanbul", "to": "Almaty", "label": "Fly Istanbul to Almaty", "emoji": "✈️" },
-    { "id": "loc-029", "person": "B", "type": "stay", "start": "2026-03-05", "end": "2026-03-21", "location": "Almaty", "country": "Kazakhstan", "label": "Almaty", "emoji": "", "inferred": true },
+    { "id": "loc-029", "person": "B", "type": "stay", "start": "2026-03-05", "end": "2026-03-21", "location": "Almaty", "country": "Kazakhstan", "label": "Almaty", "emoji": "" },
     { "id": "loc-030", "person": "B", "type": "flight", "start": "2026-03-21", "end": "2026-03-21", "from": "Almaty", "to": "Delhi", "label": "Fly Almaty to Delhi", "emoji": "✈️" },
-    { "id": "loc-031", "person": "B", "type": "stay", "start": "2026-03-21", "end": "2026-05-24", "location": "Delhi", "country": "India", "label": "Delhi", "emoji": "", "inferred": true },
+    { "id": "loc-031", "person": "B", "type": "stay", "start": "2026-03-21", "end": "2026-05-24", "location": "Delhi", "country": "India", "label": "Delhi", "emoji": "" },
     { "id": "loc-032", "person": "B", "type": "flight", "start": "2026-05-24", "end": "2026-05-25", "from": "Delhi", "to": "NYC", "label": "Fly Delhi to NYC", "emoji": "✈️" },
-    { "id": "loc-033", "person": "B", "type": "stay", "start": "2026-05-25", "end": "2026-08-16", "location": "New York", "country": "USA", "label": "New York", "emoji": "", "inferred": true },
+    { "id": "loc-033", "person": "B", "type": "stay", "start": "2026-05-25", "end": "2026-08-16", "location": "New York", "country": "USA", "label": "New York", "emoji": "" },
     { "id": "loc-034", "person": "B", "type": "flight", "start": "2026-08-16", "end": "2026-08-16", "from": "NYC", "to": "MEX", "label": "NYC to MEX", "emoji": "✈️" }
   ]
 };
@@ -223,11 +223,6 @@ function renderLegend(locations) {
   cancelledItem.innerHTML = `<span class="legend-swatch" style="background:transparent;border:1.5px dashed rgba(255,255,255,0.3);opacity:0.5;"></span><span style="text-decoration:line-through;opacity:0.7;">Cancelled</span>`;
   misc.appendChild(cancelledItem);
 
-  const inferredItem = document.createElement("div");
-  inferredItem.className = "legend-item";
-  inferredItem.innerHTML = `<span class="legend-swatch" style="background:transparent;border:1.5px dashed rgba(255,255,255,0.5);"></span><span style="font-style:italic;opacity:0.85;">(inferred) deduced from flights, not confirmed</span>`;
-  misc.appendChild(inferredItem);
-
   panel.appendChild(misc);
 }
 
@@ -322,8 +317,7 @@ function buildMonthCard(year, month, locations) {
       const titleParts = dayLocations.map((l) => {
         const range = l.start === l.end ? l.start : `${l.start} → ${l.end}`;
         const cancelled = l.cancelled ? " (cancelled)" : "";
-        const inferred = l.inferred ? " (inferred)" : "";
-        return `${l.emoji || ""} ${l.label}${cancelled}${inferred} [${range}]`;
+        return `${l.emoji || ""} ${l.label}${cancelled} [${range}]`;
       });
       cell.title = titleParts.join("\n");
     }
@@ -490,7 +484,7 @@ function openDayPopover(clickEvent, dayLocations) {
     row.appendChild(sw);
     const lbl = document.createElement("span");
     lbl.className = "lbl";
-    lbl.textContent = `${loc.emoji || ""} ${loc.label}${loc.inferred ? " (inferred)" : ""}`.trim();
+    lbl.textContent = `${loc.emoji || ""} ${loc.label}`.trim();
     row.appendChild(lbl);
     row.addEventListener("click", () => {
       closeDayPopover();
@@ -711,14 +705,11 @@ function renderManageList() {
         ? `${loc.location || ""}${loc.country ? ", " + loc.country : ""}`
         : `${loc.from || "?"} → ${loc.to || "?"}`;
     const person = loc.person === "M" ? "♀ Mariana" : loc.person === "Both" ? "⚥ Both" : "♂ Bharath";
-    const inferredTag = loc.inferred
-      ? ' <span style="opacity:.6;font-style:italic;">(inferred)</span>'
-      : "";
 
     row.innerHTML = `
       <td style="padding:7px 6px;white-space:nowrap;">${range}</td>
       <td style="padding:7px 6px;white-space:nowrap;">${person}</td>
-      <td style="padding:7px 6px;">${loc.emoji || ""} ${loc.label}${loc.cancelled ? " ❌" : ""}${inferredTag}</td>
+      <td style="padding:7px 6px;">${loc.emoji || ""} ${loc.label}${loc.cancelled ? " ❌" : ""}</td>
       <td style="padding:7px 6px;color:var(--text-dim);">${where}</td>
       <td style="padding:7px 6px;text-align:right;white-space:nowrap;">
         <button data-id="${loc.id}" class="edit-btn">Edit</button>
