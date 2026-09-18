@@ -724,8 +724,12 @@ function computeYearEnd(locations) {
 }
 
 function buildMonthCard(year, month, locations) {
+  const today = todayIso();
   const card = document.createElement("div");
   card.className = "month-card";
+  if (`${year}-${pad2(month)}` === today.slice(0, 7)) {
+    card.classList.add("current-month");
+  }
 
   const header = document.createElement("div");
   header.className = "month-header";
@@ -773,7 +777,6 @@ function buildMonthCard(year, month, locations) {
 
   const firstDow = new Date(year, month - 1, 1).getDay();
   const daysInMonth = new Date(year, month, 0).getDate();
-  const today = todayIso();
 
   for (let i = 0; i < firstDow; i++) {
     const empty = document.createElement("div");
@@ -871,6 +874,14 @@ function renderYears(locations) {
     const yearLabel = document.createElement("span");
     yearLabel.textContent = String(y);
     title.appendChild(yearLabel);
+
+    if (y === realCurrentYear()) {
+      const remaining = Math.max(0, isoDaysInclusive(todayIso(), `${y}-12-31`));
+      const go = document.createElement("span");
+      go.className = "year-days-to-go";
+      go.textContent = `${remaining} day${remaining === 1 ? "" : "s"} to go`;
+      title.appendChild(go);
+    }
 
     const stats = countryStatsInRange(locations, `${y}-01-01`, `${y}-12-31`);
     if (stats.length) {

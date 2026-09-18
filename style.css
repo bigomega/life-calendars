@@ -280,6 +280,13 @@ main {
   opacity: 0.7;
 }
 
+.year-days-to-go {
+  color: var(--text-dim);
+  font-size: 14px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
 .year-section:first-child .year-title {
   border-top: none;
 }
@@ -315,6 +322,17 @@ main {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 10px;
+}
+
+.month-card.current-month {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent), 0 0 18px rgba(91, 156, 246, 0.18);
+  background: color-mix(in srgb, var(--accent) 10%, var(--panel));
+}
+
+.month-card.current-month h3 {
+  color: var(--text);
+  font-weight: 700;
 }
 
 .month-header {
@@ -413,10 +431,26 @@ main {
   pointer-events: none;
 }
 
+.day-cell.today {
+  outline: 2px solid var(--accent);
+  outline-offset: 0;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 40%, transparent);
+  z-index: 1;
+}
+
 .day-cell.today .num {
-  outline: 1px solid var(--accent);
+  font-weight: 800;
+  background: var(--accent);
+  color: #08131f;
+  opacity: 1;
   border-radius: 3px;
   padding: 0 2px;
+  text-shadow: none;
+}
+
+.day-cell.trip-start.today .num {
+  background: var(--accent);
+  color: #08131f;
 }
 
 .day-cell.selecting {
