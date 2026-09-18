@@ -1,205 +1,308 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Life Calendars</title>
-<meta name="description" content="A year-in-days calendar of where we've been, color-coded by location.">
-<link rel="canonical" href="https://bigomega.github.io/life-calendars/">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://bigomega.github.io/life-calendars/">
-<meta property="og:title" content="Life Calendars">
-<meta property="og:description" content="A year-in-days calendar of where we've been, color-coded by location.">
-<meta property="og:image" content="https://bigomega.github.io/life-calendars/og.png">
-<meta property="og:image:type" content="image/png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="698">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Life Calendars">
-<meta name="twitter:description" content="A year-in-days calendar of where we've been, color-coded by location.">
-<meta name="twitter:image" content="https://bigomega.github.io/life-calendars/og.png">
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<div class="sticky-top">
-  <div id="unsaved-banner" class="unsaved-banner hidden" role="status">
-    <span>Unsaved changes — not written to <code>data.json</code> yet.</span>
-    <button type="button" id="unsaved-copy">Copy JSON</button>
-  </div>
-  <header class="app-header">
-    <div class="header-row">
-      <h1>Life Calendars</h1>
-      <div class="tabs">
-        <button class="tab-btn active" data-tab="location">location</button>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Life Calendars</title>
+    <meta
+      name="description"
+      content="A year-in-days calendar of where we've been, color-coded by location."
+    />
+    <link rel="canonical" href="https://bigomega.github.io/life-calendars/" />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://bigomega.github.io/life-calendars/"
+    />
+    <meta property="og:title" content="Life Calendars" />
+    <meta
+      property="og:description"
+      content="A year-in-days calendar of where we've been, color-coded by location."
+    />
+    <meta
+      property="og:image"
+      content="https://bigomega.github.io/life-calendars/og.png"
+    />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="698" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Life Calendars" />
+    <meta
+      name="twitter:description"
+      content="A year-in-days calendar of where we've been, color-coded by location."
+    />
+    <meta
+      name="twitter:image"
+      content="https://bigomega.github.io/life-calendars/og.png"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="sticky-top">
+      <div id="unsaved-banner" class="unsaved-banner hidden" role="status">
+        <span
+          >Unsaved changes — not written to <code>data.json</code> yet.</span
+        >
+        <button type="button" id="unsaved-copy">Copy JSON</button>
       </div>
-    </div>
-  </header>
-
-  <div class="controls-bar">
-    <div class="control-group">
-      <span class="title">People</span>
-      <label class="person-chip" id="chip-B">
-        <input type="checkbox" value="B" checked> Bharath ♂
-      </label>
-      <label class="person-chip" id="chip-M">
-        <input type="checkbox" value="M" checked> Mariana ♀
-      </label>
-    </div>
-
-    <div class="control-group">
-      <span class="title">Year</span>
-      <button id="year-prev">◀</button>
-      <select id="year-select"></select>
-      <button id="year-next">▶</button>
-      <button id="btn-today">Today</button>
-      <button id="btn-legend" aria-pressed="false" aria-controls="legend-panel">Legend</button>
-    </div>
-
-    <div class="spacer"></div>
-
-    <div class="control-group">
-      <button id="btn-add-location" class="primary">+ Add</button>
-      <button id="btn-manage-locations" class="btn-with-icon">
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-          <path d="M12 20h9"></path>
-          <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
-        </svg>
-        Manage
-      </button>
-      <button id="btn-copy-json">Copy JSON</button>
-      <button id="btn-settings" class="icon-btn" title="Settings" aria-label="Settings" aria-haspopup="dialog">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-          <circle cx="12" cy="12" r="3"></circle>
-          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-        </svg>
-      </button>
-    </div>
-  </div>
-
-  <div class="legend-panel hidden" id="legend-panel"></div>
-</div>
-
-<main>
-  <div id="years-container"></div>
-</main>
-
-<!-- Add / Edit location modal -->
-<div class="overlay hidden" id="location-modal-overlay">
-  <div class="modal">
-    <h2 id="location-modal-title">Add Location</h2>
-    <div id="location-modal-flag" class="location-modal-flag hidden" aria-hidden="true"></div>
-    <form id="location-form">
-      <input type="hidden" id="f-id">
-
-      <div class="form-row-inline">
-        <div class="form-row">
-          <label for="f-location">Location</label>
-          <div class="combo">
-            <input type="text" id="f-location" placeholder="e.g. Mumbai" autocomplete="off" aria-autocomplete="list" aria-controls="location-suggestions">
-            <button type="button" class="combo-toggle" id="f-location-toggle" tabindex="-1" aria-label="Show past locations">▾</button>
-            <ul id="location-suggestions" class="combo-list hidden" role="listbox"></ul>
+      <header class="app-header">
+        <div class="header-row">
+          <h1>Life Calendars</h1>
+          <div class="tabs">
+            <button class="tab-btn active" data-tab="location">location</button>
           </div>
         </div>
-        <div class="form-row">
-          <label for="f-country">Country</label>
-          <select id="f-country">
-            <option value="">Select country</option>
-          </select>
+      </header>
+
+      <div class="controls-bar">
+        <div class="control-group">
+          <span class="title">People</span>
+          <label class="person-chip" id="chip-B">
+            <input type="checkbox" value="B" checked /> Bharath ♂
+          </label>
+          <label class="person-chip" id="chip-M">
+            <input type="checkbox" value="M" checked /> Mariana ♀
+          </label>
+        </div>
+
+        <div class="control-group">
+          <span class="title">Year</span>
+          <button id="year-prev">◀</button>
+          <select id="year-select"></select>
+          <button id="year-next">▶</button>
+          <button id="btn-today">Today</button>
+          <button
+            id="btn-legend"
+            aria-pressed="false"
+            aria-controls="legend-panel"
+          >
+            Legend
+          </button>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div class="control-group">
+          <button id="btn-add-location" class="primary">+ Add</button>
+          <button id="btn-manage-locations" class="btn-with-icon">
+            <svg
+              viewBox="0 0 24 24"
+              width="14"
+              height="14"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <path d="M12 20h9"></path>
+              <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
+            </svg>
+            Manage
+          </button>
+          <button id="btn-copy-json">Copy JSON</button>
+          <button
+            id="btn-settings"
+            class="icon-btn"
+            title="Settings"
+            aria-label="Settings"
+            aria-haspopup="dialog"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              width="18"
+              height="18"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="3"></circle>
+              <path
+                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+              ></path>
+            </svg>
+          </button>
         </div>
       </div>
 
-      <div class="form-row">
-        <label for="f-person">Person</label>
-        <select id="f-person">
-          <option value="B">Bharath</option>
-          <option value="M">Mariana</option>
-          <option value="Both" selected>Both</option>
-        </select>
-      </div>
+      <div class="legend-panel hidden" id="legend-panel"></div>
+    </div>
 
-      <div class="form-row-inline">
-        <div class="form-row">
-          <label for="f-start">From</label>
-          <input type="date" id="f-start" required>
+    <main>
+      <div id="years-container"></div>
+    </main>
+
+    <!-- Add / Edit location modal -->
+    <div class="overlay hidden" id="location-modal-overlay">
+      <div class="modal">
+        <h2 id="location-modal-title">Add Location</h2>
+        <div
+          id="location-modal-flag"
+          class="location-modal-flag hidden"
+          aria-hidden="true"
+        ></div>
+        <form id="location-form">
+          <input type="hidden" id="f-id" />
+
+          <div class="form-row-inline">
+            <div class="form-row">
+              <label for="f-location">Location</label>
+              <div class="combo">
+                <input
+                  type="text"
+                  id="f-location"
+                  placeholder="e.g. Mumbai"
+                  autocomplete="off"
+                  aria-autocomplete="list"
+                  aria-controls="location-suggestions"
+                />
+                <button
+                  type="button"
+                  class="combo-toggle"
+                  id="f-location-toggle"
+                  tabindex="-1"
+                  aria-label="Show past locations"
+                >
+                  ▾
+                </button>
+                <ul
+                  id="location-suggestions"
+                  class="combo-list hidden"
+                  role="listbox"
+                ></ul>
+              </div>
+            </div>
+            <div class="form-row">
+              <label for="f-country">Country</label>
+              <select id="f-country">
+                <option value="">Select country</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label for="f-person">Person</label>
+            <select id="f-person">
+              <option value="B">Bharath</option>
+              <option value="M">Mariana</option>
+              <option value="Both" selected>Both</option>
+            </select>
+          </div>
+
+          <div class="form-row-inline">
+            <div class="form-row">
+              <label for="f-start">From</label>
+              <input type="date" id="f-start" required />
+            </div>
+            <div class="form-row">
+              <label for="f-end">To</label>
+              <input type="date" id="f-end" required />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label for="f-comments">Comments →</label>
+            <input type="text" id="f-comments" placeholder="Optional" />
+          </div>
+
+          <div class="form-actions">
+            <button type="button" id="f-delete" class="danger hidden">
+              Delete
+            </button>
+            <div class="right">
+              <button type="button" id="f-cancel">Cancel</button>
+              <button type="submit" class="primary">Save</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Manage locations (table) modal -->
+    <div class="overlay hidden" id="manage-modal-overlay">
+      <div class="modal" style="width: min(720px, 94vw)">
+        <h2>Manage Locations</h2>
+        <div id="manage-list" style="max-height: 60vh; overflow-y: auto"></div>
+        <div class="form-actions">
+          <div></div>
+          <div class="right">
+            <button type="button" id="manage-close">Close</button>
+          </div>
         </div>
-        <div class="form-row">
-          <label for="f-end">To</label>
-          <input type="date" id="f-end" required>
+      </div>
+    </div>
+
+    <!-- Copy JSON modal -->
+    <div class="overlay hidden" id="json-modal-overlay">
+      <div class="modal json-modal" style="width: min(680px, 94vw)">
+        <h2>Current data.json</h2>
+        <p class="hint">
+          Copy this and paste it over <code>data.json</code> in the repo to open
+          a PR with your changes, or
+          <a id="json-edit-link" href="#" target="_blank" rel="noopener"
+            >open data.json on GitHub</a
+          >
+          and paste it there — GitHub will offer to start a PR for you.
+        </p>
+        <textarea id="json-output" readonly></textarea>
+        <div class="form-actions">
+          <div></div>
+          <div class="right">
+            <button type="button" id="json-copy-btn" class="primary">
+              Copy to clipboard
+            </button>
+            <button type="button" id="json-close">Close</button>
+          </div>
         </div>
       </div>
+    </div>
 
-      <div class="form-row">
-        <label for="f-comments">Comments</label>
-        <input type="text" id="f-comments" placeholder="Optional">
-      </div>
-
-      <div class="form-actions">
-        <button type="button" id="f-delete" class="danger hidden">Delete</button>
-        <div class="right">
-          <button type="button" id="f-cancel">Cancel</button>
-          <button type="submit" class="primary">Save</button>
+    <!-- Settings modal -->
+    <div class="overlay hidden" id="settings-modal-overlay">
+      <div
+        class="modal settings-modal"
+        role="dialog"
+        aria-labelledby="settings-title"
+      >
+        <h2 id="settings-title">Settings</h2>
+        <div class="form-row setting-slider">
+          <label for="s-trip-mid"
+            >Non-first day opacity <span id="s-trip-mid-val">32%</span></label
+          >
+          <input
+            type="range"
+            id="s-trip-mid"
+            min="0"
+            max="100"
+            step="1"
+            value="32"
+          />
+        </div>
+        <div class="form-actions">
+          <button
+            type="button"
+            id="btn-reset"
+            class="danger"
+            title="Discard local edits, reload from data.json"
+          >
+            Reset
+          </button>
+          <div class="right">
+            <button type="button" id="settings-close">Close</button>
+          </div>
         </div>
       </div>
-    </form>
-  </div>
-</div>
-
-<!-- Manage locations (table) modal -->
-<div class="overlay hidden" id="manage-modal-overlay">
-  <div class="modal" style="width:min(720px,94vw);">
-    <h2>Manage Locations</h2>
-    <div id="manage-list" style="max-height:60vh; overflow-y:auto;"></div>
-    <div class="form-actions">
-      <div></div>
-      <div class="right">
-        <button type="button" id="manage-close">Close</button>
-      </div>
     </div>
-  </div>
-</div>
 
-<!-- Copy JSON modal -->
-<div class="overlay hidden" id="json-modal-overlay">
-  <div class="modal json-modal" style="width:min(680px,94vw);">
-    <h2>Current data.json</h2>
-    <p class="hint">
-      Copy this and paste it over <code>data.json</code> in the repo to open a PR with your changes, or
-      <a id="json-edit-link" href="#" target="_blank" rel="noopener">open data.json on GitHub</a>
-      and paste it there — GitHub will offer to start a PR for you.
-    </p>
-    <textarea id="json-output" readonly></textarea>
-    <div class="form-actions">
-      <div></div>
-      <div class="right">
-        <button type="button" id="json-copy-btn" class="primary">Copy to clipboard</button>
-        <button type="button" id="json-close">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
+    <div id="day-popover" class="day-popover hidden"></div>
+    <div
+      id="country-tooltip"
+      class="country-tooltip hidden"
+      role="tooltip"
+    ></div>
+    <div id="toast" class="toast hidden"></div>
 
-<!-- Settings modal -->
-<div class="overlay hidden" id="settings-modal-overlay">
-  <div class="modal settings-modal" role="dialog" aria-labelledby="settings-title">
-    <h2 id="settings-title">Settings</h2>
-    <div class="form-row setting-slider">
-      <label for="s-trip-mid">Non-first day opacity <span id="s-trip-mid-val">32%</span></label>
-      <input type="range" id="s-trip-mid" min="0" max="100" step="1" value="32">
-    </div>
-    <div class="form-actions">
-      <button type="button" id="btn-reset" class="danger" title="Discard local edits, reload from data.json">Reset</button>
-      <div class="right">
-        <button type="button" id="settings-close">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="day-popover" class="day-popover hidden"></div>
-<div id="country-tooltip" class="country-tooltip hidden" role="tooltip"></div>
-<div id="toast" class="toast hidden"></div>
-
-<script src="app.js"></script>
-</body>
+    <script src="app.js"></script>
+  </body>
 </html>
