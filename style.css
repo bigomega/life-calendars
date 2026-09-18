@@ -287,6 +287,15 @@ main {
   font-size: 8px;
 }
 
+.flag-badge {
+  position: absolute;
+  top: 1px;
+  right: 2px;
+  font-size: 9px;
+  line-height: 1;
+  pointer-events: none;
+}
+
 .stack-strip {
   position: absolute;
   left: 2px;
