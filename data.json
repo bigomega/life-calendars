@@ -13,6 +13,114 @@
   ],
   "locations": [
     {
+      "id": "loc-3id5w6o",
+      "person": "Both",
+      "start": "2023-12-06",
+      "end": "2024-06-17",
+      "location": "Bir",
+      "country": "India",
+      "comments": ""
+    },
+    {
+      "id": "loc-qxpmxod",
+      "person": "B",
+      "start": "2024-06-18",
+      "end": "2024-06-19",
+      "location": "Mumbai",
+      "country": "India",
+      "comments": "Interview"
+    },
+    {
+      "id": "loc-9chd05i",
+      "person": "B",
+      "start": "2024-06-20",
+      "end": "2024-06-30",
+      "location": "Bir",
+      "country": "India",
+      "comments": ""
+    },
+    {
+      "id": "loc-d3tl780",
+      "person": "B",
+      "start": "2024-07-01",
+      "end": "2024-07-11",
+      "location": "Mumbai",
+      "country": "India",
+      "comments": "Joining Fynd 💼"
+    },
+    {
+      "id": "loc-yraka0z",
+      "person": "B",
+      "start": "2024-07-12",
+      "end": "2024-07-15",
+      "location": "Tiruchengode",
+      "country": "India",
+      "comments": "My wedding?"
+    },
+    {
+      "id": "loc-h274rxe",
+      "person": "B",
+      "start": "2024-07-16",
+      "end": "2024-08-14",
+      "location": "Mumbai",
+      "country": "India",
+      "comments": ""
+    },
+    {
+      "id": "loc-96t1ncp",
+      "person": "Both",
+      "start": "2024-08-15",
+      "end": "2024-08-18",
+      "location": "Aurangabad",
+      "country": "India",
+      "comments": "Caves trip"
+    },
+    {
+      "id": "loc-q21lbfu",
+      "person": "Both",
+      "start": "2024-08-19",
+      "end": "2024-08-26",
+      "location": "Mumbai",
+      "country": "India",
+      "comments": ""
+    },
+    {
+      "id": "loc-d3txlsv",
+      "person": "Both",
+      "start": "2024-08-27",
+      "end": "2024-08-28",
+      "location": "Chennai",
+      "country": "India",
+      "comments": "Shrihari wedding ❤️"
+    },
+    {
+      "id": "loc-s5celle",
+      "person": "B",
+      "start": "2024-08-29",
+      "end": "2024-09-06",
+      "location": "Mumbai",
+      "country": "India",
+      "comments": ""
+    },
+    {
+      "id": "loc-gd1dsjc",
+      "person": "B",
+      "start": "2024-09-07",
+      "end": "2024-09-08",
+      "location": "Bangalore",
+      "country": "India",
+      "comments": "FOSS conf"
+    },
+    {
+      "id": "loc-dn3pnkj",
+      "person": "B",
+      "start": "2024-09-09",
+      "end": "2024-09-27",
+      "location": "Mumbai",
+      "country": "India",
+      "comments": ""
+    },
+    {
       "id": "loc-001",
       "person": "B",
       "start": "2024-09-28",
@@ -22,6 +130,33 @@
       "comments": "Bir Trip"
     },
     {
+      "id": "loc-b8raozn",
+      "person": "B",
+      "start": "2024-10-03",
+      "end": "2024-10-17",
+      "location": "Mumbai",
+      "country": "India",
+      "comments": ""
+    },
+    {
+      "id": "loc-asz2knt",
+      "person": "B",
+      "start": "2024-10-18",
+      "end": "2024-10-19",
+      "location": "Goa",
+      "country": "India",
+      "comments": "React conf"
+    },
+    {
+      "id": "loc-m60m8dn",
+      "person": "B",
+      "start": "2024-10-20",
+      "end": "2024-10-31",
+      "location": "Mumbai",
+      "country": "India",
+      "comments": ""
+    },
+    {
       "id": "loc-002",
       "person": "M",
       "start": "2024-10-30",
@@ -29,6 +164,69 @@
       "location": "Mumbai",
       "country": "India",
       "comments": "Mariana - Mumbai"
+    },
+    {
+      "id": "loc-32fljpq",
+      "person": "Both",
+      "start": "2024-11-01",
+      "end": "2024-11-03",
+      "location": "On road",
+      "country": "India",
+      "comments": "🏍️ Coimbatore → Mumbai"
+    },
+    {
+      "id": "loc-0sszuyl",
+      "person": "B",
+      "start": "2024-11-04",
+      "end": "2025-02-28",
+      "location": "Mumbai",
+      "country": "India",
+      "comments": ""
+    },
+    {
+      "id": "loc-ildw303",
+      "person": "Both",
+      "start": "2025-03-01",
+      "end": "2025-03-02",
+      "location": "Chennai",
+      "country": "India",
+      "comments": "Sunil wedding"
+    },
+    {
+      "id": "loc-ge0gkhr",
+      "person": "B",
+      "start": "2025-03-03",
+      "end": "2025-05-01",
+      "location": "Mumbai",
+      "country": "India",
+      "comments": ""
+    },
+    {
+      "id": "loc-7nx9w8u",
+      "person": "Both",
+      "start": "2025-05-02",
+      "end": "2025-05-10",
+      "location": "Chennai",
+      "country": "India",
+      "comments": ""
+    },
+    {
+      "id": "loc-xasc6p2",
+      "person": "Both",
+      "start": "2025-05-11",
+      "end": "2025-05-16",
+      "location": "Mumbai",
+      "country": "India",
+      "comments": ""
+    },
+    {
+      "id": "loc-kyp6fss",
+      "person": "Both",
+      "start": "2025-05-17",
+      "end": "2025-05-18",
+      "location": "On road",
+      "country": "India",
+      "comments": "Mumbai → Karnal"
     },
     {
       "id": "loc-6dqcj7n",
@@ -281,6 +479,15 @@
       "location": "Bir",
       "country": "India",
       "comments": ""
+    },
+    {
+      "id": "loc-n88sqwz",
+      "person": "B",
+      "start": "2027-01-17",
+      "end": "2027-02-13",
+      "location": "Bir/South",
+      "country": "India",
+      "comments": "Undecided"
     },
     {
       "id": "loc-3fwbjzw",
