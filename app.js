@@ -67,6 +67,41 @@ const COUNTRY_HUES = {
 };
 const LIGHTNESS_STEPS = [42, 56, 34, 66, 48, 60, 38, 70];
 
+// Country name -> ISO 3166-1 alpha-2, used to deduce a flag emoji so a new
+// location never needs a flag typed into the form.
+const COUNTRY_CODES = {
+  "india": "IN", "usa": "US", "united states": "US", "united states of america": "US",
+  "mexico": "MX", "uae": "AE", "united arab emirates": "AE", "georgia": "GE",
+  "turkey": "TR", "türkiye": "TR", "kazakhstan": "KZ", "canada": "CA",
+  "united kingdom": "GB", "uk": "GB", "france": "FR", "germany": "DE", "italy": "IT",
+  "spain": "ES", "portugal": "PT", "netherlands": "NL", "japan": "JP", "china": "CN",
+  "south korea": "KR", "korea": "KR", "thailand": "TH", "vietnam": "VN",
+  "indonesia": "ID", "singapore": "SG", "malaysia": "MY", "philippines": "PH",
+  "australia": "AU", "new zealand": "NZ", "brazil": "BR", "argentina": "AR",
+  "chile": "CL", "colombia": "CO", "peru": "PE", "egypt": "EG", "morocco": "MA",
+  "south africa": "ZA", "kenya": "KE", "israel": "IL", "jordan": "JO",
+  "saudi arabia": "SA", "qatar": "QA", "oman": "OM", "bahrain": "BH",
+  "kuwait": "KW", "iran": "IR", "iraq": "IQ", "pakistan": "PK",
+  "bangladesh": "BD", "sri lanka": "LK", "nepal": "NP", "russia": "RU",
+  "ukraine": "UA", "poland": "PL", "czech republic": "CZ", "czechia": "CZ",
+  "austria": "AT", "switzerland": "CH", "belgium": "BE", "sweden": "SE",
+  "norway": "NO", "denmark": "DK", "finland": "FI", "iceland": "IS",
+  "ireland": "IE", "greece": "GR", "croatia": "HR", "serbia": "RS",
+  "romania": "RO", "bulgaria": "BG", "hungary": "HU", "slovakia": "SK",
+  "slovenia": "SI", "armenia": "AM", "azerbaijan": "AZ", "uzbekistan": "UZ",
+  "kyrgyzstan": "KG", "tajikistan": "TJ", "turkmenistan": "TM", "mongolia": "MN",
+  "taiwan": "TW", "hong kong": "HK", "myanmar": "MM", "cambodia": "KH", "laos": "LA"
+};
+
+function countryFlag(country) {
+  if (!country) return "";
+  const code = COUNTRY_CODES[country.trim().toLowerCase()];
+  if (!code) return "";
+  return code
+    .toUpperCase()
+    .replace(/./g, (c) => String.fromCodePoint(127397 + c.charCodeAt(0)));
+}
+
 const WEEKDAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 const MONTH_NAMES = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 
@@ -187,7 +222,7 @@ function renderLegend(locations) {
     group.className = "legend-group";
     const title = document.createElement("div");
     title.className = "country-name";
-    title.textContent = country;
+    title.textContent = `${countryFlag(country)} ${country}`.trim();
     group.appendChild(title);
 
     Array.from(byCountry[country]).sort().forEach((l) => {
@@ -280,6 +315,13 @@ function buildMonthCard(year, month, locations) {
     if (stays.length) {
       cell.style.background = stayColor(stays[0]);
       cell.style.color = "#111";
+      const flag = countryFlag(stays[0].country);
+      if (flag && !travel.some((l) => l.cancelled)) {
+        const flagEl = document.createElement("span");
+        flagEl.className = "flag-badge";
+        flagEl.textContent = flag;
+        cell.appendChild(flagEl);
+      }
     }
 
     const num = document.createElement("span");
