@@ -582,6 +582,12 @@ function countMissingDays(locations, year) {
   return isoDaysInclusive(start, end) - covered;
 }
 
+function countMovesInYear(locations, year) {
+  const start = `${year}-01-01`;
+  const end = `${year}-12-31`;
+  return locations.filter((l) => l.start >= start && l.start <= end).length;
+}
+
 function countryStatsInRange(locations, start, end) {
   const firstSeen = {};
   for (const loc of locations) {
@@ -982,6 +988,13 @@ function renderYears(locations) {
         miss.textContent = `Missing ${missing} day${missing === 1 ? "" : "s"}`;
         title.appendChild(miss);
       }
+    }
+    const moves = countMovesInYear(locations, y);
+    if (moves > 0) {
+      const moveEl = document.createElement("span");
+      moveEl.className = "year-moves";
+      moveEl.textContent = `${moves} move${moves === 1 ? "" : "s"}`;
+      title.appendChild(moveEl);
     }
     section.appendChild(title);
 

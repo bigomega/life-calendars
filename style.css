@@ -305,6 +305,16 @@ main {
   font-variant-numeric: tabular-nums;
 }
 
+.year-moves {
+  margin-left: auto;
+  color: var(--text-dim);
+  font-size: 13px;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
 .year-section:first-child .year-title {
   border-top: none;
 }
