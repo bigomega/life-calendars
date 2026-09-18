@@ -21,19 +21,15 @@ files run as-is, both opened locally and hosted on GitHub Pages.
 ```jsonc
 {
   "people": [{ "id": "B", "name": "Bharath", "icon": "♂" }, ...],
-  "events": [
+  "locations": [
     {
-      "id": "evt-001",
-      "person": "B",              // "B" or "M"
-      "type": "stay",              // "stay" | "flight" | "transit"
-      "start": "2024-09-28",       // ISO date, inclusive
-      "end": "2024-10-02",         // ISO date, inclusive
-      "location": "Bir",           // stay only
-      "country": "India",          // stay only — drives legend color
-      "from": "Delhi", "to": "NYC",// flight/transit only
-      "label": "Bir Trip",
-      "emoji": "✔️",
-      "cancelled": true             // optional
+      "id": "loc-001",
+      "person": "B",              // "B", "M", or "Both"
+      "start": "2024-09-28",      // ISO date, inclusive
+      "end": "2024-10-02",        // ISO date, inclusive
+      "location": "Bir",
+      "country": "India",         // drives legend color and flag
+      "label": "Bir Trip"
     }
   ]
 }
@@ -42,8 +38,6 @@ files run as-is, both opened locally and hosted on GitHub Pages.
 Colors are assigned automatically: each **country** gets a hue, and each
 distinct **location** within that country gets a different shade of that
 hue, so e.g. Mumbai and Delhi are both reddish but visually distinct.
-Flights/transit legs are drawn as a dashed marker instead of a location
-fill, since they represent movement, not a place you stayed.
 
 ## Editing data
 

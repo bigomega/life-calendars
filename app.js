@@ -20,40 +20,26 @@ const FALLBACK_DATA = {
     { "id": "M", "name": "Mariana", "icon": "♀" }
   ],
   "locations": [
-    { "id": "loc-001", "person": "B", "type": "stay", "start": "2024-09-28", "end": "2024-10-02", "location": "Bir", "country": "India", "label": "Bir Trip", "emoji": "✔️" },
-    { "id": "loc-002", "person": "B", "type": "stay", "start": "2024-10-30", "end": "2024-11-14", "location": "Mumbai", "country": "India", "label": "Mariana - Mumbai", "emoji": "✔️" },
-    { "id": "loc-003", "person": "B", "type": "transit", "start": "2025-05-17", "end": "2025-05-18", "from": "Mumbai", "to": "Karnal", "country": "India", "label": "Mumbai - Karnal", "emoji": "🏍" },
-    { "id": "loc-004", "person": "B", "type": "transit", "start": "2025-06-01", "end": "2025-06-01", "from": "Karnal", "to": "Bir", "country": "India", "label": "Karnal - Bir", "emoji": "🏍" },
-    { "id": "loc-005", "person": "B", "type": "stay", "start": "2025-07-20", "end": "2025-07-20", "location": "Delhi", "country": "India", "label": "Delhi", "emoji": "" },
-    { "id": "loc-006", "person": "B", "type": "stay", "start": "2025-07-23", "end": "2025-07-26", "location": "Kolkata", "country": "India", "label": "Kolkata US Visa interview", "emoji": "" },
-    { "id": "loc-007", "person": "B", "type": "stay", "start": "2025-07-27", "end": "2025-07-27", "location": "Delhi", "country": "India", "label": "Delhi transit day", "emoji": "" },
-    { "id": "loc-008", "person": "B", "type": "flight", "start": "2025-08-22", "end": "2025-08-23", "from": "Delhi", "to": "NYC", "label": "Fly Delhi to NYC", "emoji": "✈️" },
-    { "id": "loc-009", "person": "B", "type": "stay", "start": "2025-08-23", "end": "2025-10-26", "location": "New York", "country": "USA", "label": "New York", "emoji": "" },
-    { "id": "loc-010", "person": "B", "type": "flight", "start": "2025-10-26", "end": "2025-10-26", "from": "New York", "to": "Mexico", "label": "Fly New York to Mexico", "emoji": "✈️" },
-    { "id": "loc-011", "person": "B", "type": "stay", "start": "2025-10-27", "end": "2025-10-31", "location": "Mexico City", "country": "Mexico", "label": "Mexico City", "emoji": "🏡" },
-    { "id": "loc-012", "person": "B", "type": "stay", "start": "2025-11-01", "end": "2025-11-01", "location": "Patzcuaro", "country": "Mexico", "label": "Patzcuaro", "emoji": "" },
-    { "id": "loc-013", "person": "B", "type": "stay", "start": "2025-11-02", "end": "2025-11-15", "location": "Morelia", "country": "Mexico", "label": "Morelia", "emoji": "🏡" },
-    { "id": "loc-014", "person": "B", "type": "stay", "start": "2025-11-16", "end": "2025-11-30", "location": "Guanajuato", "country": "Mexico", "label": "Guanajuato", "emoji": "🏡" },
-    { "id": "loc-015", "person": "B", "type": "stay", "start": "2025-12-01", "end": "2026-01-25", "location": "Mexico", "country": "Mexico", "label": "Mexico", "emoji": "" },
-    { "id": "loc-016", "person": "B", "type": "flight", "start": "2026-01-25", "end": "2026-01-25", "from": "Mexico", "to": "Orlando", "label": "Fly Mexico to Orlando", "emoji": "✈️" },
-    { "id": "loc-017", "person": "B", "type": "stay", "start": "2026-01-25", "end": "2026-01-29", "location": "Florida", "country": "USA", "label": "Orlando / Fort Lauderdale", "emoji": "" },
-    { "id": "loc-018", "person": "B", "type": "flight", "start": "2026-01-29", "end": "2026-01-29", "from": "Fort-Lauderdale", "to": "Seattle", "label": "Fly Fort-Lauderdale to Seattle", "emoji": "✈️" },
-    { "id": "loc-019", "person": "B", "type": "stay", "start": "2026-01-29", "end": "2026-02-01", "location": "Seattle", "country": "USA", "label": "Seattle", "emoji": "" },
-    { "id": "loc-020", "person": "B", "type": "flight", "start": "2026-02-01", "end": "2026-02-02", "from": "Seattle", "to": "Dubai", "label": "Fly Seattle to Dubai", "emoji": "✈️" },
-    { "id": "loc-021", "person": "B", "type": "stay", "start": "2026-02-02", "end": "2026-02-14", "location": "Dubai", "country": "UAE", "label": "Dubai", "emoji": "" },
-    { "id": "loc-022", "person": "B", "type": "flight", "start": "2026-02-14", "end": "2026-02-14", "from": "Dubai", "to": "Tbilisi", "label": "Fly Dubai to Tbilisi", "emoji": "✈️" },
-    { "id": "loc-023", "person": "B", "type": "stay", "start": "2026-02-14", "end": "2026-02-27", "location": "Tbilisi", "country": "Georgia", "label": "Tbilisi", "emoji": "" },
-    { "id": "loc-024", "person": "B", "type": "flight", "start": "2026-02-28", "end": "2026-02-28", "from": "Tbilisi", "to": "Dubai", "label": "Fly Tbilisi to Dubai", "emoji": "✈️", "cancelled": true },
-    { "id": "loc-025", "person": "B", "type": "stay", "start": "2026-02-28", "end": "2026-03-03", "location": "Tbilisi", "country": "Georgia", "label": "Stay in Tbilisi", "emoji": "🏨" },
-    { "id": "loc-026", "person": "B", "type": "flight", "start": "2026-03-01", "end": "2026-03-01", "from": "Dubai", "to": "Delhi", "label": "Fly Dubai to Delhi", "emoji": "✈️", "cancelled": true },
-    { "id": "loc-027", "person": "B", "type": "flight", "start": "2026-03-01", "end": "2026-03-01", "from": "Tbilisi", "to": "Delhi", "label": "Fly Tbilisi to Delhi", "emoji": "✈️" },
-    { "id": "loc-028", "person": "B", "type": "flight", "start": "2026-03-05", "end": "2026-03-05", "from": "Istanbul", "to": "Almaty", "label": "Fly Istanbul to Almaty", "emoji": "✈️" },
-    { "id": "loc-029", "person": "B", "type": "stay", "start": "2026-03-05", "end": "2026-03-21", "location": "Almaty", "country": "Kazakhstan", "label": "Almaty", "emoji": "" },
-    { "id": "loc-030", "person": "B", "type": "flight", "start": "2026-03-21", "end": "2026-03-21", "from": "Almaty", "to": "Delhi", "label": "Fly Almaty to Delhi", "emoji": "✈️" },
-    { "id": "loc-031", "person": "B", "type": "stay", "start": "2026-03-21", "end": "2026-05-24", "location": "Delhi", "country": "India", "label": "Delhi", "emoji": "" },
-    { "id": "loc-032", "person": "B", "type": "flight", "start": "2026-05-24", "end": "2026-05-25", "from": "Delhi", "to": "NYC", "label": "Fly Delhi to NYC", "emoji": "✈️" },
-    { "id": "loc-033", "person": "B", "type": "stay", "start": "2026-05-25", "end": "2026-08-16", "location": "New York", "country": "USA", "label": "New York", "emoji": "" },
-    { "id": "loc-034", "person": "B", "type": "flight", "start": "2026-08-16", "end": "2026-08-16", "from": "NYC", "to": "MEX", "label": "NYC to MEX", "emoji": "✈️" }
+    { "id": "loc-001", "person": "B", "start": "2024-09-28", "end": "2024-10-02", "location": "Bir", "country": "India", "label": "Bir Trip" },
+    { "id": "loc-002", "person": "B", "start": "2024-10-30", "end": "2024-11-14", "location": "Mumbai", "country": "India", "label": "Mariana - Mumbai" },
+    { "id": "loc-005", "person": "B", "start": "2025-07-20", "end": "2025-07-20", "location": "Delhi", "country": "India", "label": "Delhi" },
+    { "id": "loc-006", "person": "B", "start": "2025-07-23", "end": "2025-07-26", "location": "Kolkata", "country": "India", "label": "Kolkata US Visa interview" },
+    { "id": "loc-007", "person": "B", "start": "2025-07-27", "end": "2025-07-27", "location": "Delhi", "country": "India", "label": "Delhi transit day" },
+    { "id": "loc-009", "person": "B", "start": "2025-08-23", "end": "2025-10-26", "location": "New York", "country": "USA", "label": "New York" },
+    { "id": "loc-011", "person": "B", "start": "2025-10-27", "end": "2025-10-31", "location": "Mexico City", "country": "Mexico", "label": "Mexico City" },
+    { "id": "loc-012", "person": "B", "start": "2025-11-01", "end": "2025-11-01", "location": "Patzcuaro", "country": "Mexico", "label": "Patzcuaro" },
+    { "id": "loc-013", "person": "B", "start": "2025-11-02", "end": "2025-11-15", "location": "Morelia", "country": "Mexico", "label": "Morelia" },
+    { "id": "loc-014", "person": "B", "start": "2025-11-16", "end": "2025-11-30", "location": "Guanajuato", "country": "Mexico", "label": "Guanajuato" },
+    { "id": "loc-015", "person": "B", "start": "2025-12-01", "end": "2026-01-25", "location": "Mexico", "country": "Mexico", "label": "Mexico" },
+    { "id": "loc-017", "person": "B", "start": "2026-01-25", "end": "2026-01-29", "location": "Florida", "country": "USA", "label": "Orlando / Fort Lauderdale" },
+    { "id": "loc-019", "person": "B", "start": "2026-01-29", "end": "2026-02-01", "location": "Seattle", "country": "USA", "label": "Seattle" },
+    { "id": "loc-021", "person": "B", "start": "2026-02-02", "end": "2026-02-14", "location": "Dubai", "country": "UAE", "label": "Dubai" },
+    { "id": "loc-023", "person": "B", "start": "2026-02-14", "end": "2026-02-27", "location": "Tbilisi", "country": "Georgia", "label": "Tbilisi" },
+    { "id": "loc-025", "person": "B", "start": "2026-02-28", "end": "2026-03-03", "location": "Tbilisi", "country": "Georgia", "label": "Stay in Tbilisi" },
+    { "id": "loc-029", "person": "B", "start": "2026-03-05", "end": "2026-03-21", "location": "Almaty", "country": "Kazakhstan", "label": "Almaty" },
+    { "id": "loc-031", "person": "B", "start": "2026-03-21", "end": "2026-03-21", "location": "Delhi", "country": "India", "label": "Delhi" },
+    { "id": "loc-psf2rmu", "person": "Both", "start": "2026-03-22", "end": "2026-05-24", "location": "Bir", "country": "India", "label": "Bir" },
+    { "id": "loc-033", "person": "B", "start": "2026-05-25", "end": "2026-08-16", "location": "New York", "country": "USA", "label": "New York" }
   ]
 };
 
@@ -68,31 +54,79 @@ const COUNTRY_HUES = {
 };
 const LIGHTNESS_STEPS = [42, 56, 34, 66, 48, 60, 38, 70];
 
-// Country name -> ISO 3166-1 alpha-2, used to deduce a flag emoji so a new
-// location never needs a flag typed into the form.
-const COUNTRY_CODES = {
-  "india": "IN", "usa": "US", "united states": "US", "united states of america": "US",
-  "mexico": "MX", "uae": "AE", "united arab emirates": "AE", "georgia": "GE",
-  "turkey": "TR", "türkiye": "TR", "kazakhstan": "KZ", "canada": "CA",
-  "united kingdom": "GB", "uk": "GB", "france": "FR", "germany": "DE", "italy": "IT",
-  "spain": "ES", "portugal": "PT", "netherlands": "NL", "japan": "JP", "china": "CN",
-  "south korea": "KR", "korea": "KR", "thailand": "TH", "vietnam": "VN",
-  "indonesia": "ID", "singapore": "SG", "malaysia": "MY", "philippines": "PH",
-  "australia": "AU", "new zealand": "NZ", "brazil": "BR", "argentina": "AR",
-  "chile": "CL", "colombia": "CO", "peru": "PE", "egypt": "EG", "morocco": "MA",
-  "south africa": "ZA", "kenya": "KE", "israel": "IL", "jordan": "JO",
-  "saudi arabia": "SA", "qatar": "QA", "oman": "OM", "bahrain": "BH",
-  "kuwait": "KW", "iran": "IR", "iraq": "IQ", "pakistan": "PK",
-  "bangladesh": "BD", "sri lanka": "LK", "nepal": "NP", "russia": "RU",
-  "ukraine": "UA", "poland": "PL", "czech republic": "CZ", "czechia": "CZ",
-  "austria": "AT", "switzerland": "CH", "belgium": "BE", "sweden": "SE",
-  "norway": "NO", "denmark": "DK", "finland": "FI", "iceland": "IS",
-  "ireland": "IE", "greece": "GR", "croatia": "HR", "serbia": "RS",
-  "romania": "RO", "bulgaria": "BG", "hungary": "HU", "slovakia": "SK",
-  "slovenia": "SI", "armenia": "AM", "azerbaijan": "AZ", "uzbekistan": "UZ",
-  "kyrgyzstan": "KG", "tajikistan": "TJ", "turkmenistan": "TM", "mongolia": "MN",
-  "taiwan": "TW", "hong kong": "HK", "myanmar": "MM", "cambodia": "KH", "laos": "LA"
+// Display name + ISO 3166-1 alpha-2. Flags come from the code; the dropdown
+// is this full list so a stay is never missing a country (Cyprus, etc.).
+const COUNTRIES = [
+  ["Afghanistan","AF"],["Albania","AL"],["Algeria","DZ"],["Andorra","AD"],["Angola","AO"],
+  ["Antigua and Barbuda","AG"],["Argentina","AR"],["Armenia","AM"],["Australia","AU"],["Austria","AT"],["Azerbaijan","AZ"],
+  ["Bahamas","BS"],["Bahrain","BH"],["Bangladesh","BD"],["Barbados","BB"],["Belarus","BY"],["Belgium","BE"],
+  ["Belize","BZ"],["Benin","BJ"],["Bhutan","BT"],["Bolivia","BO"],["Bosnia and Herzegovina","BA"],["Botswana","BW"],
+  ["Brazil","BR"],["Brunei","BN"],["Bulgaria","BG"],["Burkina Faso","BF"],["Burundi","BI"],
+  ["Cabo Verde","CV"],["Cambodia","KH"],["Cameroon","CM"],["Canada","CA"],["Central African Republic","CF"],
+  ["Chad","TD"],["Chile","CL"],["China","CN"],["Colombia","CO"],["Comoros","KM"],["Congo","CG"],
+  ["Costa Rica","CR"],["Croatia","HR"],["Cuba","CU"],["Cyprus","CY"],["Czechia","CZ"],
+  ["DR Congo","CD"],["Denmark","DK"],["Djibouti","DJ"],["Dominica","DM"],["Dominican Republic","DO"],
+  ["Ecuador","EC"],["Egypt","EG"],["El Salvador","SV"],["Equatorial Guinea","GQ"],["Eritrea","ER"],
+  ["Estonia","EE"],["Eswatini","SZ"],["Ethiopia","ET"],
+  ["Fiji","FJ"],["Finland","FI"],["France","FR"],
+  ["Gabon","GA"],["Gambia","GM"],["Georgia","GE"],["Germany","DE"],["Ghana","GH"],["Greece","GR"],
+  ["Grenada","GD"],["Guatemala","GT"],["Guinea","GN"],["Guinea-Bissau","GW"],["Guyana","GY"],
+  ["Haiti","HT"],["Honduras","HN"],["Hong Kong","HK"],["Hungary","HU"],
+  ["Iceland","IS"],["India","IN"],["Indonesia","ID"],["Iran","IR"],["Iraq","IQ"],["Ireland","IE"],
+  ["Israel","IL"],["Italy","IT"],["Ivory Coast","CI"],
+  ["Jamaica","JM"],["Japan","JP"],["Jordan","JO"],
+  ["Kazakhstan","KZ"],["Kenya","KE"],["Kiribati","KI"],["Kosovo","XK"],["Kuwait","KW"],["Kyrgyzstan","KG"],
+  ["Laos","LA"],["Latvia","LV"],["Lebanon","LB"],["Lesotho","LS"],["Liberia","LR"],["Libya","LY"],
+  ["Liechtenstein","LI"],["Lithuania","LT"],["Luxembourg","LU"],
+  ["Macau","MO"],["Madagascar","MG"],["Malawi","MW"],["Malaysia","MY"],["Maldives","MV"],["Mali","ML"],
+  ["Malta","MT"],["Marshall Islands","MH"],["Mauritania","MR"],["Mauritius","MU"],["Mexico","MX"],
+  ["Micronesia","FM"],["Moldova","MD"],["Monaco","MC"],["Mongolia","MN"],["Montenegro","ME"],
+  ["Morocco","MA"],["Mozambique","MZ"],["Myanmar","MM"],
+  ["Namibia","NA"],["Nauru","NR"],["Nepal","NP"],["Netherlands","NL"],["New Zealand","NZ"],
+  ["Nicaragua","NI"],["Niger","NE"],["Nigeria","NG"],["North Korea","KP"],["North Macedonia","MK"],["Norway","NO"],
+  ["Oman","OM"],
+  ["Pakistan","PK"],["Palau","PW"],["Palestine","PS"],["Panama","PA"],["Papua New Guinea","PG"],
+  ["Paraguay","PY"],["Peru","PE"],["Philippines","PH"],["Poland","PL"],["Portugal","PT"],["Puerto Rico","PR"],
+  ["Qatar","QA"],
+  ["Romania","RO"],["Russia","RU"],["Rwanda","RW"],
+  ["Saint Kitts and Nevis","KN"],["Saint Lucia","LC"],["Saint Vincent and the Grenadines","VC"],
+  ["Samoa","WS"],["San Marino","SM"],["Sao Tome and Principe","ST"],["Saudi Arabia","SA"],["Senegal","SN"],
+  ["Serbia","RS"],["Seychelles","SC"],["Sierra Leone","SL"],["Singapore","SG"],["Slovakia","SK"],
+  ["Slovenia","SI"],["Solomon Islands","SB"],["Somalia","SO"],["South Africa","ZA"],["South Korea","KR"],
+  ["South Sudan","SS"],["Spain","ES"],["Sri Lanka","LK"],["Sudan","SD"],["Suriname","SR"],["Sweden","SE"],
+  ["Switzerland","CH"],["Syria","SY"],
+  ["Taiwan","TW"],["Tajikistan","TJ"],["Tanzania","TZ"],["Thailand","TH"],["Timor-Leste","TL"],
+  ["Togo","TG"],["Tonga","TO"],["Trinidad and Tobago","TT"],["Tunisia","TN"],["Turkey","TR"],
+  ["Turkmenistan","TM"],["Tuvalu","TV"],
+  ["UAE","AE"],["UK","GB"],["USA","US"],["Uganda","UG"],["Ukraine","UA"],["Uruguay","UY"],["Uzbekistan","UZ"],
+  ["Vanuatu","VU"],["Vatican City","VA"],["Venezuela","VE"],["Vietnam","VN"],
+  ["Yemen","YE"],
+  ["Zambia","ZM"],["Zimbabwe","ZW"]
+];
+
+const COUNTRY_ALIASES = {
+  "united states": "US", "united states of america": "US",
+  "united kingdom": "GB", "great britain": "GB",
+  "united arab emirates": "AE",
+  "türkiye": "TR", "turkiye": "TR",
+  "czech republic": "CZ",
+  "korea": "KR", "republic of korea": "KR",
+  "cote d'ivoire": "CI", "côte d'ivoire": "CI",
+  "congo-brazzaville": "CG", "republic of the congo": "CG",
+  "congo-kinshasa": "CD", "democratic republic of the congo": "CD",
+  "swaziland": "SZ",
+  "macedonia": "MK",
+  "east timor": "TL",
+  "burma": "MM",
+  "cypress": "CY",
+  "hongkong": "HK",
+  "macao": "MO"
 };
+
+const COUNTRY_CODES = Object.fromEntries([
+  ...COUNTRIES.map(([name, code]) => [name.toLowerCase(), code]),
+  ...Object.entries(COUNTRY_ALIASES)
+]);
 
 function countryFlag(country) {
   if (!country) return "";
@@ -105,6 +139,8 @@ function countryFlag(country) {
 
 const WEEKDAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 const MONTH_NAMES = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const MONTH_SHORT = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const COUNTRY_OPTIONS = COUNTRIES.map(([name]) => name);
 
 let state = { people: [], locations: [] };
 let colorMap = {}; // "Country||Location" -> hsl string
@@ -142,6 +178,32 @@ function showToast(msg) {
 
 // ---------- data load / persist ----------
 
+function normalizeLocations(locations) {
+  return (locations || [])
+    .filter((l) => l && (!l.type || l.type === "stay") && !l.cancelled)
+    .map((l) => {
+      const location = (l.location || "").trim();
+      const country = (l.country || "").trim();
+      return {
+        id: l.id || uid(),
+        person: l.person || "B",
+        start: l.start,
+        end: l.end || l.start,
+        location,
+        country,
+        label: (l.label || "").trim() || location || "Untitled"
+      };
+    })
+    .filter((l) => l.start && l.end);
+}
+
+function applyData(raw) {
+  state = {
+    people: raw.people && raw.people.length ? raw.people : FALLBACK_DATA.people,
+    locations: normalizeLocations(raw.locations)
+  };
+}
+
 async function loadData() {
   let base = null;
   try {
@@ -155,13 +217,14 @@ async function loadData() {
   const local = localStorage.getItem(STORAGE_KEY);
   if (local) {
     try {
-      state = JSON.parse(local);
+      applyData(JSON.parse(local));
+      persist();
       return;
     } catch (e) {
       // corrupted local copy, fall through to base
     }
   }
-  state = JSON.parse(JSON.stringify(base));
+  applyData(JSON.parse(JSON.stringify(base)));
 }
 
 function persist() {
@@ -189,7 +252,7 @@ function rebuildColorMap() {
   colorMap = {};
   const byCountry = {};
   for (const loc of state.locations) {
-    if (loc.type !== "stay" || !loc.country) continue;
+    if (!loc.country) continue;
     const l = loc.location || "Unknown";
     byCountry[loc.country] = byCountry[loc.country] || new Set();
     byCountry[loc.country].add(l);
@@ -223,15 +286,7 @@ function isoDaysInclusive(start, end) {
   return Math.round((b - a) / 86400000) + 1;
 }
 
-function countStayDays(locations, country, rangeStart, rangeEnd) {
-  const intervals = [];
-  for (const loc of locations) {
-    if (loc.cancelled || loc.type !== "stay" || loc.country !== country) continue;
-    if (!overlapsRange(loc, rangeStart, rangeEnd)) continue;
-    const s = loc.start < rangeStart ? rangeStart : loc.start;
-    const e = loc.end > rangeEnd ? rangeEnd : loc.end;
-    if (s <= e) intervals.push([s, e]);
-  }
+function mergeIntervalDays(intervals) {
   intervals.sort((a, b) => a[0].localeCompare(b[0]));
   let days = 0;
   let curS = null;
@@ -252,23 +307,69 @@ function countStayDays(locations, country, rangeStart, rangeEnd) {
   return days;
 }
 
+function clippedIntervals(locations, rangeStart, rangeEnd, country) {
+  const intervals = [];
+  for (const loc of locations) {
+    if (country && loc.country !== country) continue;
+    if (!overlapsRange(loc, rangeStart, rangeEnd)) continue;
+    const s = loc.start < rangeStart ? rangeStart : loc.start;
+    const e = loc.end > rangeEnd ? rangeEnd : loc.end;
+    if (s <= e) intervals.push([s, e]);
+  }
+  return intervals;
+}
+
+function countStayDays(locations, country, rangeStart, rangeEnd) {
+  return mergeIntervalDays(clippedIntervals(locations, rangeStart, rangeEnd, country));
+}
+
+function countMissingDays(locations, year) {
+  const start = `${year}-01-01`;
+  const end = `${year}-12-31`;
+  const covered = mergeIntervalDays(clippedIntervals(locations, start, end));
+  return isoDaysInclusive(start, end) - covered;
+}
+
 function countryStatsInRange(locations, start, end) {
   const firstSeen = {};
   for (const loc of locations) {
-    if (loc.cancelled || loc.type !== "stay" || !loc.country) continue;
+    if (!loc.country) continue;
     if (!overlapsRange(loc, start, end)) continue;
     if (firstSeen[loc.country] === undefined || loc.start < firstSeen[loc.country]) {
       firstSeen[loc.country] = loc.start;
     }
   }
   return Object.keys(firstSeen)
-    .sort((a, b) => firstSeen[a].localeCompare(firstSeen[b]) || a.localeCompare(b))
     .map((country) => ({
       country,
       flag: countryFlag(country),
       color: countryColor(country),
       days: countStayDays(locations, country, start, end)
+    }))
+    .sort((a, b) => b.days - a.days || a.country.localeCompare(b.country));
+}
+
+function staysForCountryInRange(locations, country, rangeStart, rangeEnd) {
+  return locations
+    .filter((l) => l.country === country && overlapsRange(l, rangeStart, rangeEnd))
+    .sort((a, b) => a.start.localeCompare(b.start) || (a.location || "").localeCompare(b.location || ""))
+    .map((l) => ({
+      location: l.location || l.label || country,
+      start: l.start < rangeStart ? rangeStart : l.start,
+      end: l.end > rangeEnd ? rangeEnd : l.end
     }));
+}
+
+function formatDayNoYear(iso) {
+  const parts = (iso || "").split("-");
+  if (parts.length < 3) return iso;
+  const month = MONTH_SHORT[parseInt(parts[1], 10) - 1] || parts[1];
+  return `${month} ${parseInt(parts[2], 10)}`;
+}
+
+function formatStayRange(start, end) {
+  if (start === end) return formatDayNoYear(start);
+  return `${formatDayNoYear(start)} → ${formatDayNoYear(end)}`;
 }
 
 // ---------- filtering ----------
@@ -289,7 +390,7 @@ function overlapsRange(loc, start, end) {
 function uniqueStaysInRange(locations, start, end) {
   const firstSeen = {};
   for (const loc of locations) {
-    if (loc.type !== "stay" || !loc.location) continue;
+    if (!loc.location) continue;
     if (!overlapsRange(loc, start, end)) continue;
     const key = (loc.country || "") + "||" + loc.location;
     if (firstSeen[key] === undefined || loc.start < firstSeen[key].start) {
@@ -309,7 +410,7 @@ function renderLegend(locations) {
 
   const byCountry = {};
   for (const loc of locations) {
-    if (loc.type !== "stay" || !loc.country) continue;
+    if (!loc.country) continue;
     const l = loc.location || "Unknown";
     byCountry[loc.country] = byCountry[loc.country] || new Set();
     byCountry[loc.country].add(l);
@@ -338,26 +439,6 @@ function renderLegend(locations) {
     });
     panel.appendChild(group);
   }
-
-  // Static legend entries
-  const misc = document.createElement("div");
-  misc.className = "legend-group";
-  const miscTitle = document.createElement("div");
-  miscTitle.className = "country-name";
-  miscTitle.textContent = "Travel";
-  misc.appendChild(miscTitle);
-
-  const flightItem = document.createElement("div");
-  flightItem.className = "legend-item";
-  flightItem.innerHTML = `<span class="legend-swatch" style="background:transparent;border:1.5px dashed rgba(255,255,255,0.6);"></span><span>✈️ / 🏍 Flight or transit</span>`;
-  misc.appendChild(flightItem);
-
-  const cancelledItem = document.createElement("div");
-  cancelledItem.className = "legend-item";
-  cancelledItem.innerHTML = `<span class="legend-swatch" style="background:transparent;border:1.5px dashed rgba(255,255,255,0.3);opacity:0.5;"></span><span style="text-decoration:line-through;opacity:0.7;">Cancelled</span>`;
-  misc.appendChild(cancelledItem);
-
-  panel.appendChild(misc);
 }
 
 // ---------- rendering: calendar (all years, one long scroll) ----------
@@ -428,8 +509,6 @@ function buildMonthCard(year, month, locations) {
   for (let d = 1; d <= daysInMonth; d++) {
     const dateStr = isoDate(year, month, d);
     const dayLocations = locationsForDate(locations, dateStr);
-    const stays = dayLocations.filter((l) => l.type === "stay");
-    const travel = dayLocations.filter((l) => l.type !== "stay");
 
     const cell = document.createElement("div");
     cell.className = "day-cell";
@@ -437,11 +516,11 @@ function buildMonthCard(year, month, locations) {
     if (dateStr === today) cell.classList.add("today");
     if (dayLocations.length) cell.classList.add("has-locations");
 
-    if (stays.length) {
+    if (dayLocations.length) {
+      const tripStart = dayLocations.find((l) => l.start === dateStr);
       if (settings.daybox === "B") {
-        cell.style.background = stayColor(stays[0]);
+        cell.style.background = stayColor(dayLocations[0]);
         cell.style.color = "#111";
-        const tripStart = stays.find((l) => !l.cancelled && l.start === dateStr);
         const flag = tripStart ? countryFlag(tripStart.country) : "";
         if (flag) {
           cell.classList.add("trip-start");
@@ -452,8 +531,7 @@ function buildMonthCard(year, month, locations) {
           cell.appendChild(flagBg);
         }
       } else {
-        const stay = stays.find((l) => !l.cancelled) || stays[0];
-        const flag = countryFlag(stay.country);
+        const flag = countryFlag(dayLocations[0].country);
         if (flag) {
           cell.classList.add("has-flag");
           const flagBg = document.createElement("span");
@@ -463,6 +541,12 @@ function buildMonthCard(year, month, locations) {
           cell.appendChild(flagBg);
         }
       }
+      if (tripStart) {
+        const days = document.createElement("span");
+        days.className = "trip-days";
+        days.textContent = `${isoDaysInclusive(tripStart.start, tripStart.end)}d`;
+        cell.appendChild(days);
+      }
     }
 
     const num = document.createElement("span");
@@ -470,10 +554,10 @@ function buildMonthCard(year, month, locations) {
     num.textContent = d;
     cell.appendChild(num);
 
-    if (settings.daybox === "B" && stays.length > 1) {
+    if (settings.daybox === "B" && dayLocations.length > 1) {
       const strip = document.createElement("div");
       strip.className = "stack-strip";
-      stays.slice(1, 4).forEach((l) => {
+      dayLocations.slice(1, 4).forEach((l) => {
         const seg = document.createElement("span");
         seg.style.background = stayColor(l);
         strip.appendChild(seg);
@@ -481,26 +565,10 @@ function buildMonthCard(year, month, locations) {
       cell.appendChild(strip);
     }
 
-    if (travel.length) {
-      const anyCancelled = travel.every((l) => l.cancelled);
-      const marker = document.createElement("div");
-      marker.className = "transit-marker dashed";
-      marker.style.opacity = anyCancelled ? "0.5" : "1";
-      marker.textContent = travel[0].emoji || (travel[0].type === "flight" ? "✈️" : "🏍");
-      cell.appendChild(marker);
-      if (travel.some((l) => l.cancelled)) {
-        const badge = document.createElement("span");
-        badge.className = "cancelled-badge";
-        badge.textContent = "❌";
-        cell.appendChild(badge);
-      }
-    }
-
     if (dayLocations.length) {
       const titleParts = dayLocations.map((l) => {
         const range = l.start === l.end ? l.start : `${l.start} → ${l.end}`;
-        const cancelled = l.cancelled ? " (cancelled)" : "";
-        return `${l.emoji || ""} ${l.label}${cancelled} [${range}]`;
+        return `${l.label} [${range}]`;
       });
       cell.title = titleParts.join("\n");
     }
@@ -536,24 +604,38 @@ function renderYears(locations) {
       stats.forEach((s) => {
         const el = document.createElement("span");
         el.className = "year-country";
-        el.title = `${s.country} · ${s.days} day${s.days === 1 ? "" : "s"}`;
+        el.style.borderColor = s.color;
+        el.setAttribute("role", "button");
+        el.tabIndex = 0;
+        el.setAttribute("aria-label", s.country);
         if (s.flag) {
           const flag = document.createElement("span");
           flag.className = "year-flag";
           flag.textContent = s.flag;
           el.appendChild(flag);
         }
-        const sw = document.createElement("span");
-        sw.className = "year-country-swatch";
-        sw.style.background = s.color;
-        el.appendChild(sw);
         const days = document.createElement("span");
         days.className = "year-country-days";
         days.textContent = String(s.days);
         el.appendChild(days);
+        const openTip = (e) => {
+          if (e.button !== undefined && e.button !== 0) return;
+          e.preventDefault();
+          e.stopPropagation();
+          openCountryTooltip(el, s, y, locations);
+        };
+        el.addEventListener("pointerdown", openTip);
+        el.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") openTip(e);
+        });
         row.appendChild(el);
       });
       title.appendChild(row);
+      const missing = countMissingDays(locations, y);
+      const miss = document.createElement("span");
+      miss.className = "year-missing";
+      miss.textContent = `Missing ${missing} day${missing === 1 ? "" : "s"}`;
+      title.appendChild(miss);
     }
     section.appendChild(title);
 
@@ -567,14 +649,19 @@ function renderYears(locations) {
 }
 
 function renderAll(opts = {}) {
+  closeCountryTooltip();
   rebuildColorMap();
   const locations = filteredLocations();
+  const savedScroll = opts.year === undefined ? window.scrollY : null;
   renderLegend(locations);
   renderYears(locations);
   populateYearJump();
   setupScrollSpy();
-  const target = opts.year !== undefined ? opts.year : (currentYear || realCurrentYear());
-  scrollToYear(target, { smooth: false });
+  if (opts.year !== undefined) {
+    scrollToYear(opts.year, { smooth: false });
+    return;
+  }
+  window.scrollTo({ top: savedScroll, behavior: "auto" });
 }
 
 // ---------- year navigation / scroll-spy ----------
@@ -688,6 +775,72 @@ function goToToday() {
   }
 }
 
+// ---------- year-country tooltip ----------
+
+let countryTooltipAnchor = null;
+
+function closeCountryTooltip() {
+  countryTooltipAnchor = null;
+  const tip = document.getElementById("country-tooltip");
+  if (tip) tip.classList.add("hidden");
+}
+
+function openCountryTooltip(el, stat, year, locations) {
+  closeDayPopover();
+  const tip = document.getElementById("country-tooltip");
+  if (countryTooltipAnchor === el && !tip.classList.contains("hidden")) {
+    closeCountryTooltip();
+    return;
+  }
+
+  countryTooltipAnchor = el;
+  const rangeStart = `${year}-01-01`;
+  const rangeEnd = `${year}-12-31`;
+  const stays = staysForCountryInRange(locations, stat.country, rangeStart, rangeEnd);
+
+  tip.innerHTML = "";
+  const title = document.createElement("div");
+  title.className = "tt-title";
+  title.style.background = stat.color;
+  title.textContent = `${stat.flag ? stat.flag + " " : ""}${stat.country}`;
+  tip.appendChild(title);
+
+  if (!stays.length) {
+    const empty = document.createElement("div");
+    empty.className = "tt-range";
+    empty.textContent = "No stays this year";
+    tip.appendChild(empty);
+  } else {
+    stays.forEach((stay) => {
+      const row = document.createElement("div");
+      row.className = "tt-range";
+      const loc = document.createElement("span");
+      loc.className = "tt-loc";
+      loc.append(stay.location, " ");
+      const count = document.createElement("span");
+      count.className = "tt-count";
+      count.textContent = `(${isoDaysInclusive(stay.start, stay.end)})`;
+      loc.appendChild(count);
+      const dates = document.createElement("span");
+      dates.className = "tt-dates";
+      dates.textContent = formatStayRange(stay.start, stay.end);
+      row.appendChild(loc);
+      row.appendChild(dates);
+      tip.appendChild(row);
+    });
+  }
+
+  tip.classList.remove("hidden");
+  const chip = el.getBoundingClientRect();
+  const rect = tip.getBoundingClientRect();
+  let x = chip.left;
+  let y = chip.bottom + 6;
+  if (x + rect.width > window.innerWidth - 8) x = Math.max(8, window.innerWidth - rect.width - 8);
+  if (y + rect.height > window.innerHeight - 8) y = Math.max(8, chip.top - rect.height - 6);
+  tip.style.left = x + "px";
+  tip.style.top = y + "px";
+}
+
 // ---------- day popover ----------
 
 function closeDayPopover() {
@@ -706,15 +859,14 @@ function openDayPopover(clickEvent, dayLocations) {
 
   dayLocations.forEach((loc) => {
     const row = document.createElement("div");
-    row.className = "pop-event" + (loc.cancelled ? " cancelled" : "");
+    row.className = "pop-event";
     const sw = document.createElement("span");
     sw.className = "sw";
-    sw.style.background = loc.type === "stay" ? stayColor(loc) : "transparent";
-    if (loc.type !== "stay") sw.style.border = "1.5px dashed rgba(255,255,255,0.6)";
+    sw.style.background = stayColor(loc);
     row.appendChild(sw);
     const lbl = document.createElement("span");
     lbl.className = "lbl";
-    lbl.textContent = `${loc.emoji || ""} ${loc.label}`.trim();
+    lbl.textContent = loc.label;
     row.appendChild(lbl);
     row.addEventListener("click", () => {
       closeDayPopover();
@@ -738,23 +890,34 @@ function openDayPopover(clickEvent, dayLocations) {
 // "click" event on the same target, which would otherwise close it again.
 document.addEventListener("pointerdown", (e) => {
   const pop = document.getElementById("day-popover");
-  if (pop.classList.contains("hidden")) return;
-  if (!pop.contains(e.target)) closeDayPopover();
+  if (!pop.classList.contains("hidden") && !pop.contains(e.target)) closeDayPopover();
+
+  const tip = document.getElementById("country-tooltip");
+  if (tip.classList.contains("hidden")) return;
+  if (tip.contains(e.target) || e.target.closest(".year-country")) return;
+  closeCountryTooltip();
 });
+
+window.addEventListener("scroll", closeCountryTooltip, true);
 
 // ---------- click / click-and-drag to add a location ----------
 
-function highlightRange(grid, a, b) {
-  clearHighlight(grid);
+function highlightRange(a, b) {
+  clearHighlight();
   const lo = a < b ? a : b;
   const hi = a < b ? b : a;
-  grid.querySelectorAll(".day-cell[data-date]").forEach((c) => {
+  document.querySelectorAll("#years-container .day-cell[data-date]").forEach((c) => {
     if (c.dataset.date >= lo && c.dataset.date <= hi) c.classList.add("selecting");
   });
 }
 
-function clearHighlight(grid) {
-  grid.querySelectorAll(".day-cell.selecting").forEach((c) => c.classList.remove("selecting"));
+function clearHighlight() {
+  document.querySelectorAll("#years-container .day-cell.selecting").forEach((c) => c.classList.remove("selecting"));
+}
+
+function cellAtPoint(x, y) {
+  const el = document.elementFromPoint(x, y);
+  return el && el.closest ? el.closest(".day-cell[data-date]") : null;
 }
 
 function setupDragToAdd() {
@@ -764,27 +927,26 @@ function setupDragToAdd() {
     if (e.button !== undefined && e.button !== 0) return;
     const cell = e.target.closest(".day-cell[data-date]");
     if (!cell) return;
-    const grid = cell.closest(".day-grid");
-    dragState = { grid, startDate: cell.dataset.date, endDate: cell.dataset.date, moved: false };
-    highlightRange(grid, dragState.startDate, dragState.endDate);
+    dragState = { startDate: cell.dataset.date, endDate: cell.dataset.date, moved: false };
+    highlightRange(dragState.startDate, dragState.endDate);
+    if (container.setPointerCapture) container.setPointerCapture(e.pointerId);
   });
 
-  container.addEventListener("pointermove", (e) => {
+  window.addEventListener("pointermove", (e) => {
     if (!dragState) return;
-    const el = document.elementFromPoint(e.clientX, e.clientY);
-    const cell = el && el.closest ? el.closest(".day-cell[data-date]") : null;
-    if (!cell || cell.closest(".day-grid") !== dragState.grid) return;
+    const cell = cellAtPoint(e.clientX, e.clientY);
+    if (!cell) return;
     if (cell.dataset.date !== dragState.endDate) {
       dragState.endDate = cell.dataset.date;
       dragState.moved = true;
-      highlightRange(dragState.grid, dragState.startDate, dragState.endDate);
+      highlightRange(dragState.startDate, dragState.endDate);
     }
   });
 
   window.addEventListener("pointerup", (e) => {
     if (!dragState) return;
-    const { grid, startDate, endDate, moved } = dragState;
-    clearHighlight(grid);
+    const { startDate, endDate, moved } = dragState;
+    clearHighlight();
     dragState = null;
     const lo = startDate < endDate ? startDate : endDate;
     const hi = startDate < endDate ? endDate : startDate;
@@ -801,9 +963,155 @@ function setupDragToAdd() {
 
 // ---------- add/edit location modal ----------
 
-function setFormMode(type) {
-  document.getElementById("stay-fields").classList.toggle("hidden", type !== "stay");
-  document.getElementById("route-fields").classList.toggle("hidden", type === "stay");
+function populateCountrySelect(selected) {
+  const sel = document.getElementById("f-country");
+  const names = new Set(COUNTRY_OPTIONS);
+  if (selected) names.add(selected);
+  const sorted = Array.from(names).sort((a, b) => a.localeCompare(b));
+  sel.innerHTML = '<option value="">Select country</option>';
+  sorted.forEach((name) => {
+    const opt = document.createElement("option");
+    opt.value = name;
+    const flag = countryFlag(name);
+    // Name first so native typeahead matches "India", not the flag code points.
+    opt.textContent = flag ? `${name} ${flag}` : name;
+    sel.appendChild(opt);
+  });
+  sel.value = selected || "";
+}
+
+function pastLocations() {
+  const byName = new Map();
+  state.locations.forEach((l) => {
+    const name = (l.location || "").trim();
+    if (!name) return;
+    const prev = byName.get(name.toLowerCase());
+    if (!prev || l.start > prev.start) {
+      byName.set(name.toLowerCase(), { name, country: l.country || "", start: l.start });
+    }
+  });
+  return Array.from(byName.values()).sort((a, b) => a.name.localeCompare(b.name));
+}
+
+function countryForLocationName(name) {
+  const key = (name || "").trim().toLowerCase();
+  if (!key) return "";
+  const match = pastLocations().find((l) => l.name.toLowerCase() === key);
+  return match ? match.country : "";
+}
+
+function applyCountryFromLocation() {
+  const country = countryForLocationName(document.getElementById("f-location").value);
+  if (country) populateCountrySelect(country);
+}
+
+let locationComboIndex = -1;
+
+function locationSuggestionOptions() {
+  return [...document.querySelectorAll("#location-suggestions li[role='option']")];
+}
+
+function chooseLocationSuggestion(item) {
+  document.getElementById("f-location").value = item.name;
+  if (item.country) populateCountrySelect(item.country);
+  closeLocationSuggestions();
+}
+
+function highlightLocationSuggestion(index) {
+  const options = locationSuggestionOptions();
+  if (!options.length) {
+    locationComboIndex = -1;
+    return;
+  }
+  locationComboIndex = ((index % options.length) + options.length) % options.length;
+  options.forEach((li, i) => {
+    li.setAttribute("aria-selected", i === locationComboIndex ? "true" : "false");
+    if (i === locationComboIndex) li.scrollIntoView({ block: "nearest" });
+  });
+}
+
+function closeLocationSuggestions() {
+  locationComboIndex = -1;
+  const list = document.getElementById("location-suggestions");
+  if (list) list.classList.add("hidden");
+}
+
+function renderLocationSuggestions(query) {
+  const list = document.getElementById("location-suggestions");
+  const q = (query || "").trim().toLowerCase();
+  const items = pastLocations().filter((l) => !q || l.name.toLowerCase().includes(q));
+  list.innerHTML = "";
+  locationComboIndex = -1;
+  if (!items.length) {
+    const empty = document.createElement("li");
+    empty.className = "combo-empty";
+    empty.textContent = q ? "No matching past locations" : "No past locations yet";
+    list.appendChild(empty);
+  } else {
+    items.forEach((item) => {
+      const li = document.createElement("li");
+      li.setAttribute("role", "option");
+      li.setAttribute("aria-selected", "false");
+      li.textContent = item.name;
+      li.addEventListener("mousedown", (e) => {
+        e.preventDefault();
+        chooseLocationSuggestion(item);
+      });
+      list.appendChild(li);
+    });
+  }
+  list.classList.remove("hidden");
+}
+
+function setupLocationCombo() {
+  const input = document.getElementById("f-location");
+  const toggle = document.getElementById("f-location-toggle");
+  input.addEventListener("focus", () => renderLocationSuggestions(input.value));
+  input.addEventListener("input", () => {
+    renderLocationSuggestions(input.value);
+    applyCountryFromLocation();
+  });
+  input.addEventListener("keydown", (e) => {
+    const list = document.getElementById("location-suggestions");
+    const open = list && !list.classList.contains("hidden");
+    const options = locationSuggestionOptions();
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      if (!open) renderLocationSuggestions(input.value);
+      highlightLocationSuggestion(locationComboIndex + 1);
+      return;
+    }
+    if (e.key === "ArrowUp") {
+      e.preventDefault();
+      if (!open) renderLocationSuggestions(input.value);
+      highlightLocationSuggestion(locationComboIndex < 0 ? locationSuggestionOptions().length - 1 : locationComboIndex - 1);
+      return;
+    }
+    if (e.key === "Enter" && open && locationComboIndex >= 0 && options[locationComboIndex]) {
+      e.preventDefault();
+      options[locationComboIndex].dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+      return;
+    }
+    if (e.key === "Escape" && open) {
+      e.preventDefault();
+      e.stopPropagation();
+      closeLocationSuggestions();
+    }
+  });
+  input.addEventListener("blur", () => {
+    setTimeout(closeLocationSuggestions, 120);
+  });
+  toggle.addEventListener("mousedown", (e) => {
+    e.preventDefault();
+    const list = document.getElementById("location-suggestions");
+    if (!list.classList.contains("hidden")) {
+      closeLocationSuggestions();
+      return;
+    }
+    input.focus();
+    renderLocationSuggestions("");
+  });
 }
 
 function openLocationModal(loc, prefillStart, prefillEnd) {
@@ -812,40 +1120,27 @@ function openLocationModal(loc, prefillStart, prefillEnd) {
   const deleteBtn = document.getElementById("f-delete");
 
   document.getElementById("f-id").value = loc ? loc.id : "";
-  document.getElementById("f-person").value = loc
-    ? loc.person
-    : selectedPeople.has("B")
-    ? "B"
-    : selectedPeople.has("M")
-    ? "M"
-    : "Both";
-  document.getElementById("f-type").value = loc ? loc.type : "stay";
+  document.getElementById("f-person").value = loc ? loc.person : "Both";
   document.getElementById("f-start").value = loc ? loc.start : prefillStart || "";
   document.getElementById("f-end").value = loc ? loc.end : prefillEnd || prefillStart || "";
   document.getElementById("f-location").value = loc ? loc.location || "" : "";
-  document.getElementById("f-country").value = loc ? loc.country || "" : "";
-  document.getElementById("f-from").value = loc ? loc.from || "" : "";
-  document.getElementById("f-to").value = loc ? loc.to || "" : "";
+  populateCountrySelect(loc ? loc.country || "" : "");
   document.getElementById("f-label").value = loc ? loc.label : "";
-  document.getElementById("f-emoji").value = loc ? loc.emoji || "" : "";
-  document.getElementById("f-cancelled").checked = loc ? !!loc.cancelled : false;
 
-  setFormMode(loc ? loc.type : "stay");
   title.textContent = loc ? "Edit Location" : "Add Location";
   deleteBtn.classList.toggle("hidden", !loc);
+  closeLocationSuggestions();
   overlay.classList.remove("hidden");
 }
 
 function closeLocationModal() {
+  closeLocationSuggestions();
   document.getElementById("location-modal-overlay").classList.add("hidden");
 }
-
-document.getElementById("f-type").addEventListener("change", (e) => setFormMode(e.target.value));
 
 document.getElementById("location-form").addEventListener("submit", (e) => {
   e.preventDefault();
   const id = document.getElementById("f-id").value || uid();
-  const type = document.getElementById("f-type").value;
   const start = document.getElementById("f-start").value;
   const end = document.getElementById("f-end").value || start;
 
@@ -857,26 +1152,14 @@ document.getElementById("location-form").addEventListener("submit", (e) => {
   const loc = {
     id,
     person: document.getElementById("f-person").value,
-    type,
     start,
     end,
-    label: document.getElementById("f-label").value.trim(),
-    emoji: document.getElementById("f-emoji").value.trim()
+    location: document.getElementById("f-location").value.trim(),
+    country: document.getElementById("f-country").value.trim(),
+    label: document.getElementById("f-label").value.trim()
   };
 
-  if (type === "stay") {
-    loc.location = document.getElementById("f-location").value.trim();
-    loc.country = document.getElementById("f-country").value.trim();
-  } else {
-    loc.from = document.getElementById("f-from").value.trim();
-    loc.to = document.getElementById("f-to").value.trim();
-  }
-
-  if (document.getElementById("f-cancelled").checked) loc.cancelled = true;
-
-  if (!loc.label) {
-    loc.label = type === "stay" ? loc.location || "Untitled" : `${loc.from || "?"} → ${loc.to || "?"}`;
-  }
+  if (!loc.label) loc.label = loc.location || "Untitled";
 
   const idx = state.locations.findIndex((x) => x.id === id);
   if (idx >= 0) state.locations[idx] = loc;
@@ -930,16 +1213,13 @@ function renderManageList() {
     row.style.borderBottom = "1px solid var(--border)";
 
     const range = loc.start === loc.end ? loc.start : `${loc.start} → ${loc.end}`;
-    const where =
-      loc.type === "stay"
-        ? `${loc.location || ""}${loc.country ? ", " + loc.country : ""}`
-        : `${loc.from || "?"} → ${loc.to || "?"}`;
+    const where = `${loc.location || ""}${loc.country ? ", " + loc.country : ""}`;
     const person = loc.person === "M" ? "♀ Mariana" : loc.person === "Both" ? "⚥ Both" : "♂ Bharath";
 
     row.innerHTML = `
       <td style="padding:7px 6px;white-space:nowrap;">${range}</td>
       <td style="padding:7px 6px;white-space:nowrap;">${person}</td>
-      <td style="padding:7px 6px;">${loc.emoji || ""} ${loc.label}${loc.cancelled ? " ❌" : ""}</td>
+      <td style="padding:7px 6px;">${loc.label}</td>
       <td style="padding:7px 6px;color:var(--text-dim);">${where}</td>
       <td style="padding:7px 6px;text-align:right;white-space:nowrap;">
         <button data-id="${loc.id}" class="edit-btn">Edit</button>
@@ -1084,11 +1364,17 @@ document.getElementById("btn-reset").addEventListener("click", async () => {
 
 document.addEventListener("keydown", (e) => {
   if (e.key !== "Escape") return;
+  const locList = document.getElementById("location-suggestions");
+  if (locList && !locList.classList.contains("hidden")) {
+    closeLocationSuggestions();
+    return;
+  }
   closeLocationModal();
   closeManageModal();
   document.getElementById("json-modal-overlay").classList.add("hidden");
   closeSettingsModal();
   closeDayPopover();
+  closeCountryTooltip();
 });
 
 // ---------- boot ----------
@@ -1103,6 +1389,7 @@ window.addEventListener("hashchange", () => {
   await loadData();
   setupPersonChips();
   setupYearControls();
+  setupLocationCombo();
   setupStickyOffset();
   setupDragToAdd();
   const initialYear = parseHashYear() || realCurrentYear();

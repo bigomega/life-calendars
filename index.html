@@ -68,23 +68,13 @@
     <form id="location-form">
       <input type="hidden" id="f-id">
 
-      <div class="form-row-inline">
-        <div class="form-row">
-          <label for="f-person">Person</label>
-          <select id="f-person">
-            <option value="B">Bharath</option>
-            <option value="M">Mariana</option>
-            <option value="Both">Both</option>
-          </select>
-        </div>
-        <div class="form-row">
-          <label for="f-type">Type</label>
-          <select id="f-type">
-            <option value="stay">Stay (location range)</option>
-            <option value="flight">Flight</option>
-            <option value="transit">Transit (other travel)</option>
-          </select>
-        </div>
+      <div class="form-row">
+        <label for="f-person">Person</label>
+        <select id="f-person">
+          <option value="B">Bharath</option>
+          <option value="M">Mariana</option>
+          <option value="Both" selected>Both</option>
+        </select>
       </div>
 
       <div class="form-row-inline">
@@ -98,47 +88,26 @@
         </div>
       </div>
 
-      <div id="stay-fields">
-        <div class="form-row-inline">
-          <div class="form-row">
-            <label for="f-location">Location</label>
-            <input type="text" id="f-location" placeholder="e.g. Mumbai">
-          </div>
-          <div class="form-row">
-            <label for="f-country">Country</label>
-            <input type="text" id="f-country" placeholder="e.g. India">
-          </div>
-        </div>
-      </div>
-
-      <div id="route-fields">
-        <div class="form-row-inline">
-          <div class="form-row">
-            <label for="f-from">From</label>
-            <input type="text" id="f-from" placeholder="e.g. Delhi">
-          </div>
-          <div class="form-row">
-            <label for="f-to">To</label>
-            <input type="text" id="f-to" placeholder="e.g. NYC">
-          </div>
-        </div>
-      </div>
-
       <div class="form-row-inline">
         <div class="form-row">
-          <label for="f-label">Label</label>
-          <input type="text" id="f-label" placeholder="Short description">
+          <label for="f-location">Location</label>
+          <div class="combo">
+            <input type="text" id="f-location" placeholder="e.g. Mumbai" autocomplete="off" aria-autocomplete="list" aria-controls="location-suggestions">
+            <button type="button" class="combo-toggle" id="f-location-toggle" tabindex="-1" aria-label="Show past locations">▾</button>
+            <ul id="location-suggestions" class="combo-list hidden" role="listbox"></ul>
+          </div>
         </div>
         <div class="form-row">
-          <label for="f-emoji">Emoji (optional)</label>
-          <input type="text" id="f-emoji" placeholder="✈️">
+          <label for="f-country">Country</label>
+          <select id="f-country">
+            <option value="">Select country</option>
+          </select>
         </div>
       </div>
 
       <div class="form-row">
-        <label style="flex-direction: row; align-items: center; display:flex; gap:6px;">
-          <input type="checkbox" id="f-cancelled" style="width:auto;"> Cancelled
-        </label>
+        <label for="f-label">Label</label>
+        <input type="text" id="f-label" placeholder="Short description">
       </div>
 
       <div class="form-actions">
@@ -217,6 +186,7 @@
 </div>
 
 <div id="day-popover" class="day-popover hidden"></div>
+<div id="country-tooltip" class="country-tooltip hidden" role="tooltip"></div>
 <div id="toast" class="toast hidden"></div>
 
 <script src="app.js"></script>
