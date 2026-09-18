@@ -19,8 +19,11 @@ const COUNTRY_HUES = {
   Georgia: 271,
   Turkey: 187,
   Kazakhstan: 328,
+  "International Transit": 204,
 };
 const LIGHTNESS_STEPS = [42, 56, 34, 66, 48, 60, 38, 70];
+
+const TRANSIT_COUNTRY = "International Transit";
 
 // Display name + ISO 3166-1 alpha-2. Flags come from the code; the dropdown
 // is this full list so a stay is never missing a country (Cyprus, etc.).
@@ -258,8 +261,13 @@ const COUNTRY_CODES = Object.fromEntries([
   ...Object.entries(COUNTRY_ALIASES),
 ]);
 
+function isTransitCountry(country) {
+  return (country || "").trim().toLowerCase() === TRANSIT_COUNTRY.toLowerCase();
+}
+
 function countryFlag(country) {
   if (!country) return "";
+  if (isTransitCountry(country)) return "✈️";
   const code = COUNTRY_CODES[country.trim().toLowerCase()];
   if (!code) return "";
   return code
@@ -331,8 +339,12 @@ function stayComments(location, raw) {
   if (!comments || comments === location) return "";
   return comments;
 }
+function stayLocationName(loc) {
+  if (isTransitCountry(loc.country)) return "Transit";
+  return (loc.location || "").trim() || "Untitled";
+}
 function stayTitle(loc) {
-  const name = (loc.location || "").trim() || "Untitled";
+  const name = stayLocationName(loc);
   const comments = (loc.comments || "").trim();
   return comments ? `${name} : ${comments}` : name;
 }
@@ -498,7 +510,7 @@ function rebuildColorMap() {
   const byCountry = {};
   for (const loc of state.locations) {
     if (!loc.country) continue;
-    const l = loc.location || "Unknown";
+    const l = stayLocationName(loc);
     byCountry[loc.country] = byCountry[loc.country] || new Set();
     byCountry[loc.country].add(l);
   }
@@ -516,7 +528,7 @@ function rebuildColorMap() {
 }
 
 function stayColor(loc) {
-  const key = (loc.country || "") + "||" + (loc.location || "");
+  const key = (loc.country || "") + "||" + stayLocationName(loc);
   return colorMap[key] || "hsl(0, 0%, 55%)";
 }
 
@@ -668,10 +680,10 @@ function groupStaysByLocation(stays) {
     byName.get(key).push(stay);
   }
   return Array.from(byName.entries())
-    .map(([location, ranges]) => {
+    .map(([, ranges]) => {
       ranges.sort((a, b) => a.start.localeCompare(b.start));
       return {
-        location,
+        location: stayLocationName(ranges[0]),
         ranges,
         days: mergeIntervalDays(ranges.map((r) => [r.start, r.end])),
       };
@@ -715,9 +727,9 @@ function overlapsRange(loc, start, end) {
 function uniqueStaysInRange(locations, start, end) {
   const firstSeen = {};
   for (const loc of locations) {
-    if (!loc.location) continue;
+    if (!isTransitCountry(loc.country) && !loc.location) continue;
     if (!overlapsRange(loc, start, end)) continue;
-    const key = (loc.country || "") + "||" + loc.location;
+    const key = (loc.country || "") + "||" + stayLocationName(loc);
     if (firstSeen[key] === undefined || loc.start < firstSeen[key].start) {
       firstSeen[key] = { loc, start: loc.start };
     }
@@ -726,7 +738,7 @@ function uniqueStaysInRange(locations, start, end) {
     .sort(
       (a, b) =>
         a.start.localeCompare(b.start) ||
-        a.loc.location.localeCompare(b.loc.location),
+        stayLocationName(a.loc).localeCompare(stayLocationName(b.loc)),
     )
     .map((x) => x.loc);
 }
@@ -740,7 +752,7 @@ function renderLegend(locations) {
   const byCountry = {};
   for (const loc of locations) {
     if (!loc.country) continue;
-    const l = loc.location || "Unknown";
+    const l = stayLocationName(loc);
     byCountry[loc.country] = byCountry[loc.country] || new Set();
     byCountry[loc.country].add(l);
   }
@@ -810,15 +822,17 @@ function buildMonthCard(year, month, locations) {
     monthStays.forEach((loc) => {
       const item = document.createElement("span");
       item.className = "month-legend-item";
-      item.title = loc.country
-        ? `${loc.location}, ${loc.country}`
-        : loc.location;
+      item.title = isTransitCountry(loc.country)
+        ? TRANSIT_COUNTRY
+        : loc.country
+          ? `${loc.location}, ${loc.country}`
+          : loc.location;
       const sw = document.createElement("span");
       sw.className = "legend-swatch";
       sw.style.background = stayColor(loc);
       item.appendChild(sw);
       const lbl = document.createElement("span");
-      lbl.textContent = loc.location;
+      lbl.textContent = stayLocationName(loc);
       item.appendChild(lbl);
       legend.appendChild(item);
     });
@@ -1450,9 +1464,10 @@ function populateCountrySelect(selected) {
   const sel = document.getElementById("f-country");
   const names = new Set(COUNTRY_OPTIONS);
   if (selected) names.add(selected);
+  names.delete(TRANSIT_COUNTRY);
   const sorted = Array.from(names).sort((a, b) => a.localeCompare(b));
   sel.innerHTML = '<option value="">Select country</option>';
-  sorted.forEach((name) => {
+  [TRANSIT_COUNTRY, ...sorted].forEach((name) => {
     const opt = document.createElement("option");
     opt.value = name;
     const flag = countryFlag(name);
@@ -1617,6 +1632,7 @@ function setupLocationCombo() {
   });
   toggle.addEventListener("mousedown", (e) => {
     e.preventDefault();
+    if (toggle.disabled) return;
     const list = document.getElementById("location-suggestions");
     if (!list.classList.contains("hidden")) {
       closeLocationSuggestions();
@@ -1630,9 +1646,25 @@ function setupLocationCombo() {
 function updateLocationModalFlag() {
   const el = document.getElementById("location-modal-flag");
   if (!el) return;
-  const flag = countryFlag(document.getElementById("f-country").value);
+  const country = document.getElementById("f-country").value;
+  const flag = countryFlag(country);
   el.textContent = flag;
   el.classList.toggle("hidden", !flag);
+  syncLocationFieldForCountry(country);
+}
+
+function syncLocationFieldForCountry(country) {
+  const transit = isTransitCountry(country);
+  const input = document.getElementById("f-location");
+  const toggle = document.getElementById("f-location-toggle");
+  const row = input.closest(".form-row");
+  input.disabled = transit;
+  toggle.disabled = transit;
+  if (row) row.classList.toggle("is-disabled", transit);
+  if (transit) {
+    input.value = "";
+    closeLocationSuggestions();
+  }
 }
 
 function openLocationModal(loc, prefillStart, prefillEnd) {
@@ -1656,6 +1688,13 @@ function openLocationModal(loc, prefillStart, prefillEnd) {
   deleteBtn.classList.toggle("hidden", !loc);
   closeLocationSuggestions();
   overlay.classList.remove("hidden");
+  if (!loc) {
+    const input = document.getElementById("f-location");
+    requestAnimationFrame(() => {
+      input.focus();
+      input.select();
+    });
+  }
 }
 
 function closeLocationModal() {
@@ -1674,15 +1713,19 @@ document.getElementById("location-form").addEventListener("submit", (e) => {
     return;
   }
 
+  const country = document.getElementById("f-country").value.trim();
+  const location = isTransitCountry(country)
+    ? ""
+    : document.getElementById("f-location").value.trim();
   const loc = {
     id,
     person: document.getElementById("f-person").value,
     start,
     end,
-    location: document.getElementById("f-location").value.trim(),
-    country: document.getElementById("f-country").value.trim(),
+    location,
+    country,
     comments: stayComments(
-      document.getElementById("f-location").value.trim(),
+      location,
       document.getElementById("f-comments").value,
     ),
   };
@@ -1751,7 +1794,9 @@ function renderManageList() {
 
     const range =
       loc.start === loc.end ? loc.start : `${loc.start} → ${loc.end}`;
-    const where = `${loc.location || ""}${loc.country ? ", " + loc.country : ""}`;
+    const where = isTransitCountry(loc.country)
+      ? TRANSIT_COUNTRY
+      : `${loc.location || ""}${loc.country ? ", " + loc.country : ""}`;
     const person =
       loc.person === "M"
         ? "♀ Mariana"

@@ -710,6 +710,15 @@ body.resizing-trip * {
   line-height: 1;
 }
 
+.form-row.is-disabled {
+  opacity: 0.45;
+}
+
+.form-row.is-disabled input,
+.combo-toggle:disabled {
+  cursor: default;
+}
+
 .combo-list {
   position: absolute;
   z-index: 5;

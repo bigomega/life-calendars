@@ -13,6 +13,51 @@
   ],
   "locations": [
     {
+      "id": "loc-lcfi475",
+      "person": "Both",
+      "start": "2023-04-01",
+      "end": "2023-04-02",
+      "location": "On road",
+      "country": "India",
+      "comments": "Srinagar → Bir"
+    },
+    {
+      "id": "loc-jd5isy9",
+      "person": "Both",
+      "start": "2023-04-03",
+      "end": "2023-11-12",
+      "location": "Bir",
+      "country": "India",
+      "comments": ""
+    },
+    {
+      "id": "loc-dq0ti0k",
+      "person": "Both",
+      "start": "2023-11-13",
+      "end": "2023-11-17",
+      "location": "Dharamshala",
+      "country": "India",
+      "comments": "Paragliding accuracy competition"
+    },
+    {
+      "id": "loc-4ynjzqb",
+      "person": "Both",
+      "start": "2023-11-18",
+      "end": "2023-11-29",
+      "location": "Bir",
+      "country": "India",
+      "comments": ""
+    },
+    {
+      "id": "loc-z8khk19",
+      "person": "Both",
+      "start": "2023-11-30",
+      "end": "2023-12-05",
+      "location": "Bilaspur",
+      "country": "India",
+      "comments": "SIV Training"
+    },
+    {
       "id": "loc-3id5w6o",
       "person": "Both",
       "start": "2023-12-06",
@@ -157,15 +202,6 @@
       "comments": ""
     },
     {
-      "id": "loc-002",
-      "person": "M",
-      "start": "2024-10-30",
-      "end": "2024-11-14",
-      "location": "Mumbai",
-      "country": "India",
-      "comments": "Mariana - Mumbai"
-    },
-    {
       "id": "loc-32fljpq",
       "person": "Both",
       "start": "2024-11-01",
@@ -173,6 +209,15 @@
       "location": "On road",
       "country": "India",
       "comments": "🏍️ Coimbatore → Mumbai"
+    },
+    {
+      "id": "loc-002",
+      "person": "M",
+      "start": "2024-11-04",
+      "end": "2024-11-14",
+      "location": "Mumbai",
+      "country": "India",
+      "comments": "Mariana - Mumbai"
     },
     {
       "id": "loc-0sszuyl",
@@ -190,7 +235,7 @@
       "end": "2025-03-02",
       "location": "Chennai",
       "country": "India",
-      "comments": "Sunil wedding"
+      "comments": "Sunil wedding ❤️"
     },
     {
       "id": "loc-ge0gkhr",
@@ -247,31 +292,13 @@
       "comments": ""
     },
     {
-      "id": "loc-005",
-      "person": "Both",
-      "start": "2025-07-20",
-      "end": "2025-07-20",
-      "location": "Delhi",
-      "country": "India",
-      "comments": ""
-    },
-    {
       "id": "loc-006",
       "person": "Both",
-      "start": "2025-07-21",
-      "end": "2025-07-26",
+      "start": "2025-07-20",
+      "end": "2025-07-28",
       "location": "Kolkata",
       "country": "India",
-      "comments": "Kolkata US Visa interview"
-    },
-    {
-      "id": "loc-007",
-      "person": "Both",
-      "start": "2025-07-27",
-      "end": "2025-07-27",
-      "location": "Delhi",
-      "country": "India",
-      "comments": "Delhi transit day"
+      "comments": "US Visa interview"
     },
     {
       "id": "loc-ne4o2nm",
@@ -283,13 +310,58 @@
       "comments": ""
     },
     {
-      "id": "loc-009",
+      "id": "loc-7fxtxbk",
+      "person": "M",
+      "start": "2025-08-23",
+      "end": "2025-09-11",
+      "location": "Bir",
+      "country": "India",
+      "comments": ""
+    },
+    {
+      "id": "loc-i6vepif",
       "person": "B",
       "start": "2025-08-23",
-      "end": "2025-10-26",
+      "end": "2025-08-23",
+      "location": "",
+      "country": "International Transit",
+      "comments": "India → NYC"
+    },
+    {
+      "id": "loc-009",
+      "person": "B",
+      "start": "2025-08-24",
+      "end": "2025-10-25",
       "location": "New York",
       "country": "USA",
       "comments": ""
+    },
+    {
+      "id": "loc-fkozpxz",
+      "person": "M",
+      "start": "2025-09-12",
+      "end": "2025-09-13",
+      "location": "",
+      "country": "International Transit",
+      "comments": "India → Mexico"
+    },
+    {
+      "id": "loc-vjtre6r",
+      "person": "M",
+      "start": "2025-09-14",
+      "end": "2025-10-31",
+      "location": "Mexico City",
+      "country": "Mexico",
+      "comments": ""
+    },
+    {
+      "id": "loc-dt93ejb",
+      "person": "B",
+      "start": "2025-10-26",
+      "end": "2025-10-26",
+      "location": "",
+      "country": "International Transit",
+      "comments": "NYC → Mexico"
     },
     {
       "id": "loc-011",
@@ -302,7 +374,7 @@
     },
     {
       "id": "loc-012",
-      "person": "B",
+      "person": "Both",
       "start": "2025-11-01",
       "end": "2025-11-01",
       "location": "Patzcuaro",
@@ -311,7 +383,7 @@
     },
     {
       "id": "loc-013",
-      "person": "B",
+      "person": "Both",
       "start": "2025-11-02",
       "end": "2025-11-15",
       "location": "Morelia",
@@ -320,12 +392,12 @@
     },
     {
       "id": "loc-014",
-      "person": "B",
+      "person": "Both",
       "start": "2025-11-16",
       "end": "2025-11-30",
       "location": "Guanajuato",
       "country": "Mexico",
-      "comments": ""
+      "comments": "Mariana Orchestra Play"
     },
     {
       "id": "loc-015",
@@ -349,10 +421,19 @@
       "id": "loc-019",
       "person": "Both",
       "start": "2026-01-29",
-      "end": "2026-02-01",
+      "end": "2026-01-31",
       "location": "Seattle",
       "country": "USA",
       "comments": ""
+    },
+    {
+      "id": "loc-23qesov",
+      "person": "Both",
+      "start": "2026-02-01",
+      "end": "2026-02-01",
+      "location": "",
+      "country": "International Transit",
+      "comments": "Seattle → Dubai"
     },
     {
       "id": "loc-021",
@@ -412,10 +493,19 @@
       "id": "loc-psf2rmu",
       "person": "Both",
       "start": "2026-03-16",
-      "end": "2026-05-24",
+      "end": "2026-05-23",
       "location": "Bir",
       "country": "India",
       "comments": ""
+    },
+    {
+      "id": "loc-vzqjnkp",
+      "person": "Both",
+      "start": "2026-05-24",
+      "end": "2026-05-24",
+      "location": "",
+      "country": "International Transit",
+      "comments": "India → NYC"
     },
     {
       "id": "loc-033",
