@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Life Calendars</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="app-header">
+  <h1>Life Calendars</h1>
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="location">Location Calendar</button>
+  </div>
+</header>
+
+<div class="controls-bar">
+  <div class="control-group">
+    <span class="title">People</span>
+    <label class="person-chip" id="chip-B">
+      <input type="checkbox" value="B" checked> Bharath ♂
+    </label>
+    <label class="person-chip" id="chip-M">
+      <input type="checkbox" value="M" checked> Mariana ♀
+    </label>
+  </div>
+
+  <div class="control-group">
+    <span class="title">Year</span>
+    <button id="year-prev">◀</button>
+    <select id="year-select"></select>
+    <button id="year-next">▶</button>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div class="control-group">
+    <button id="btn-add-event" class="primary">+ Add Event</button>
+    <button id="btn-manage">Manage Events</button>
+    <button id="btn-copy-json">Copy JSON</button>
+    <button id="btn-reset" class="danger" title="Discard local edits, reload from data.json">Reset</button>
+  </div>
+</div>
+
+<main>
+  <div class="legend-panel" id="legend-panel"></div>
+  <div class="months-grid" id="months-grid"></div>
+</main>
+
+<!-- Add / Edit event modal -->
+<div class="overlay hidden" id="event-modal-overlay">
+  <div class="modal">
+    <h2 id="event-modal-title">Add Event</h2>
+    <form id="event-form">
+      <input type="hidden" id="f-id">
+
+      <div class="form-row-inline">
+        <div class="form-row">
+          <label for="f-person">Person</label>
+          <select id="f-person">
+            <option value="B">Bharath</option>
+            <option value="M">Mariana</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="f-type">Type</label>
+          <select id="f-type">
+            <option value="stay">Stay (location range)</option>
+            <option value="flight">Flight</option>
+            <option value="transit">Transit (other travel)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row-inline">
+        <div class="form-row">
+          <label for="f-start">Start date</label>
+          <input type="date" id="f-start" required>
+        </div>
+        <div class="form-row">
+          <label for="f-end">End date</label>
+          <input type="date" id="f-end" required>
+        </div>
+      </div>
+
+      <div id="stay-fields">
+        <div class="form-row-inline">
+          <div class="form-row">
+            <label for="f-location">Location</label>
+            <input type="text" id="f-location" placeholder="e.g. Mumbai">
+          </div>
+          <div class="form-row">
+            <label for="f-country">Country</label>
+            <input type="text" id="f-country" placeholder="e.g. India">
+          </div>
+        </div>
+      </div>
+
+      <div id="route-fields">
+        <div class="form-row-inline">
+          <div class="form-row">
+            <label for="f-from">From</label>
+            <input type="text" id="f-from" placeholder="e.g. Delhi">
+          </div>
+          <div class="form-row">
+            <label for="f-to">To</label>
+            <input type="text" id="f-to" placeholder="e.g. NYC">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row-inline">
+        <div class="form-row">
+          <label for="f-label">Label</label>
+          <input type="text" id="f-label" placeholder="Short description">
+        </div>
+        <div class="form-row">
+          <label for="f-emoji">Emoji (optional)</label>
+          <input type="text" id="f-emoji" placeholder="✈️">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label style="flex-direction: row; align-items: center; display:flex; gap:6px;">
+          <input type="checkbox" id="f-cancelled" style="width:auto;"> Cancelled
+        </label>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" id="f-delete" class="danger hidden">Delete</button>
+        <div class="right">
+          <button type="button" id="f-cancel">Cancel</button>
+          <button type="submit" class="primary">Save</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Manage events (table) modal -->
+<div class="overlay hidden" id="manage-modal-overlay">
+  <div class="modal" style="width:min(720px,94vw);">
+    <h2>Manage Events</h2>
+    <div id="manage-list" style="max-height:60vh; overflow-y:auto;"></div>
+    <div class="form-actions">
+      <div></div>
+      <div class="right">
+        <button type="button" id="manage-close">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Copy JSON modal -->
+<div class="overlay hidden" id="json-modal-overlay">
+  <div class="modal json-modal" style="width:min(680px,94vw);">
+    <h2>Current data.json</h2>
+    <p class="hint">Copy this and paste it over <code>data.json</code> in the repo to open a PR with your changes.</p>
+    <textarea id="json-output" readonly></textarea>
+    <div class="form-actions">
+      <div></div>
+      <div class="right">
+        <button type="button" id="json-copy-btn" class="primary">Copy to clipboard</button>
+        <button type="button" id="json-close">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="day-popover" class="day-popover hidden"></div>
+<div id="toast" class="toast hidden"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
