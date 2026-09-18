@@ -12,15 +12,9 @@
   <header class="app-header">
     <div class="header-row">
       <h1>Life Calendars</h1>
-      <button id="btn-settings" class="icon-btn" title="Settings" aria-label="Settings" aria-haspopup="dialog">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-          <circle cx="12" cy="12" r="3"></circle>
-          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-        </svg>
-      </button>
-    </div>
-    <div class="tabs">
-      <button class="tab-btn active" data-tab="location">Location Calendar</button>
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="location">location</button>
+      </div>
     </div>
   </header>
 
@@ -47,10 +41,21 @@
     <div class="spacer"></div>
 
     <div class="control-group">
-      <button id="btn-add-location" class="primary">+ Add Location</button>
-      <button id="btn-manage-locations">Manage Locations</button>
+      <button id="btn-add-location" class="primary">+ Add</button>
+      <button id="btn-manage-locations" class="btn-with-icon">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M12 20h9"></path>
+          <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
+        </svg>
+        Manage
+      </button>
       <button id="btn-copy-json">Copy JSON</button>
-      <button id="btn-reset" class="danger" title="Discard local edits, reload from data.json">Reset</button>
+      <button id="btn-settings" class="icon-btn" title="Settings" aria-label="Settings" aria-haspopup="dialog">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+      </button>
     </div>
   </div>
 
@@ -106,8 +111,8 @@
       </div>
 
       <div class="form-row">
-        <label for="f-label">Label</label>
-        <input type="text" id="f-label" placeholder="Short description">
+        <label for="f-comments">Comments</label>
+        <input type="text" id="f-comments" placeholder="Optional">
       </div>
 
       <div class="form-actions">
@@ -159,25 +164,8 @@
 <div class="overlay hidden" id="settings-modal-overlay">
   <div class="modal settings-modal" role="dialog" aria-labelledby="settings-title">
     <h2 id="settings-title">Settings</h2>
-    <fieldset class="setting-block">
-      <legend>Day boxes</legend>
-      <label class="choice-card">
-        <input type="radio" name="daybox" value="M">
-        <span class="choice-copy">
-          <span class="choice-title">daybox:M</span>
-          <span class="choice-desc">Uncolored boxes, flag on every stay day</span>
-        </span>
-      </label>
-      <label class="choice-card">
-        <input type="radio" name="daybox" value="B">
-        <span class="choice-copy">
-          <span class="choice-title">daybox:B</span>
-          <span class="choice-desc">Location colors, flag on the first day of each trip</span>
-        </span>
-      </label>
-    </fieldset>
     <div class="form-actions">
-      <div></div>
+      <button type="button" id="btn-reset" class="danger" title="Discard local edits, reload from data.json">Reset</button>
       <div class="right">
         <button type="button" id="settings-close">Close</button>
       </div>

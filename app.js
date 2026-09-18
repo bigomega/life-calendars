@@ -1,7 +1,6 @@
 /* Life Calendars — Location Calendar
  * No backend. Data lives in data.json (source of truth for PRs), with a
- * localStorage overlay for in-browser edits and an embedded fallback copy
- * so the page still works if fetch() is blocked (e.g. opened via file://).
+ * localStorage overlay for in-browser edits.
  */
 
 const STORAGE_KEY = "life-calendar-data-v1";
@@ -12,120 +11,251 @@ const YEAR_START = 2009;
 const GITHUB_REPO = "bigomega/life-calendars";
 const GITHUB_EDIT_BRANCH = "gh-pages";
 
-// Fallback copy of data.json — used only if fetch('./data.json') fails.
-// Keep this in sync with data.json when you hand-edit the file directly.
-const FALLBACK_DATA = {
-  "people": [
-    { "id": "B", "name": "Bharath", "icon": "♂" },
-    { "id": "M", "name": "Mariana", "icon": "♀" }
-  ],
-  "locations": [
-    { "id": "loc-001", "person": "B", "start": "2024-09-28", "end": "2024-10-02", "location": "Bir", "country": "India", "label": "Bir Trip" },
-    { "id": "loc-002", "person": "B", "start": "2024-10-30", "end": "2024-11-14", "location": "Mumbai", "country": "India", "label": "Mariana - Mumbai" },
-    { "id": "loc-005", "person": "B", "start": "2025-07-20", "end": "2025-07-20", "location": "Delhi", "country": "India", "label": "Delhi" },
-    { "id": "loc-006", "person": "B", "start": "2025-07-23", "end": "2025-07-26", "location": "Kolkata", "country": "India", "label": "Kolkata US Visa interview" },
-    { "id": "loc-007", "person": "B", "start": "2025-07-27", "end": "2025-07-27", "location": "Delhi", "country": "India", "label": "Delhi transit day" },
-    { "id": "loc-009", "person": "B", "start": "2025-08-23", "end": "2025-10-26", "location": "New York", "country": "USA", "label": "New York" },
-    { "id": "loc-011", "person": "B", "start": "2025-10-27", "end": "2025-10-31", "location": "Mexico City", "country": "Mexico", "label": "Mexico City" },
-    { "id": "loc-012", "person": "B", "start": "2025-11-01", "end": "2025-11-01", "location": "Patzcuaro", "country": "Mexico", "label": "Patzcuaro" },
-    { "id": "loc-013", "person": "B", "start": "2025-11-02", "end": "2025-11-15", "location": "Morelia", "country": "Mexico", "label": "Morelia" },
-    { "id": "loc-014", "person": "B", "start": "2025-11-16", "end": "2025-11-30", "location": "Guanajuato", "country": "Mexico", "label": "Guanajuato" },
-    { "id": "loc-015", "person": "B", "start": "2025-12-01", "end": "2026-01-25", "location": "Mexico", "country": "Mexico", "label": "Mexico" },
-    { "id": "loc-017", "person": "B", "start": "2026-01-25", "end": "2026-01-29", "location": "Florida", "country": "USA", "label": "Orlando / Fort Lauderdale" },
-    { "id": "loc-019", "person": "B", "start": "2026-01-29", "end": "2026-02-01", "location": "Seattle", "country": "USA", "label": "Seattle" },
-    { "id": "loc-021", "person": "B", "start": "2026-02-02", "end": "2026-02-14", "location": "Dubai", "country": "UAE", "label": "Dubai" },
-    { "id": "loc-023", "person": "B", "start": "2026-02-14", "end": "2026-02-27", "location": "Tbilisi", "country": "Georgia", "label": "Tbilisi" },
-    { "id": "loc-025", "person": "B", "start": "2026-02-28", "end": "2026-03-03", "location": "Tbilisi", "country": "Georgia", "label": "Stay in Tbilisi" },
-    { "id": "loc-029", "person": "B", "start": "2026-03-05", "end": "2026-03-21", "location": "Almaty", "country": "Kazakhstan", "label": "Almaty" },
-    { "id": "loc-031", "person": "B", "start": "2026-03-21", "end": "2026-03-21", "location": "Delhi", "country": "India", "label": "Delhi" },
-    { "id": "loc-psf2rmu", "person": "Both", "start": "2026-03-22", "end": "2026-05-24", "location": "Bir", "country": "India", "label": "Bir" },
-    { "id": "loc-033", "person": "B", "start": "2026-05-25", "end": "2026-08-16", "location": "New York", "country": "USA", "label": "New York" }
-  ]
-};
-
 const COUNTRY_HUES = {
-  "India": 14,
-  "USA": 214,
-  "Mexico": 145,
-  "UAE": 42,
-  "Georgia": 271,
-  "Turkey": 187,
-  "Kazakhstan": 328
+  India: 14,
+  USA: 214,
+  Mexico: 145,
+  UAE: 42,
+  Georgia: 271,
+  Turkey: 187,
+  Kazakhstan: 328,
 };
 const LIGHTNESS_STEPS = [42, 56, 34, 66, 48, 60, 38, 70];
 
 // Display name + ISO 3166-1 alpha-2. Flags come from the code; the dropdown
 // is this full list so a stay is never missing a country (Cyprus, etc.).
 const COUNTRIES = [
-  ["Afghanistan","AF"],["Albania","AL"],["Algeria","DZ"],["Andorra","AD"],["Angola","AO"],
-  ["Antigua and Barbuda","AG"],["Argentina","AR"],["Armenia","AM"],["Australia","AU"],["Austria","AT"],["Azerbaijan","AZ"],
-  ["Bahamas","BS"],["Bahrain","BH"],["Bangladesh","BD"],["Barbados","BB"],["Belarus","BY"],["Belgium","BE"],
-  ["Belize","BZ"],["Benin","BJ"],["Bhutan","BT"],["Bolivia","BO"],["Bosnia and Herzegovina","BA"],["Botswana","BW"],
-  ["Brazil","BR"],["Brunei","BN"],["Bulgaria","BG"],["Burkina Faso","BF"],["Burundi","BI"],
-  ["Cabo Verde","CV"],["Cambodia","KH"],["Cameroon","CM"],["Canada","CA"],["Central African Republic","CF"],
-  ["Chad","TD"],["Chile","CL"],["China","CN"],["Colombia","CO"],["Comoros","KM"],["Congo","CG"],
-  ["Costa Rica","CR"],["Croatia","HR"],["Cuba","CU"],["Cyprus","CY"],["Czechia","CZ"],
-  ["DR Congo","CD"],["Denmark","DK"],["Djibouti","DJ"],["Dominica","DM"],["Dominican Republic","DO"],
-  ["Ecuador","EC"],["Egypt","EG"],["El Salvador","SV"],["Equatorial Guinea","GQ"],["Eritrea","ER"],
-  ["Estonia","EE"],["Eswatini","SZ"],["Ethiopia","ET"],
-  ["Fiji","FJ"],["Finland","FI"],["France","FR"],
-  ["Gabon","GA"],["Gambia","GM"],["Georgia","GE"],["Germany","DE"],["Ghana","GH"],["Greece","GR"],
-  ["Grenada","GD"],["Guatemala","GT"],["Guinea","GN"],["Guinea-Bissau","GW"],["Guyana","GY"],
-  ["Haiti","HT"],["Honduras","HN"],["Hong Kong","HK"],["Hungary","HU"],
-  ["Iceland","IS"],["India","IN"],["Indonesia","ID"],["Iran","IR"],["Iraq","IQ"],["Ireland","IE"],
-  ["Israel","IL"],["Italy","IT"],["Ivory Coast","CI"],
-  ["Jamaica","JM"],["Japan","JP"],["Jordan","JO"],
-  ["Kazakhstan","KZ"],["Kenya","KE"],["Kiribati","KI"],["Kosovo","XK"],["Kuwait","KW"],["Kyrgyzstan","KG"],
-  ["Laos","LA"],["Latvia","LV"],["Lebanon","LB"],["Lesotho","LS"],["Liberia","LR"],["Libya","LY"],
-  ["Liechtenstein","LI"],["Lithuania","LT"],["Luxembourg","LU"],
-  ["Macau","MO"],["Madagascar","MG"],["Malawi","MW"],["Malaysia","MY"],["Maldives","MV"],["Mali","ML"],
-  ["Malta","MT"],["Marshall Islands","MH"],["Mauritania","MR"],["Mauritius","MU"],["Mexico","MX"],
-  ["Micronesia","FM"],["Moldova","MD"],["Monaco","MC"],["Mongolia","MN"],["Montenegro","ME"],
-  ["Morocco","MA"],["Mozambique","MZ"],["Myanmar","MM"],
-  ["Namibia","NA"],["Nauru","NR"],["Nepal","NP"],["Netherlands","NL"],["New Zealand","NZ"],
-  ["Nicaragua","NI"],["Niger","NE"],["Nigeria","NG"],["North Korea","KP"],["North Macedonia","MK"],["Norway","NO"],
-  ["Oman","OM"],
-  ["Pakistan","PK"],["Palau","PW"],["Palestine","PS"],["Panama","PA"],["Papua New Guinea","PG"],
-  ["Paraguay","PY"],["Peru","PE"],["Philippines","PH"],["Poland","PL"],["Portugal","PT"],["Puerto Rico","PR"],
-  ["Qatar","QA"],
-  ["Romania","RO"],["Russia","RU"],["Rwanda","RW"],
-  ["Saint Kitts and Nevis","KN"],["Saint Lucia","LC"],["Saint Vincent and the Grenadines","VC"],
-  ["Samoa","WS"],["San Marino","SM"],["Sao Tome and Principe","ST"],["Saudi Arabia","SA"],["Senegal","SN"],
-  ["Serbia","RS"],["Seychelles","SC"],["Sierra Leone","SL"],["Singapore","SG"],["Slovakia","SK"],
-  ["Slovenia","SI"],["Solomon Islands","SB"],["Somalia","SO"],["South Africa","ZA"],["South Korea","KR"],
-  ["South Sudan","SS"],["Spain","ES"],["Sri Lanka","LK"],["Sudan","SD"],["Suriname","SR"],["Sweden","SE"],
-  ["Switzerland","CH"],["Syria","SY"],
-  ["Taiwan","TW"],["Tajikistan","TJ"],["Tanzania","TZ"],["Thailand","TH"],["Timor-Leste","TL"],
-  ["Togo","TG"],["Tonga","TO"],["Trinidad and Tobago","TT"],["Tunisia","TN"],["Turkey","TR"],
-  ["Turkmenistan","TM"],["Tuvalu","TV"],
-  ["UAE","AE"],["UK","GB"],["USA","US"],["Uganda","UG"],["Ukraine","UA"],["Uruguay","UY"],["Uzbekistan","UZ"],
-  ["Vanuatu","VU"],["Vatican City","VA"],["Venezuela","VE"],["Vietnam","VN"],
-  ["Yemen","YE"],
-  ["Zambia","ZM"],["Zimbabwe","ZW"]
+  ["Afghanistan", "AF"],
+  ["Albania", "AL"],
+  ["Algeria", "DZ"],
+  ["Andorra", "AD"],
+  ["Angola", "AO"],
+  ["Antigua and Barbuda", "AG"],
+  ["Argentina", "AR"],
+  ["Armenia", "AM"],
+  ["Australia", "AU"],
+  ["Austria", "AT"],
+  ["Azerbaijan", "AZ"],
+  ["Bahamas", "BS"],
+  ["Bahrain", "BH"],
+  ["Bangladesh", "BD"],
+  ["Barbados", "BB"],
+  ["Belarus", "BY"],
+  ["Belgium", "BE"],
+  ["Belize", "BZ"],
+  ["Benin", "BJ"],
+  ["Bhutan", "BT"],
+  ["Bolivia", "BO"],
+  ["Bosnia and Herzegovina", "BA"],
+  ["Botswana", "BW"],
+  ["Brazil", "BR"],
+  ["Brunei", "BN"],
+  ["Bulgaria", "BG"],
+  ["Burkina Faso", "BF"],
+  ["Burundi", "BI"],
+  ["Cabo Verde", "CV"],
+  ["Cambodia", "KH"],
+  ["Cameroon", "CM"],
+  ["Canada", "CA"],
+  ["Central African Republic", "CF"],
+  ["Chad", "TD"],
+  ["Chile", "CL"],
+  ["China", "CN"],
+  ["Colombia", "CO"],
+  ["Comoros", "KM"],
+  ["Congo", "CG"],
+  ["Costa Rica", "CR"],
+  ["Croatia", "HR"],
+  ["Cuba", "CU"],
+  ["Cyprus", "CY"],
+  ["Czechia", "CZ"],
+  ["DR Congo", "CD"],
+  ["Denmark", "DK"],
+  ["Djibouti", "DJ"],
+  ["Dominica", "DM"],
+  ["Dominican Republic", "DO"],
+  ["Ecuador", "EC"],
+  ["Egypt", "EG"],
+  ["El Salvador", "SV"],
+  ["Equatorial Guinea", "GQ"],
+  ["Eritrea", "ER"],
+  ["Estonia", "EE"],
+  ["Eswatini", "SZ"],
+  ["Ethiopia", "ET"],
+  ["Fiji", "FJ"],
+  ["Finland", "FI"],
+  ["France", "FR"],
+  ["Gabon", "GA"],
+  ["Gambia", "GM"],
+  ["Georgia", "GE"],
+  ["Germany", "DE"],
+  ["Ghana", "GH"],
+  ["Greece", "GR"],
+  ["Grenada", "GD"],
+  ["Guatemala", "GT"],
+  ["Guinea", "GN"],
+  ["Guinea-Bissau", "GW"],
+  ["Guyana", "GY"],
+  ["Haiti", "HT"],
+  ["Honduras", "HN"],
+  ["Hong Kong", "HK"],
+  ["Hungary", "HU"],
+  ["Iceland", "IS"],
+  ["India", "IN"],
+  ["Indonesia", "ID"],
+  ["Iran", "IR"],
+  ["Iraq", "IQ"],
+  ["Ireland", "IE"],
+  ["Israel", "IL"],
+  ["Italy", "IT"],
+  ["Ivory Coast", "CI"],
+  ["Jamaica", "JM"],
+  ["Japan", "JP"],
+  ["Jordan", "JO"],
+  ["Kazakhstan", "KZ"],
+  ["Kenya", "KE"],
+  ["Kiribati", "KI"],
+  ["Kosovo", "XK"],
+  ["Kuwait", "KW"],
+  ["Kyrgyzstan", "KG"],
+  ["Laos", "LA"],
+  ["Latvia", "LV"],
+  ["Lebanon", "LB"],
+  ["Lesotho", "LS"],
+  ["Liberia", "LR"],
+  ["Libya", "LY"],
+  ["Liechtenstein", "LI"],
+  ["Lithuania", "LT"],
+  ["Luxembourg", "LU"],
+  ["Macau", "MO"],
+  ["Madagascar", "MG"],
+  ["Malawi", "MW"],
+  ["Malaysia", "MY"],
+  ["Maldives", "MV"],
+  ["Mali", "ML"],
+  ["Malta", "MT"],
+  ["Marshall Islands", "MH"],
+  ["Mauritania", "MR"],
+  ["Mauritius", "MU"],
+  ["Mexico", "MX"],
+  ["Micronesia", "FM"],
+  ["Moldova", "MD"],
+  ["Monaco", "MC"],
+  ["Mongolia", "MN"],
+  ["Montenegro", "ME"],
+  ["Morocco", "MA"],
+  ["Mozambique", "MZ"],
+  ["Myanmar", "MM"],
+  ["Namibia", "NA"],
+  ["Nauru", "NR"],
+  ["Nepal", "NP"],
+  ["Netherlands", "NL"],
+  ["New Zealand", "NZ"],
+  ["Nicaragua", "NI"],
+  ["Niger", "NE"],
+  ["Nigeria", "NG"],
+  ["North Korea", "KP"],
+  ["North Macedonia", "MK"],
+  ["Norway", "NO"],
+  ["Oman", "OM"],
+  ["Pakistan", "PK"],
+  ["Palau", "PW"],
+  ["Palestine", "PS"],
+  ["Panama", "PA"],
+  ["Papua New Guinea", "PG"],
+  ["Paraguay", "PY"],
+  ["Peru", "PE"],
+  ["Philippines", "PH"],
+  ["Poland", "PL"],
+  ["Portugal", "PT"],
+  ["Puerto Rico", "PR"],
+  ["Qatar", "QA"],
+  ["Romania", "RO"],
+  ["Russia", "RU"],
+  ["Rwanda", "RW"],
+  ["Saint Kitts and Nevis", "KN"],
+  ["Saint Lucia", "LC"],
+  ["Saint Vincent and the Grenadines", "VC"],
+  ["Samoa", "WS"],
+  ["San Marino", "SM"],
+  ["Sao Tome and Principe", "ST"],
+  ["Saudi Arabia", "SA"],
+  ["Senegal", "SN"],
+  ["Serbia", "RS"],
+  ["Seychelles", "SC"],
+  ["Sierra Leone", "SL"],
+  ["Singapore", "SG"],
+  ["Slovakia", "SK"],
+  ["Slovenia", "SI"],
+  ["Solomon Islands", "SB"],
+  ["Somalia", "SO"],
+  ["South Africa", "ZA"],
+  ["South Korea", "KR"],
+  ["South Sudan", "SS"],
+  ["Spain", "ES"],
+  ["Sri Lanka", "LK"],
+  ["Sudan", "SD"],
+  ["Suriname", "SR"],
+  ["Sweden", "SE"],
+  ["Switzerland", "CH"],
+  ["Syria", "SY"],
+  ["Taiwan", "TW"],
+  ["Tajikistan", "TJ"],
+  ["Tanzania", "TZ"],
+  ["Thailand", "TH"],
+  ["Timor-Leste", "TL"],
+  ["Togo", "TG"],
+  ["Tonga", "TO"],
+  ["Trinidad and Tobago", "TT"],
+  ["Tunisia", "TN"],
+  ["Turkey", "TR"],
+  ["Turkmenistan", "TM"],
+  ["Tuvalu", "TV"],
+  ["UAE", "AE"],
+  ["UK", "GB"],
+  ["USA", "US"],
+  ["Uganda", "UG"],
+  ["Ukraine", "UA"],
+  ["Uruguay", "UY"],
+  ["Uzbekistan", "UZ"],
+  ["Vanuatu", "VU"],
+  ["Vatican City", "VA"],
+  ["Venezuela", "VE"],
+  ["Vietnam", "VN"],
+  ["Yemen", "YE"],
+  ["Zambia", "ZM"],
+  ["Zimbabwe", "ZW"],
 ];
 
 const COUNTRY_ALIASES = {
-  "united states": "US", "united states of america": "US",
-  "united kingdom": "GB", "great britain": "GB",
+  "united states": "US",
+  "united states of america": "US",
+  "united kingdom": "GB",
+  "great britain": "GB",
   "united arab emirates": "AE",
-  "türkiye": "TR", "turkiye": "TR",
+  türkiye: "TR",
+  turkiye: "TR",
   "czech republic": "CZ",
-  "korea": "KR", "republic of korea": "KR",
-  "cote d'ivoire": "CI", "côte d'ivoire": "CI",
-  "congo-brazzaville": "CG", "republic of the congo": "CG",
-  "congo-kinshasa": "CD", "democratic republic of the congo": "CD",
-  "swaziland": "SZ",
-  "macedonia": "MK",
+  korea: "KR",
+  "republic of korea": "KR",
+  "cote d'ivoire": "CI",
+  "côte d'ivoire": "CI",
+  "congo-brazzaville": "CG",
+  "republic of the congo": "CG",
+  "congo-kinshasa": "CD",
+  "democratic republic of the congo": "CD",
+  swaziland: "SZ",
+  macedonia: "MK",
   "east timor": "TL",
-  "burma": "MM",
-  "cypress": "CY",
-  "hongkong": "HK",
-  "macao": "MO"
+  burma: "MM",
+  cypress: "CY",
+  hongkong: "HK",
+  macao: "MO",
 };
 
 const COUNTRY_CODES = Object.fromEntries([
   ...COUNTRIES.map(([name, code]) => [name.toLowerCase(), code]),
-  ...Object.entries(COUNTRY_ALIASES)
+  ...Object.entries(COUNTRY_ALIASES),
 ]);
 
 function countryFlag(country) {
@@ -138,8 +268,34 @@ function countryFlag(country) {
 }
 
 const WEEKDAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
-const MONTH_NAMES = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-const MONTH_SHORT = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const MONTH_NAMES = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+const MONTH_SHORT = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
 const COUNTRY_OPTIONS = COUNTRIES.map(([name]) => name);
 
 let state = { people: [], locations: [] };
@@ -149,19 +305,39 @@ let currentYear = null; // active/visible year, synced with #hash
 let yearEnd = YEAR_START;
 let scrollObserver = null;
 let dragState = null;
-let settings = { daybox: "M" };
+let settings = {};
 
 // ---------- utils ----------
 
-function pad2(n) { return n < 10 ? "0" + n : "" + n; }
-function isoDate(y, m, d) { return `${y}-${pad2(m)}-${pad2(d)}`; }
+function pad2(n) {
+  return n < 10 ? "0" + n : "" + n;
+}
+function isoDate(y, m, d) {
+  return `${y}-${pad2(m)}-${pad2(d)}`;
+}
 function todayIso() {
   const d = new Date();
   return isoDate(d.getFullYear(), d.getMonth() + 1, d.getDate());
 }
-function realCurrentYear() { return new Date().getFullYear(); }
+function realCurrentYear() {
+  return new Date().getFullYear();
+}
 function uid() {
   return "loc-" + Math.random().toString(36).slice(2, 9);
+}
+function stayComments(location, raw) {
+  const comments = (raw || "").trim();
+  if (!comments || comments === location) return "";
+  return comments;
+}
+function stayTitle(loc) {
+  const name = (loc.location || "").trim() || "Untitled";
+  const comments = (loc.comments || "").trim();
+  return comments ? `${name} : ${comments}` : name;
+}
+function stayPersonMark(loc) {
+  const isPerson = loc.person === "B" || loc.person === "M";
+  return isPerson ? `👤 ${loc.person}` : "👥";
 }
 function hashHue(str) {
   let h = 0;
@@ -191,7 +367,7 @@ function normalizeLocations(locations) {
         end: l.end || l.start,
         location,
         country,
-        label: (l.label || "").trim() || location || "Untitled"
+        comments: stayComments(location, l.comments || l.label),
       };
     })
     .filter((l) => l.start && l.end);
@@ -199,20 +375,19 @@ function normalizeLocations(locations) {
 
 function applyData(raw) {
   state = {
-    people: raw.people && raw.people.length ? raw.people : FALLBACK_DATA.people,
-    locations: normalizeLocations(raw.locations)
+    people: raw.people && raw.people.length ? raw.people : [],
+    locations: normalizeLocations(raw.locations),
   };
 }
 
 async function loadData() {
-  let base = null;
+  let base = { people: [], locations: [] };
   try {
     const res = await fetch("./data.json", { cache: "no-store" });
     if (res.ok) base = await res.json();
   } catch (e) {
-    // ignore, fall back below
+    // ignore; localStorage overlay may still have data
   }
-  if (!base) base = FALLBACK_DATA;
 
   const local = localStorage.getItem(STORAGE_KEY);
   if (local) {
@@ -231,18 +406,26 @@ function persist() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
+function applyPeopleFilter(ids) {
+  const valid = ["B", "M"].filter((p) => ids.includes(p));
+  selectedPeople = new Set(valid);
+}
+
 function loadSettings() {
   try {
     const raw = localStorage.getItem(SETTINGS_KEY);
     if (!raw) return;
     const parsed = JSON.parse(raw);
-    if (parsed.daybox === "B" || parsed.daybox === "M") settings.daybox = parsed.daybox;
+    if (!parsed || typeof parsed !== "object") return;
+    settings = parsed;
+    if (Array.isArray(parsed.people)) applyPeopleFilter(parsed.people);
   } catch (e) {
     // ignore corrupt settings
   }
 }
 
 function persistSettings() {
+  settings.people = ["B", "M"].filter((p) => selectedPeople.has(p));
   localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
 }
 
@@ -258,7 +441,10 @@ function rebuildColorMap() {
     byCountry[loc.country].add(l);
   }
   for (const country of Object.keys(byCountry)) {
-    const hue = COUNTRY_HUES[country] !== undefined ? COUNTRY_HUES[country] : hashHue(country);
+    const hue =
+      COUNTRY_HUES[country] !== undefined
+        ? COUNTRY_HUES[country]
+        : hashHue(country);
     const locs = Array.from(byCountry[country]).sort();
     locs.forEach((l, i) => {
       const lightness = LIGHTNESS_STEPS[i % LIGHTNESS_STEPS.length];
@@ -273,7 +459,9 @@ function stayColor(loc) {
 }
 
 function countryHue(country) {
-  return COUNTRY_HUES[country] !== undefined ? COUNTRY_HUES[country] : hashHue(country);
+  return COUNTRY_HUES[country] !== undefined
+    ? COUNTRY_HUES[country]
+    : hashHue(country);
 }
 
 function countryColor(country) {
@@ -320,7 +508,9 @@ function clippedIntervals(locations, rangeStart, rangeEnd, country) {
 }
 
 function countStayDays(locations, country, rangeStart, rangeEnd) {
-  return mergeIntervalDays(clippedIntervals(locations, rangeStart, rangeEnd, country));
+  return mergeIntervalDays(
+    clippedIntervals(locations, rangeStart, rangeEnd, country),
+  );
 }
 
 function countMissingDays(locations, year) {
@@ -335,7 +525,10 @@ function countryStatsInRange(locations, start, end) {
   for (const loc of locations) {
     if (!loc.country) continue;
     if (!overlapsRange(loc, start, end)) continue;
-    if (firstSeen[loc.country] === undefined || loc.start < firstSeen[loc.country]) {
+    if (
+      firstSeen[loc.country] === undefined ||
+      loc.start < firstSeen[loc.country]
+    ) {
       firstSeen[loc.country] = loc.start;
     }
   }
@@ -344,19 +537,25 @@ function countryStatsInRange(locations, start, end) {
       country,
       flag: countryFlag(country),
       color: countryColor(country),
-      days: countStayDays(locations, country, start, end)
+      days: countStayDays(locations, country, start, end),
     }))
     .sort((a, b) => b.days - a.days || a.country.localeCompare(b.country));
 }
 
 function staysForCountryInRange(locations, country, rangeStart, rangeEnd) {
   return locations
-    .filter((l) => l.country === country && overlapsRange(l, rangeStart, rangeEnd))
-    .sort((a, b) => a.start.localeCompare(b.start) || (a.location || "").localeCompare(b.location || ""))
+    .filter(
+      (l) => l.country === country && overlapsRange(l, rangeStart, rangeEnd),
+    )
+    .sort(
+      (a, b) =>
+        a.start.localeCompare(b.start) ||
+        (a.location || "").localeCompare(b.location || ""),
+    )
     .map((l) => ({
-      location: l.location || l.label || country,
+      location: l.location || country,
       start: l.start < rangeStart ? rangeStart : l.start,
-      end: l.end > rangeEnd ? rangeEnd : l.end
+      end: l.end > rangeEnd ? rangeEnd : l.end,
     }));
 }
 
@@ -375,7 +574,11 @@ function formatStayRange(start, end) {
 // ---------- filtering ----------
 
 function filteredLocations() {
-  return state.locations.filter((l) => (l.person === "Both" ? selectedPeople.size > 0 : selectedPeople.has(l.person)));
+  return state.locations.filter((l) =>
+    l.person === "Both"
+      ? selectedPeople.size > 0
+      : selectedPeople.has(l.person),
+  );
 }
 
 function locationsForDate(locations, dateStr) {
@@ -398,7 +601,11 @@ function uniqueStaysInRange(locations, start, end) {
     }
   }
   return Object.values(firstSeen)
-    .sort((a, b) => a.start.localeCompare(b.start) || a.loc.location.localeCompare(b.loc.location))
+    .sort(
+      (a, b) =>
+        a.start.localeCompare(b.start) ||
+        a.loc.location.localeCompare(b.loc.location),
+    )
     .map((x) => x.loc);
 }
 
@@ -425,18 +632,20 @@ function renderLegend(locations) {
     title.textContent = `${countryFlag(country)} ${country}`.trim();
     group.appendChild(title);
 
-    Array.from(byCountry[country]).sort().forEach((l) => {
-      const item = document.createElement("div");
-      item.className = "legend-item";
-      const sw = document.createElement("span");
-      sw.className = "legend-swatch";
-      sw.style.background = colorMap[country + "||" + l] || "#888";
-      item.appendChild(sw);
-      const lbl = document.createElement("span");
-      lbl.textContent = l;
-      item.appendChild(lbl);
-      group.appendChild(item);
-    });
+    Array.from(byCountry[country])
+      .sort()
+      .forEach((l) => {
+        const item = document.createElement("div");
+        item.className = "legend-item";
+        const sw = document.createElement("span");
+        sw.className = "legend-swatch";
+        sw.style.background = colorMap[country + "||" + l] || "#888";
+        item.appendChild(sw);
+        const lbl = document.createElement("span");
+        lbl.textContent = l;
+        item.appendChild(lbl);
+        group.appendChild(item);
+      });
     panel.appendChild(group);
   }
 }
@@ -445,7 +654,9 @@ function renderLegend(locations) {
 
 function computeYearEnd(locations) {
   const nowY = realCurrentYear();
-  const dataYears = locations.map((l) => parseInt(l.start.slice(0, 4), 10)).filter((y) => !Number.isNaN(y));
+  const dataYears = locations
+    .map((l) => parseInt(l.start.slice(0, 4), 10))
+    .filter((y) => !Number.isNaN(y));
   const maxDataYear = dataYears.length ? Math.max(...dataYears) : nowY;
   return Math.max(nowY, maxDataYear) + 2;
 }
@@ -470,7 +681,9 @@ function buildMonthCard(year, month, locations) {
     monthStays.forEach((loc) => {
       const item = document.createElement("span");
       item.className = "month-legend-item";
-      item.title = loc.country ? `${loc.location}, ${loc.country}` : loc.location;
+      item.title = loc.country
+        ? `${loc.location}, ${loc.country}`
+        : loc.location;
       const sw = document.createElement("span");
       sw.className = "legend-swatch";
       sw.style.background = stayColor(loc);
@@ -518,35 +731,26 @@ function buildMonthCard(year, month, locations) {
 
     if (dayLocations.length) {
       const tripStart = dayLocations.find((l) => l.start === dateStr);
-      if (settings.daybox === "B") {
-        cell.style.background = stayColor(dayLocations[0]);
-        cell.style.color = "#111";
-        const flag = tripStart ? countryFlag(tripStart.country) : "";
-        if (flag) {
-          cell.classList.add("trip-start");
-          const flagBg = document.createElement("span");
-          flagBg.className = "flag-bg";
-          flagBg.textContent = flag;
-          flagBg.setAttribute("aria-hidden", "true");
-          cell.appendChild(flagBg);
-        }
-      } else {
-        const flag = countryFlag(dayLocations[0].country);
-        if (flag) {
-          cell.classList.add("has-flag");
-          const flagBg = document.createElement("span");
-          flagBg.className = "flag-bg";
-          flagBg.textContent = flag;
-          flagBg.setAttribute("aria-hidden", "true");
-          cell.appendChild(flagBg);
-        }
+      cell.style.background = stayColor(dayLocations[0]);
+      cell.style.color = "#111";
+      const flag = tripStart ? countryFlag(tripStart.country) : "";
+      if (flag) {
+        cell.classList.add("trip-start");
+        const flagBg = document.createElement("span");
+        flagBg.className = "flag-bg";
+        flagBg.textContent = flag;
+        flagBg.setAttribute("aria-hidden", "true");
+        cell.appendChild(flagBg);
       }
       if (tripStart) {
+        cell.dataset.tripStartId = tripStart.id;
         const days = document.createElement("span");
         days.className = "trip-days";
         days.textContent = `${isoDaysInclusive(tripStart.start, tripStart.end)}d`;
         cell.appendChild(days);
       }
+      const tripEnd = dayLocations.find((l) => l.end === dateStr);
+      if (tripEnd) cell.dataset.tripEndId = tripEnd.id;
     }
 
     const num = document.createElement("span");
@@ -554,7 +758,7 @@ function buildMonthCard(year, month, locations) {
     num.textContent = d;
     cell.appendChild(num);
 
-    if (settings.daybox === "B" && dayLocations.length > 1) {
+    if (dayLocations.length > 1) {
       const strip = document.createElement("div");
       strip.className = "stack-strip";
       dayLocations.slice(1, 4).forEach((l) => {
@@ -568,7 +772,7 @@ function buildMonthCard(year, month, locations) {
     if (dayLocations.length) {
       const titleParts = dayLocations.map((l) => {
         const range = l.start === l.end ? l.start : `${l.start} → ${l.end}`;
-        return `${l.label} [${range}]`;
+        return `${stayTitle(l)} [${range}]`;
       });
       cell.title = titleParts.join("\n");
     }
@@ -593,6 +797,14 @@ function renderYears(locations) {
 
     const title = document.createElement("h2");
     title.className = "year-title";
+    const missing = countMissingDays(locations, y);
+    if (missing === 0) {
+      const check = document.createElement("span");
+      check.className = "year-complete";
+      check.textContent = "✅";
+      check.setAttribute("aria-hidden", "true");
+      title.appendChild(check);
+    }
     const yearLabel = document.createElement("span");
     yearLabel.textContent = String(y);
     title.appendChild(yearLabel);
@@ -631,17 +843,19 @@ function renderYears(locations) {
         row.appendChild(el);
       });
       title.appendChild(row);
-      const missing = countMissingDays(locations, y);
-      const miss = document.createElement("span");
-      miss.className = "year-missing";
-      miss.textContent = `Missing ${missing} day${missing === 1 ? "" : "s"}`;
-      title.appendChild(miss);
+      if (missing > 0) {
+        const miss = document.createElement("span");
+        miss.className = "year-missing";
+        miss.textContent = `Missing ${missing} day${missing === 1 ? "" : "s"}`;
+        title.appendChild(miss);
+      }
     }
     section.appendChild(title);
 
     const grid = document.createElement("div");
     grid.className = "months-grid";
-    for (let m = 1; m <= 12; m++) grid.appendChild(buildMonthCard(y, m, locations));
+    for (let m = 1; m <= 12; m++)
+      grid.appendChild(buildMonthCard(y, m, locations));
     section.appendChild(grid);
 
     container.appendChild(section);
@@ -678,7 +892,7 @@ function stickyHeaderHeight() {
 function syncStickyOffset() {
   document.documentElement.style.setProperty(
     "--sticky-header-height",
-    stickyHeaderHeight() + "px"
+    stickyHeaderHeight() + "px",
   );
 }
 
@@ -701,8 +915,12 @@ function scrollToYear(year, { smooth = false } = {}) {
   const y = clampYear(year);
   const el = document.getElementById("y" + y);
   if (!el) return;
-  const top = el.getBoundingClientRect().top + window.scrollY - stickyHeaderHeight() - 8;
-  window.scrollTo({ top: Math.max(0, top), behavior: smooth ? "smooth" : "auto" });
+  const top =
+    el.getBoundingClientRect().top + window.scrollY - stickyHeaderHeight() - 8;
+  window.scrollTo({
+    top: Math.max(0, top),
+    behavior: smooth ? "smooth" : "auto",
+  });
   setCurrentYear(y);
 }
 
@@ -735,7 +953,7 @@ function setupScrollSpy() {
         }
       });
     },
-    { rootMargin: `-${bandTop}px 0px -${marginBottom}px 0px`, threshold: 0 }
+    { rootMargin: `-${bandTop}px 0px -${marginBottom}px 0px`, threshold: 0 },
   );
   sections.forEach((s) => scrollObserver.observe(s));
 }
@@ -767,7 +985,10 @@ function goToToday() {
     const rect = cell.getBoundingClientRect();
     const desiredCenter = offset + (window.innerHeight - offset) / 2;
     const currentCenter = rect.top + rect.height / 2;
-    window.scrollTo({ top: window.scrollY + (currentCenter - desiredCenter), behavior: "smooth" });
+    window.scrollTo({
+      top: window.scrollY + (currentCenter - desiredCenter),
+      behavior: "smooth",
+    });
     cell.classList.add("flash");
     setTimeout(() => cell.classList.remove("flash"), 1200);
   } else {
@@ -796,7 +1017,12 @@ function openCountryTooltip(el, stat, year, locations) {
   countryTooltipAnchor = el;
   const rangeStart = `${year}-01-01`;
   const rangeEnd = `${year}-12-31`;
-  const stays = staysForCountryInRange(locations, stat.country, rangeStart, rangeEnd);
+  const stays = staysForCountryInRange(
+    locations,
+    stat.country,
+    rangeStart,
+    rangeEnd,
+  );
 
   tip.innerHTML = "";
   const title = document.createElement("div");
@@ -835,8 +1061,10 @@ function openCountryTooltip(el, stat, year, locations) {
   const rect = tip.getBoundingClientRect();
   let x = chip.left;
   let y = chip.bottom + 6;
-  if (x + rect.width > window.innerWidth - 8) x = Math.max(8, window.innerWidth - rect.width - 8);
-  if (y + rect.height > window.innerHeight - 8) y = Math.max(8, chip.top - rect.height - 6);
+  if (x + rect.width > window.innerWidth - 8)
+    x = Math.max(8, window.innerWidth - rect.width - 8);
+  if (y + rect.height > window.innerHeight - 8)
+    y = Math.max(8, chip.top - rect.height - 6);
   tip.style.left = x + "px";
   tip.style.top = y + "px";
 }
@@ -866,8 +1094,12 @@ function openDayPopover(clickEvent, dayLocations) {
     row.appendChild(sw);
     const lbl = document.createElement("span");
     lbl.className = "lbl";
-    lbl.textContent = loc.label;
+    lbl.textContent = stayTitle(loc);
     row.appendChild(lbl);
+    const who = document.createElement("span");
+    who.className = "who";
+    who.textContent = stayPersonMark(loc);
+    row.appendChild(who);
     row.addEventListener("click", () => {
       closeDayPopover();
       openLocationModal(loc);
@@ -879,8 +1111,10 @@ function openDayPopover(clickEvent, dayLocations) {
   const rect = pop.getBoundingClientRect();
   let x = clickEvent.clientX + 8;
   let y = clickEvent.clientY + 8;
-  if (x + rect.width > window.innerWidth) x = window.innerWidth - rect.width - 8;
-  if (y + rect.height > window.innerHeight) y = window.innerHeight - rect.height - 8;
+  if (x + rect.width > window.innerWidth)
+    x = window.innerWidth - rect.width - 8;
+  if (y + rect.height > window.innerHeight)
+    y = window.innerHeight - rect.height - 8;
   pop.style.left = x + "px";
   pop.style.top = y + "px";
 }
@@ -890,7 +1124,8 @@ function openDayPopover(clickEvent, dayLocations) {
 // "click" event on the same target, which would otherwise close it again.
 document.addEventListener("pointerdown", (e) => {
   const pop = document.getElementById("day-popover");
-  if (!pop.classList.contains("hidden") && !pop.contains(e.target)) closeDayPopover();
+  if (!pop.classList.contains("hidden") && !pop.contains(e.target))
+    closeDayPopover();
 
   const tip = document.getElementById("country-tooltip");
   if (tip.classList.contains("hidden")) return;
@@ -906,18 +1141,59 @@ function highlightRange(a, b) {
   clearHighlight();
   const lo = a < b ? a : b;
   const hi = a < b ? b : a;
-  document.querySelectorAll("#years-container .day-cell[data-date]").forEach((c) => {
-    if (c.dataset.date >= lo && c.dataset.date <= hi) c.classList.add("selecting");
-  });
+  document
+    .querySelectorAll("#years-container .day-cell[data-date]")
+    .forEach((c) => {
+      if (c.dataset.date >= lo && c.dataset.date <= hi)
+        c.classList.add("selecting");
+    });
 }
 
 function clearHighlight() {
-  document.querySelectorAll("#years-container .day-cell.selecting").forEach((c) => c.classList.remove("selecting"));
+  document
+    .querySelectorAll("#years-container .day-cell.selecting")
+    .forEach((c) => c.classList.remove("selecting"));
 }
 
 function cellAtPoint(x, y) {
   const el = document.elementFromPoint(x, y);
   return el && el.closest ? el.closest(".day-cell[data-date]") : null;
+}
+
+const RESIZE_EDGE_PX = 5;
+let resizeHoverCell = null;
+
+function tripEdgeAt(cell, clientX) {
+  if (!cell) return null;
+  const rect = cell.getBoundingClientRect();
+  const startId = cell.dataset.tripStartId;
+  const endId = cell.dataset.tripEndId;
+  if (startId && clientX - rect.left <= RESIZE_EDGE_PX)
+    return { edge: "start", id: startId };
+  if (endId && rect.right - clientX <= RESIZE_EDGE_PX)
+    return { edge: "end", id: endId };
+  return null;
+}
+
+function setResizeHover(cell, on) {
+  if (resizeHoverCell && resizeHoverCell !== cell)
+    resizeHoverCell.classList.remove("resize-edge");
+  resizeHoverCell = on && cell ? cell : null;
+  if (cell) cell.classList.toggle("resize-edge", !!on);
+}
+
+function applyTripResize(resize) {
+  const loc = state.locations.find((l) => l.id === resize.id);
+  if (!loc) return false;
+  const start = resize.edge === "start" ? resize.liveDate : loc.start;
+  const end = resize.edge === "end" ? resize.liveDate : loc.end;
+  if (start > end || (start === loc.start && end === loc.end)) return false;
+  loc.start = start;
+  loc.end = end;
+  persist();
+  renderAll();
+  showToast("Location updated");
+  return true;
 }
 
 function setupDragToAdd() {
@@ -927,15 +1203,58 @@ function setupDragToAdd() {
     if (e.button !== undefined && e.button !== 0) return;
     const cell = e.target.closest(".day-cell[data-date]");
     if (!cell) return;
-    dragState = { startDate: cell.dataset.date, endDate: cell.dataset.date, moved: false };
+    const hit = tripEdgeAt(cell, e.clientX);
+    if (hit) {
+      const loc = state.locations.find((l) => l.id === hit.id);
+      if (!loc) return;
+      dragState = {
+        mode: "resize",
+        edge: hit.edge,
+        id: loc.id,
+        liveDate: hit.edge === "start" ? loc.start : loc.end,
+        anchorDate: hit.edge === "start" ? loc.end : loc.start,
+        clickDate: cell.dataset.date,
+        moved: false,
+      };
+      highlightRange(loc.start, loc.end);
+      document.body.classList.add("resizing-trip");
+      if (container.setPointerCapture) container.setPointerCapture(e.pointerId);
+      e.preventDefault();
+      return;
+    }
+    dragState = {
+      mode: "add",
+      startDate: cell.dataset.date,
+      endDate: cell.dataset.date,
+      moved: false,
+    };
     highlightRange(dragState.startDate, dragState.endDate);
     if (container.setPointerCapture) container.setPointerCapture(e.pointerId);
   });
 
   window.addEventListener("pointermove", (e) => {
-    if (!dragState) return;
+    if (!dragState) {
+      const cell = cellAtPoint(e.clientX, e.clientY);
+      setResizeHover(cell, cell && tripEdgeAt(cell, e.clientX));
+      return;
+    }
     const cell = cellAtPoint(e.clientX, e.clientY);
     if (!cell) return;
+    if (dragState.mode === "resize") {
+      let live = cell.dataset.date;
+      if (dragState.edge === "start" && live > dragState.anchorDate)
+        live = dragState.anchorDate;
+      if (dragState.edge === "end" && live < dragState.anchorDate)
+        live = dragState.anchorDate;
+      if (live !== dragState.liveDate) {
+        dragState.liveDate = live;
+        dragState.moved = true;
+        const start = dragState.edge === "start" ? live : dragState.anchorDate;
+        const end = dragState.edge === "end" ? live : dragState.anchorDate;
+        highlightRange(start, end);
+      }
+      return;
+    }
     if (cell.dataset.date !== dragState.endDate) {
       dragState.endDate = cell.dataset.date;
       dragState.moved = true;
@@ -945,12 +1264,27 @@ function setupDragToAdd() {
 
   window.addEventListener("pointerup", (e) => {
     if (!dragState) return;
-    const { startDate, endDate, moved } = dragState;
+    const current = dragState;
     clearHighlight();
+    document.body.classList.remove("resizing-trip");
     dragState = null;
+    setResizeHover(null, false);
+
+    if (current.mode === "resize") {
+      if (current.moved) applyTripResize(current);
+      else {
+        const dayLocations = locationsForDate(
+          filteredLocations(),
+          current.clickDate,
+        );
+        if (dayLocations.length) openDayPopover(e, dayLocations);
+      }
+      return;
+    }
+
+    const { startDate, endDate, moved } = current;
     const lo = startDate < endDate ? startDate : endDate;
     const hi = startDate < endDate ? endDate : startDate;
-
     if (!moved) {
       const dayLocations = locationsForDate(filteredLocations(), startDate);
       if (dayLocations.length) openDayPopover(e, dayLocations);
@@ -987,10 +1321,16 @@ function pastLocations() {
     if (!name) return;
     const prev = byName.get(name.toLowerCase());
     if (!prev || l.start > prev.start) {
-      byName.set(name.toLowerCase(), { name, country: l.country || "", start: l.start });
+      byName.set(name.toLowerCase(), {
+        name,
+        country: l.country || "",
+        start: l.start,
+      });
     }
   });
-  return Array.from(byName.values()).sort((a, b) => a.name.localeCompare(b.name));
+  return Array.from(byName.values()).sort((a, b) =>
+    a.name.localeCompare(b.name),
+  );
 }
 
 function countryForLocationName(name) {
@@ -1001,14 +1341,18 @@ function countryForLocationName(name) {
 }
 
 function applyCountryFromLocation() {
-  const country = countryForLocationName(document.getElementById("f-location").value);
+  const country = countryForLocationName(
+    document.getElementById("f-location").value,
+  );
   if (country) populateCountrySelect(country);
 }
 
 let locationComboIndex = -1;
 
 function locationSuggestionOptions() {
-  return [...document.querySelectorAll("#location-suggestions li[role='option']")];
+  return [
+    ...document.querySelectorAll("#location-suggestions li[role='option']"),
+  ];
 }
 
 function chooseLocationSuggestion(item) {
@@ -1023,9 +1367,13 @@ function highlightLocationSuggestion(index) {
     locationComboIndex = -1;
     return;
   }
-  locationComboIndex = ((index % options.length) + options.length) % options.length;
+  locationComboIndex =
+    ((index % options.length) + options.length) % options.length;
   options.forEach((li, i) => {
-    li.setAttribute("aria-selected", i === locationComboIndex ? "true" : "false");
+    li.setAttribute(
+      "aria-selected",
+      i === locationComboIndex ? "true" : "false",
+    );
     if (i === locationComboIndex) li.scrollIntoView({ block: "nearest" });
   });
 }
@@ -1039,13 +1387,17 @@ function closeLocationSuggestions() {
 function renderLocationSuggestions(query) {
   const list = document.getElementById("location-suggestions");
   const q = (query || "").trim().toLowerCase();
-  const items = pastLocations().filter((l) => !q || l.name.toLowerCase().includes(q));
+  const items = pastLocations().filter(
+    (l) => !q || l.name.toLowerCase().includes(q),
+  );
   list.innerHTML = "";
   locationComboIndex = -1;
   if (!items.length) {
     const empty = document.createElement("li");
     empty.className = "combo-empty";
-    empty.textContent = q ? "No matching past locations" : "No past locations yet";
+    empty.textContent = q
+      ? "No matching past locations"
+      : "No past locations yet";
     list.appendChild(empty);
   } else {
     items.forEach((item) => {
@@ -1085,12 +1437,23 @@ function setupLocationCombo() {
     if (e.key === "ArrowUp") {
       e.preventDefault();
       if (!open) renderLocationSuggestions(input.value);
-      highlightLocationSuggestion(locationComboIndex < 0 ? locationSuggestionOptions().length - 1 : locationComboIndex - 1);
+      highlightLocationSuggestion(
+        locationComboIndex < 0
+          ? locationSuggestionOptions().length - 1
+          : locationComboIndex - 1,
+      );
       return;
     }
-    if (e.key === "Enter" && open && locationComboIndex >= 0 && options[locationComboIndex]) {
+    if (
+      e.key === "Enter" &&
+      open &&
+      locationComboIndex >= 0 &&
+      options[locationComboIndex]
+    ) {
       e.preventDefault();
-      options[locationComboIndex].dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+      options[locationComboIndex].dispatchEvent(
+        new MouseEvent("mousedown", { bubbles: true }),
+      );
       return;
     }
     if (e.key === "Escape" && open) {
@@ -1121,11 +1484,15 @@ function openLocationModal(loc, prefillStart, prefillEnd) {
 
   document.getElementById("f-id").value = loc ? loc.id : "";
   document.getElementById("f-person").value = loc ? loc.person : "Both";
-  document.getElementById("f-start").value = loc ? loc.start : prefillStart || "";
-  document.getElementById("f-end").value = loc ? loc.end : prefillEnd || prefillStart || "";
+  document.getElementById("f-start").value = loc
+    ? loc.start
+    : prefillStart || "";
+  document.getElementById("f-end").value = loc
+    ? loc.end
+    : prefillEnd || prefillStart || "";
   document.getElementById("f-location").value = loc ? loc.location || "" : "";
   populateCountrySelect(loc ? loc.country || "" : "");
-  document.getElementById("f-label").value = loc ? loc.label : "";
+  document.getElementById("f-comments").value = loc ? loc.comments || "" : "";
 
   title.textContent = loc ? "Edit Location" : "Add Location";
   deleteBtn.classList.toggle("hidden", !loc);
@@ -1156,10 +1523,11 @@ document.getElementById("location-form").addEventListener("submit", (e) => {
     end,
     location: document.getElementById("f-location").value.trim(),
     country: document.getElementById("f-country").value.trim(),
-    label: document.getElementById("f-label").value.trim()
+    comments: stayComments(
+      document.getElementById("f-location").value.trim(),
+      document.getElementById("f-comments").value,
+    ),
   };
-
-  if (!loc.label) loc.label = loc.location || "Untitled";
 
   const idx = state.locations.findIndex((x) => x.id === id);
   if (idx >= 0) state.locations[idx] = loc;
@@ -1172,10 +1540,14 @@ document.getElementById("location-form").addEventListener("submit", (e) => {
   showToast(idx >= 0 ? "Location updated" : "Location added");
 });
 
-document.getElementById("f-cancel").addEventListener("click", closeLocationModal);
-document.getElementById("location-modal-overlay").addEventListener("click", (e) => {
-  if (e.target.id === "location-modal-overlay") closeLocationModal();
-});
+document
+  .getElementById("f-cancel")
+  .addEventListener("click", closeLocationModal);
+document
+  .getElementById("location-modal-overlay")
+  .addEventListener("click", (e) => {
+    if (e.target.id === "location-modal-overlay") closeLocationModal();
+  });
 
 document.getElementById("f-delete").addEventListener("click", () => {
   const id = document.getElementById("f-id").value;
@@ -1189,14 +1561,18 @@ document.getElementById("f-delete").addEventListener("click", () => {
   showToast("Location deleted");
 });
 
-document.getElementById("btn-add-location").addEventListener("click", () => openLocationModal(null));
+document
+  .getElementById("btn-add-location")
+  .addEventListener("click", () => openLocationModal(null));
 
 // ---------- manage locations modal ----------
 
 function renderManageList() {
   const container = document.getElementById("manage-list");
   container.innerHTML = "";
-  const sorted = [...state.locations].sort((a, b) => a.start.localeCompare(b.start));
+  const sorted = [...state.locations].sort((a, b) =>
+    a.start.localeCompare(b.start),
+  );
 
   if (!sorted.length) {
     container.innerHTML = '<p class="hint">No locations yet.</p>';
@@ -1212,14 +1588,20 @@ function renderManageList() {
     const row = document.createElement("tr");
     row.style.borderBottom = "1px solid var(--border)";
 
-    const range = loc.start === loc.end ? loc.start : `${loc.start} → ${loc.end}`;
+    const range =
+      loc.start === loc.end ? loc.start : `${loc.start} → ${loc.end}`;
     const where = `${loc.location || ""}${loc.country ? ", " + loc.country : ""}`;
-    const person = loc.person === "M" ? "♀ Mariana" : loc.person === "Both" ? "⚥ Both" : "♂ Bharath";
+    const person =
+      loc.person === "M"
+        ? "♀ Mariana"
+        : loc.person === "Both"
+          ? "⚥ Both"
+          : "♂ Bharath";
 
     row.innerHTML = `
       <td style="padding:7px 6px;white-space:nowrap;">${range}</td>
       <td style="padding:7px 6px;white-space:nowrap;">${person}</td>
-      <td style="padding:7px 6px;">${loc.label}</td>
+      <td style="padding:7px 6px;">${stayTitle(loc)}</td>
       <td style="padding:7px 6px;color:var(--text-dim);">${where}</td>
       <td style="padding:7px 6px;text-align:right;white-space:nowrap;">
         <button data-id="${loc.id}" class="edit-btn">Edit</button>
@@ -1246,30 +1628,45 @@ function openManageModal() {
 function closeManageModal() {
   document.getElementById("manage-modal-overlay").classList.add("hidden");
 }
-document.getElementById("btn-manage-locations").addEventListener("click", openManageModal);
-document.getElementById("manage-close").addEventListener("click", closeManageModal);
-document.getElementById("manage-modal-overlay").addEventListener("click", (e) => {
-  if (e.target.id === "manage-modal-overlay") closeManageModal();
-});
+document
+  .getElementById("btn-manage-locations")
+  .addEventListener("click", openManageModal);
+document
+  .getElementById("manage-close")
+  .addEventListener("click", closeManageModal);
+document
+  .getElementById("manage-modal-overlay")
+  .addEventListener("click", (e) => {
+    if (e.target.id === "manage-modal-overlay") closeManageModal();
+  });
 
 // ---------- copy JSON ----------
 
 function openJsonModal() {
   const sorted = {
     people: state.people,
-    locations: [...state.locations].sort((a, b) => a.start.localeCompare(b.start))
+    locations: [...state.locations].sort((a, b) =>
+      a.start.localeCompare(b.start),
+    ),
   };
-  document.getElementById("json-output").value = JSON.stringify(sorted, null, 2);
+  document.getElementById("json-output").value = JSON.stringify(
+    sorted,
+    null,
+    2,
+  );
   const editLink = document.getElementById("json-edit-link");
   editLink.href = `https://github.com/${GITHUB_REPO}/edit/${GITHUB_EDIT_BRANCH}/data.json`;
   document.getElementById("json-modal-overlay").classList.remove("hidden");
 }
-document.getElementById("btn-copy-json").addEventListener("click", openJsonModal);
+document
+  .getElementById("btn-copy-json")
+  .addEventListener("click", openJsonModal);
 document.getElementById("json-close").addEventListener("click", () => {
   document.getElementById("json-modal-overlay").classList.add("hidden");
 });
 document.getElementById("json-modal-overlay").addEventListener("click", (e) => {
-  if (e.target.id === "json-modal-overlay") document.getElementById("json-modal-overlay").classList.add("hidden");
+  if (e.target.id === "json-modal-overlay")
+    document.getElementById("json-modal-overlay").classList.add("hidden");
 });
 document.getElementById("json-copy-btn").addEventListener("click", async () => {
   const text = document.getElementById("json-output").value;
@@ -1286,14 +1683,7 @@ document.getElementById("json-copy-btn").addEventListener("click", async () => {
 
 // ---------- settings ----------
 
-function syncSettingsForm() {
-  document.querySelectorAll('input[name="daybox"]').forEach((input) => {
-    input.checked = input.value === settings.daybox;
-  });
-}
-
 function openSettingsModal() {
-  syncSettingsForm();
   document.getElementById("settings-modal-overlay").classList.remove("hidden");
 }
 
@@ -1301,19 +1691,17 @@ function closeSettingsModal() {
   document.getElementById("settings-modal-overlay").classList.add("hidden");
 }
 
-document.getElementById("btn-settings").addEventListener("click", openSettingsModal);
-document.getElementById("settings-close").addEventListener("click", closeSettingsModal);
-document.getElementById("settings-modal-overlay").addEventListener("click", (e) => {
-  if (e.target.id === "settings-modal-overlay") closeSettingsModal();
-});
-document.querySelectorAll('input[name="daybox"]').forEach((input) => {
-  input.addEventListener("change", () => {
-    if (!input.checked) return;
-    settings.daybox = input.value === "B" ? "B" : "M";
-    persistSettings();
-    renderAll();
+document
+  .getElementById("btn-settings")
+  .addEventListener("click", openSettingsModal);
+document
+  .getElementById("settings-close")
+  .addEventListener("click", closeSettingsModal);
+document
+  .getElementById("settings-modal-overlay")
+  .addEventListener("click", (e) => {
+    if (e.target.id === "settings-modal-overlay") closeSettingsModal();
   });
-});
 
 // ---------- filters ----------
 
@@ -1321,10 +1709,12 @@ function setupPersonChips() {
   ["B", "M"].forEach((p) => {
     const chip = document.getElementById("chip-" + p);
     const checkbox = chip.querySelector("input");
+    checkbox.checked = selectedPeople.has(p);
     checkbox.addEventListener("change", () => {
       if (checkbox.checked) selectedPeople.add(p);
       else selectedPeople.delete(p);
       chip.classList.toggle("checked", checkbox.checked);
+      persistSettings();
       renderAll();
     });
     chip.classList.toggle("checked", checkbox.checked);
@@ -1333,7 +1723,9 @@ function setupPersonChips() {
 
 function setupYearControls() {
   const sel = document.getElementById("year-select");
-  sel.addEventListener("change", () => scrollToYear(parseInt(sel.value, 10), { smooth: true }));
+  sel.addEventListener("change", () =>
+    scrollToYear(parseInt(sel.value, 10), { smooth: true }),
+  );
   document.getElementById("year-prev").addEventListener("click", () => {
     scrollToYear((currentYear || realCurrentYear()) - 1, { smooth: true });
   });
@@ -1357,6 +1749,7 @@ document.getElementById("btn-reset").addEventListener("click", async () => {
   localStorage.removeItem(STORAGE_KEY);
   await loadData();
   renderAll();
+  closeSettingsModal();
   showToast("Reset to data.json");
 });
 

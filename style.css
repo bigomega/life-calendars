@@ -28,15 +28,15 @@ body {
 }
 
 header.app-header {
-  padding: 20px 24px 12px;
+  padding: 8px 24px 0;
   border-bottom: none;
 }
 
 .header-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  justify-content: flex-start;
+  gap: 10px;
 }
 
 header.app-header h1 {
@@ -45,8 +45,8 @@ header.app-header h1 {
 }
 
 .icon-btn {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   padding: 0;
   display: inline-flex;
   align-items: center;
@@ -54,18 +54,23 @@ header.app-header h1 {
   flex-shrink: 0;
 }
 
+.btn-with-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .tabs {
   display: flex;
   gap: 6px;
-  margin-top: 10px;
 }
 
 .tab-btn {
   background: var(--panel);
   border: 1px solid var(--border);
   color: var(--text);
-  padding: 6px 14px;
-  border-radius: 8px 8px 0 0;
+  padding: 4px 12px;
+  border-radius: 999px;
   cursor: pointer;
   font-size: 13px;
 }
@@ -81,7 +86,7 @@ header.app-header h1 {
   flex-wrap: wrap;
   align-items: center;
   gap: 18px;
-  padding: 14px 24px;
+  padding: 8px 24px;
   border-bottom: 1px solid var(--border);
   background: var(--panel);
 }
@@ -163,7 +168,7 @@ button[aria-pressed="true"] {
 .spacer { flex: 1; }
 
 main {
-  padding: 20px 24px 60px;
+  padding: 12px 24px 60px;
 }
 
 #years-container {
@@ -224,6 +229,11 @@ main {
   font-variant-numeric: tabular-nums;
 }
 
+.year-complete {
+  font-size: 18px;
+  line-height: 1;
+}
+
 .year-missing {
   color: var(--text-dim);
   font-size: 13px;
@@ -246,7 +256,7 @@ main {
 }
 @media (max-width: 620px) {
   .months-grid { grid-template-columns: 1fr; }
-  .controls-bar { padding: 12px; }
+  .controls-bar { padding: 8px 12px; }
   main { padding: 14px; }
 }
 
@@ -352,6 +362,12 @@ main {
   z-index: 2;
 }
 
+.day-cell.resize-edge,
+body.resizing-trip,
+body.resizing-trip * {
+  cursor: col-resize !important;
+}
+
 .day-cell.flash {
   animation: today-flash 1.2s ease-out;
 }
@@ -366,7 +382,6 @@ main {
   user-select: none;
 }
 
-.day-cell.has-flag,
 .day-cell.trip-start {
   overflow: hidden;
 }
@@ -383,13 +398,6 @@ main {
   pointer-events: none;
   z-index: 0;
   user-select: none;
-}
-
-.day-cell.has-flag .num {
-  position: relative;
-  z-index: 1;
-  font-weight: 600;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9), 0 0 6px rgba(0, 0, 0, 0.7);
 }
 
 .day-cell.trip-start .num {
@@ -433,63 +441,6 @@ main {
 .stack-strip > span {
   flex: 1;
   border-radius: 2px;
-}
-
-.setting-block {
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 12px;
-  margin: 0 0 8px;
-}
-
-.setting-block legend {
-  font-size: 12px;
-  color: var(--text-dim);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  padding: 0 6px;
-}
-
-.choice-card {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 10px 12px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--panel-2);
-  cursor: pointer;
-  margin-bottom: 8px;
-}
-
-.choice-card:last-child {
-  margin-bottom: 0;
-}
-
-.choice-card:has(input:checked) {
-  border-color: var(--accent);
-}
-
-.choice-card input {
-  accent-color: var(--accent);
-  margin-top: 3px;
-}
-
-.choice-copy {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.choice-title {
-  font-size: 13px;
-  font-weight: 600;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-}
-
-.choice-desc {
-  font-size: 12px;
-  color: var(--text-dim);
 }
 
 /* Legend */
@@ -744,6 +695,13 @@ main {
 
 .pop-event .lbl {
   flex: 1;
+  min-width: 0;
+}
+
+.pop-event .who {
+  color: var(--text-dim);
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .toast {
