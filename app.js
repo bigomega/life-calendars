@@ -5,6 +5,7 @@
  */
 
 const STORAGE_KEY = "life-calendar-data-v1";
+const SETTINGS_KEY = "life-calendar-settings-v1";
 const YEAR_START = 2009;
 
 // Where "Copy JSON" points people to open a PR from.
@@ -112,6 +113,7 @@ let currentYear = null; // active/visible year, synced with #hash
 let yearEnd = YEAR_START;
 let scrollObserver = null;
 let dragState = null;
+let settings = { daybox: "M" };
 
 // ---------- utils ----------
 
@@ -166,6 +168,21 @@ function persist() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
+function loadSettings() {
+  try {
+    const raw = localStorage.getItem(SETTINGS_KEY);
+    if (!raw) return;
+    const parsed = JSON.parse(raw);
+    if (parsed.daybox === "B" || parsed.daybox === "M") settings.daybox = parsed.daybox;
+  } catch (e) {
+    // ignore corrupt settings
+  }
+}
+
+function persistSettings() {
+  localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+}
+
 // ---------- color map ----------
 
 function rebuildColorMap() {
@@ -192,6 +209,68 @@ function stayColor(loc) {
   return colorMap[key] || "hsl(0, 0%, 55%)";
 }
 
+function countryHue(country) {
+  return COUNTRY_HUES[country] !== undefined ? COUNTRY_HUES[country] : hashHue(country);
+}
+
+function countryColor(country) {
+  return `hsl(${countryHue(country)}, 58%, ${LIGHTNESS_STEPS[0]}%)`;
+}
+
+function isoDaysInclusive(start, end) {
+  const a = Date.parse(start + "T00:00:00");
+  const b = Date.parse(end + "T00:00:00");
+  return Math.round((b - a) / 86400000) + 1;
+}
+
+function countStayDays(locations, country, rangeStart, rangeEnd) {
+  const intervals = [];
+  for (const loc of locations) {
+    if (loc.cancelled || loc.type !== "stay" || loc.country !== country) continue;
+    if (!overlapsRange(loc, rangeStart, rangeEnd)) continue;
+    const s = loc.start < rangeStart ? rangeStart : loc.start;
+    const e = loc.end > rangeEnd ? rangeEnd : loc.end;
+    if (s <= e) intervals.push([s, e]);
+  }
+  intervals.sort((a, b) => a[0].localeCompare(b[0]));
+  let days = 0;
+  let curS = null;
+  let curE = null;
+  for (const [s, e] of intervals) {
+    if (curS === null) {
+      curS = s;
+      curE = e;
+    } else if (s <= curE) {
+      if (e > curE) curE = e;
+    } else {
+      days += isoDaysInclusive(curS, curE);
+      curS = s;
+      curE = e;
+    }
+  }
+  if (curS !== null) days += isoDaysInclusive(curS, curE);
+  return days;
+}
+
+function countryStatsInRange(locations, start, end) {
+  const firstSeen = {};
+  for (const loc of locations) {
+    if (loc.cancelled || loc.type !== "stay" || !loc.country) continue;
+    if (!overlapsRange(loc, start, end)) continue;
+    if (firstSeen[loc.country] === undefined || loc.start < firstSeen[loc.country]) {
+      firstSeen[loc.country] = loc.start;
+    }
+  }
+  return Object.keys(firstSeen)
+    .sort((a, b) => firstSeen[a].localeCompare(firstSeen[b]) || a.localeCompare(b))
+    .map((country) => ({
+      country,
+      flag: countryFlag(country),
+      color: countryColor(country),
+      days: countStayDays(locations, country, start, end)
+    }));
+}
+
 // ---------- filtering ----------
 
 function filteredLocations() {
@@ -200,6 +279,26 @@ function filteredLocations() {
 
 function locationsForDate(locations, dateStr) {
   return locations.filter((l) => l.start <= dateStr && dateStr <= l.end);
+}
+
+function overlapsRange(loc, start, end) {
+  return loc.start <= end && loc.end >= start;
+}
+
+// Unique stay locations overlapping [start, end], in first-appearance order.
+function uniqueStaysInRange(locations, start, end) {
+  const firstSeen = {};
+  for (const loc of locations) {
+    if (loc.type !== "stay" || !loc.location) continue;
+    if (!overlapsRange(loc, start, end)) continue;
+    const key = (loc.country || "") + "||" + loc.location;
+    if (firstSeen[key] === undefined || loc.start < firstSeen[key].start) {
+      firstSeen[key] = { loc, start: loc.start };
+    }
+  }
+  return Object.values(firstSeen)
+    .sort((a, b) => a.start.localeCompare(b.start) || a.loc.location.localeCompare(b.loc.location))
+    .map((x) => x.loc);
 }
 
 // ---------- rendering: legend ----------
@@ -274,9 +373,35 @@ function buildMonthCard(year, month, locations) {
   const card = document.createElement("div");
   card.className = "month-card";
 
+  const header = document.createElement("div");
+  header.className = "month-header";
+
   const h3 = document.createElement("h3");
   h3.textContent = `${MONTH_NAMES[month - 1]} ${year}`;
-  card.appendChild(h3);
+  header.appendChild(h3);
+
+  const monthStart = isoDate(year, month, 1);
+  const monthEnd = isoDate(year, month, new Date(year, month, 0).getDate());
+  const monthStays = uniqueStaysInRange(locations, monthStart, monthEnd);
+  if (monthStays.length) {
+    const legend = document.createElement("div");
+    legend.className = "month-legend";
+    monthStays.forEach((loc) => {
+      const item = document.createElement("span");
+      item.className = "month-legend-item";
+      item.title = loc.country ? `${loc.location}, ${loc.country}` : loc.location;
+      const sw = document.createElement("span");
+      sw.className = "legend-swatch";
+      sw.style.background = stayColor(loc);
+      item.appendChild(sw);
+      const lbl = document.createElement("span");
+      lbl.textContent = loc.location;
+      item.appendChild(lbl);
+      legend.appendChild(item);
+    });
+    header.appendChild(legend);
+  }
+  card.appendChild(header);
 
   const weekdayRow = document.createElement("div");
   weekdayRow.className = "weekday-row";
@@ -313,14 +438,30 @@ function buildMonthCard(year, month, locations) {
     if (dayLocations.length) cell.classList.add("has-locations");
 
     if (stays.length) {
-      cell.style.background = stayColor(stays[0]);
-      cell.style.color = "#111";
-      const flag = countryFlag(stays[0].country);
-      if (flag && !travel.some((l) => l.cancelled)) {
-        const flagEl = document.createElement("span");
-        flagEl.className = "flag-badge";
-        flagEl.textContent = flag;
-        cell.appendChild(flagEl);
+      if (settings.daybox === "B") {
+        cell.style.background = stayColor(stays[0]);
+        cell.style.color = "#111";
+        const tripStart = stays.find((l) => !l.cancelled && l.start === dateStr);
+        const flag = tripStart ? countryFlag(tripStart.country) : "";
+        if (flag) {
+          cell.classList.add("trip-start");
+          const flagBg = document.createElement("span");
+          flagBg.className = "flag-bg";
+          flagBg.textContent = flag;
+          flagBg.setAttribute("aria-hidden", "true");
+          cell.appendChild(flagBg);
+        }
+      } else {
+        const stay = stays.find((l) => !l.cancelled) || stays[0];
+        const flag = countryFlag(stay.country);
+        if (flag) {
+          cell.classList.add("has-flag");
+          const flagBg = document.createElement("span");
+          flagBg.className = "flag-bg";
+          flagBg.textContent = flag;
+          flagBg.setAttribute("aria-hidden", "true");
+          cell.appendChild(flagBg);
+        }
       }
     }
 
@@ -329,7 +470,7 @@ function buildMonthCard(year, month, locations) {
     num.textContent = d;
     cell.appendChild(num);
 
-    if (stays.length > 1) {
+    if (settings.daybox === "B" && stays.length > 1) {
       const strip = document.createElement("div");
       strip.className = "stack-strip";
       stays.slice(1, 4).forEach((l) => {
@@ -384,7 +525,36 @@ function renderYears(locations) {
 
     const title = document.createElement("h2");
     title.className = "year-title";
-    title.textContent = String(y);
+    const yearLabel = document.createElement("span");
+    yearLabel.textContent = String(y);
+    title.appendChild(yearLabel);
+
+    const stats = countryStatsInRange(locations, `${y}-01-01`, `${y}-12-31`);
+    if (stats.length) {
+      const row = document.createElement("span");
+      row.className = "year-countries";
+      stats.forEach((s) => {
+        const el = document.createElement("span");
+        el.className = "year-country";
+        el.title = `${s.country} · ${s.days} day${s.days === 1 ? "" : "s"}`;
+        if (s.flag) {
+          const flag = document.createElement("span");
+          flag.className = "year-flag";
+          flag.textContent = s.flag;
+          el.appendChild(flag);
+        }
+        const sw = document.createElement("span");
+        sw.className = "year-country-swatch";
+        sw.style.background = s.color;
+        el.appendChild(sw);
+        const days = document.createElement("span");
+        days.className = "year-country-days";
+        days.textContent = String(s.days);
+        el.appendChild(days);
+        row.appendChild(el);
+      });
+      title.appendChild(row);
+    }
     section.appendChild(title);
 
     const grid = document.createElement("div");
@@ -416,6 +586,24 @@ function clampYear(y) {
 function stickyHeaderHeight() {
   const el = document.querySelector(".sticky-top");
   return el ? el.offsetHeight : 0;
+}
+
+function syncStickyOffset() {
+  document.documentElement.style.setProperty(
+    "--sticky-header-height",
+    stickyHeaderHeight() + "px"
+  );
+}
+
+function setupStickyOffset() {
+  const el = document.querySelector(".sticky-top");
+  if (!el || setupStickyOffset._ro) return;
+  setupStickyOffset._ro = new ResizeObserver(() => {
+    syncStickyOffset();
+    if (document.querySelector(".year-section")) setupScrollSpy();
+  });
+  setupStickyOffset._ro.observe(el);
+  syncStickyOffset();
 }
 
 // Scrolls so the year's title lands just below the sticky header — plain
@@ -816,6 +1004,37 @@ document.getElementById("json-copy-btn").addEventListener("click", async () => {
   }
 });
 
+// ---------- settings ----------
+
+function syncSettingsForm() {
+  document.querySelectorAll('input[name="daybox"]').forEach((input) => {
+    input.checked = input.value === settings.daybox;
+  });
+}
+
+function openSettingsModal() {
+  syncSettingsForm();
+  document.getElementById("settings-modal-overlay").classList.remove("hidden");
+}
+
+function closeSettingsModal() {
+  document.getElementById("settings-modal-overlay").classList.add("hidden");
+}
+
+document.getElementById("btn-settings").addEventListener("click", openSettingsModal);
+document.getElementById("settings-close").addEventListener("click", closeSettingsModal);
+document.getElementById("settings-modal-overlay").addEventListener("click", (e) => {
+  if (e.target.id === "settings-modal-overlay") closeSettingsModal();
+});
+document.querySelectorAll('input[name="daybox"]').forEach((input) => {
+  input.addEventListener("change", () => {
+    if (!input.checked) return;
+    settings.daybox = input.value === "B" ? "B" : "M";
+    persistSettings();
+    renderAll();
+  });
+});
+
 // ---------- filters ----------
 
 function setupPersonChips() {
@@ -842,6 +1061,13 @@ function setupYearControls() {
     scrollToYear((currentYear || realCurrentYear()) + 1, { smooth: true });
   });
   document.getElementById("btn-today").addEventListener("click", goToToday);
+  document.getElementById("btn-legend").addEventListener("click", () => {
+    const panel = document.getElementById("legend-panel");
+    const btn = document.getElementById("btn-legend");
+    const opening = panel.classList.contains("hidden");
+    panel.classList.toggle("hidden", !opening);
+    btn.setAttribute("aria-pressed", opening ? "true" : "false");
+  });
 }
 
 // ---------- reset ----------
@@ -861,6 +1087,7 @@ document.addEventListener("keydown", (e) => {
   closeLocationModal();
   closeManageModal();
   document.getElementById("json-modal-overlay").classList.add("hidden");
+  closeSettingsModal();
   closeDayPopover();
 });
 
@@ -872,9 +1099,11 @@ window.addEventListener("hashchange", () => {
 });
 
 (async function init() {
+  loadSettings();
   await loadData();
   setupPersonChips();
   setupYearControls();
+  setupStickyOffset();
   setupDragToAdd();
   const initialYear = parseHashYear() || realCurrentYear();
   renderAll({ year: initialYear });

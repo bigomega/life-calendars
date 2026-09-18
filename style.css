@@ -32,9 +32,26 @@ header.app-header {
   border-bottom: none;
 }
 
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 header.app-header h1 {
-  margin: 0 0 4px;
+  margin: 0;
   font-size: 20px;
+}
+
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .tabs {
@@ -138,6 +155,11 @@ button.danger {
 
 button:hover { filter: brightness(1.12); }
 
+button[aria-pressed="true"] {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 .spacer { flex: 1; }
 
 main {
@@ -149,18 +171,63 @@ main {
   margin: 0 auto;
 }
 
+.year-section + .year-section {
+  margin-top: 24px;
+}
+
 .year-title {
+  position: sticky;
+  top: var(--sticky-header-height, 0px);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 14px;
   font-size: 26px;
   font-weight: 700;
-  margin: 36px 4px 16px;
-  padding-top: 18px;
+  margin: 0 0 12px;
+  padding: 10px 4px 12px;
+  background: var(--bg);
   border-top: 1px solid var(--border);
   color: var(--text);
 }
 
+.year-countries {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.year-country {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: default;
+}
+
+.year-flag {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.year-country-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.year-country-days {
+  color: var(--text-dim);
+  font-size: 13px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
 .year-section:first-child .year-title {
-  margin-top: 0;
-  padding-top: 0;
   border-top: none;
 }
 
@@ -186,11 +253,41 @@ main {
   padding: 10px;
 }
 
-.month-card h3 {
+.month-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 10px;
   margin: 2px 4px 8px;
+}
+
+.month-card h3 {
+  margin: 0;
   font-size: 14px;
   font-weight: 600;
   color: var(--text-dim);
+  flex-shrink: 0;
+}
+
+.month-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+}
+
+.month-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text-dim);
+  line-height: 1.2;
+}
+
+.month-legend-item .legend-swatch {
+  width: 10px;
+  height: 10px;
 }
 
 .weekday-row {
@@ -273,6 +370,7 @@ main {
   justify-content: center;
   font-size: 11px;
   pointer-events: none;
+  z-index: 2;
 }
 
 .transit-marker.dashed {
@@ -285,15 +383,43 @@ main {
   top: -2px;
   right: -2px;
   font-size: 8px;
+  z-index: 2;
 }
 
-.flag-badge {
+.day-cell.has-flag,
+.day-cell.trip-start {
+  overflow: hidden;
+}
+
+.flag-bg {
   position: absolute;
-  top: 1px;
-  right: 2px;
-  font-size: 9px;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
   line-height: 1;
+  transform: scale(1.45);
   pointer-events: none;
+  z-index: 0;
+  user-select: none;
+}
+
+.day-cell.has-flag .num {
+  position: relative;
+  z-index: 1;
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9), 0 0 6px rgba(0, 0, 0, 0.7);
+}
+
+.day-cell.trip-start .num {
+  position: relative;
+  z-index: 1;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.72);
+  border-radius: 2px;
+  padding: 0 2px;
+  text-shadow: none;
 }
 
 .stack-strip {
@@ -305,11 +431,69 @@ main {
   border-radius: 2px;
   display: flex;
   gap: 1px;
+  z-index: 1;
 }
 
 .stack-strip > span {
   flex: 1;
   border-radius: 2px;
+}
+
+.setting-block {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+  margin: 0 0 8px;
+}
+
+.setting-block legend {
+  font-size: 12px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0 6px;
+}
+
+.choice-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel-2);
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+
+.choice-card:last-child {
+  margin-bottom: 0;
+}
+
+.choice-card:has(input:checked) {
+  border-color: var(--accent);
+}
+
+.choice-card input {
+  accent-color: var(--accent);
+  margin-top: 3px;
+}
+
+.choice-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.choice-title {
+  font-size: 13px;
+  font-weight: 600;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.choice-desc {
+  font-size: 12px;
+  color: var(--text-dim);
 }
 
 /* Legend */

@@ -10,7 +10,15 @@
 
 <div class="sticky-top">
   <header class="app-header">
-    <h1>Life Calendars</h1>
+    <div class="header-row">
+      <h1>Life Calendars</h1>
+      <button id="btn-settings" class="icon-btn" title="Settings" aria-label="Settings" aria-haspopup="dialog">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+      </button>
+    </div>
     <div class="tabs">
       <button class="tab-btn active" data-tab="location">Location Calendar</button>
     </div>
@@ -33,6 +41,7 @@
       <select id="year-select"></select>
       <button id="year-next">▶</button>
       <button id="btn-today">Today</button>
+      <button id="btn-legend" aria-pressed="false" aria-controls="legend-panel">Legend</button>
     </div>
 
     <div class="spacer"></div>
@@ -45,7 +54,7 @@
     </div>
   </div>
 
-  <div class="legend-panel" id="legend-panel"></div>
+  <div class="legend-panel hidden" id="legend-panel"></div>
 </div>
 
 <main>
@@ -172,6 +181,36 @@
       <div class="right">
         <button type="button" id="json-copy-btn" class="primary">Copy to clipboard</button>
         <button type="button" id="json-close">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Settings modal -->
+<div class="overlay hidden" id="settings-modal-overlay">
+  <div class="modal settings-modal" role="dialog" aria-labelledby="settings-title">
+    <h2 id="settings-title">Settings</h2>
+    <fieldset class="setting-block">
+      <legend>Day boxes</legend>
+      <label class="choice-card">
+        <input type="radio" name="daybox" value="M">
+        <span class="choice-copy">
+          <span class="choice-title">daybox:M</span>
+          <span class="choice-desc">Uncolored boxes, flag on every stay day</span>
+        </span>
+      </label>
+      <label class="choice-card">
+        <input type="radio" name="daybox" value="B">
+        <span class="choice-copy">
+          <span class="choice-title">daybox:B</span>
+          <span class="choice-desc">Location colors, flag on the first day of each trip</span>
+        </span>
+      </label>
+    </fieldset>
+    <div class="form-actions">
+      <div></div>
+      <div class="right">
+        <button type="button" id="settings-close">Close</button>
       </div>
     </div>
   </div>
