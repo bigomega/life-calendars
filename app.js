@@ -621,6 +621,27 @@ function staysForCountryInRange(locations, country, rangeStart, rangeEnd) {
     }));
 }
 
+function groupStaysByLocation(stays) {
+  const byName = new Map();
+  for (const stay of stays) {
+    const key = stay.location || "";
+    if (!byName.has(key)) byName.set(key, []);
+    byName.get(key).push(stay);
+  }
+  return Array.from(byName.entries())
+    .map(([location, ranges]) => {
+      ranges.sort((a, b) => a.start.localeCompare(b.start));
+      return {
+        location,
+        ranges,
+        days: mergeIntervalDays(ranges.map((r) => [r.start, r.end])),
+      };
+    })
+    .sort(
+      (a, b) => b.days - a.days || a.location.localeCompare(b.location),
+    );
+}
+
 function formatDayNoYear(iso) {
   const parts = (iso || "").split("-");
   if (parts.length < 3) return iso;
@@ -727,8 +748,11 @@ function buildMonthCard(year, month, locations) {
   const today = todayIso();
   const card = document.createElement("div");
   card.className = "month-card";
-  if (`${year}-${pad2(month)}` === today.slice(0, 7)) {
+  const ym = `${year}-${pad2(month)}`;
+  if (ym === today.slice(0, 7)) {
     card.classList.add("current-month");
+  } else if (ym > today.slice(0, 7)) {
+    card.classList.add("future-month");
   }
 
   const header = document.createElement("div");
@@ -1099,6 +1123,7 @@ function openCountryTooltip(el, stat, year, locations) {
   );
 
   tip.innerHTML = "";
+  tip.style.borderColor = stat.color;
   const title = document.createElement("div");
   title.className = "tt-title";
   title.style.background = stat.color;
@@ -1111,22 +1136,24 @@ function openCountryTooltip(el, stat, year, locations) {
     empty.textContent = "No stays this year";
     tip.appendChild(empty);
   } else {
-    stays.forEach((stay) => {
-      const row = document.createElement("div");
-      row.className = "tt-range";
-      const loc = document.createElement("span");
-      loc.className = "tt-loc";
-      loc.append(stay.location, " ");
+    groupStaysByLocation(stays).forEach((group) => {
+      const wrap = document.createElement("div");
+      wrap.className = "tt-group";
+      const head = document.createElement("div");
+      head.className = "tt-loc";
+      head.append(group.location, " ");
       const count = document.createElement("span");
       count.className = "tt-count";
-      count.textContent = `(${isoDaysInclusive(stay.start, stay.end)})`;
-      loc.appendChild(count);
-      const dates = document.createElement("span");
-      dates.className = "tt-dates";
-      dates.textContent = formatStayRange(stay.start, stay.end);
-      row.appendChild(loc);
-      row.appendChild(dates);
-      tip.appendChild(row);
+      count.textContent = `(${group.days})`;
+      head.appendChild(count);
+      wrap.appendChild(head);
+      group.ranges.forEach((stay) => {
+        const dates = document.createElement("div");
+        dates.className = "tt-dates";
+        dates.textContent = formatStayRange(stay.start, stay.end);
+        wrap.appendChild(dates);
+      });
+      tip.appendChild(wrap);
     });
   }
 

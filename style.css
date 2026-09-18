@@ -252,8 +252,9 @@ main {
   padding: 3px 8px 3px 7px;
   background: none;
   border: 1px solid currentColor;
-  border-left-width: 5px;
+  border-left-width: 13px;
   cursor: pointer;
+  border-radius: 30px;
 }
 
 .year-flag {
@@ -333,6 +334,10 @@ main {
 .month-card.current-month h3 {
   color: var(--text);
   font-weight: 700;
+}
+
+.month-card.future-month {
+  opacity: 0.62;
 }
 
 .month-header {
@@ -761,12 +766,12 @@ body.resizing-trip * {
 }
 
 .country-tooltip .tt-range {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
   padding: 3px 12px;
   color: var(--text);
+}
+
+.country-tooltip .tt-group {
+  padding: 4px 12px 6px;
 }
 
 .country-tooltip .tt-loc {
@@ -783,6 +788,7 @@ body.resizing-trip * {
   color: var(--text-dim);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
+  padding: 1px 0 1px 10px;
 }
 
 .day-popover {
