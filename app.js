@@ -405,6 +405,17 @@ function setCurrentYear(y) {
 function setupScrollSpy() {
   if (scrollObserver) scrollObserver.disconnect();
   const sections = Array.from(document.querySelectorAll(".year-section"));
+
+  // Trigger band must line up with where scrollToYear() actually lands a
+  // section's top (stickyHeaderHeight + 8px) — a generic percentage-based
+  // band can straddle the boundary between two years and misattribute the
+  // "current" year to the one above, which then gets written to the URL
+  // hash and compounds by one year on every reload.
+  const offset = stickyHeaderHeight();
+  const bandTop = offset + 4;
+  const bandBottom = offset + 12;
+  const marginBottom = Math.max(0, window.innerHeight - bandBottom);
+
   scrollObserver = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
@@ -413,7 +424,7 @@ function setupScrollSpy() {
         }
       });
     },
-    { rootMargin: "-10% 0px -85% 0px", threshold: 0 }
+    { rootMargin: `-${bandTop}px 0px -${marginBottom}px 0px`, threshold: 0 }
   );
   sections.forEach((s) => scrollObserver.observe(s));
 }
@@ -808,6 +819,16 @@ document.getElementById("btn-reset").addEventListener("click", async () => {
   await loadData();
   renderAll();
   showToast("Reset to data.json");
+});
+
+// ---------- escape closes any open modal/popover ----------
+
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Escape") return;
+  closeLocationModal();
+  closeManageModal();
+  document.getElementById("json-modal-overlay").classList.add("hidden");
+  closeDayPopover();
 });
 
 // ---------- boot ----------
