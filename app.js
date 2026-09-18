@@ -597,7 +597,10 @@ function countMissingDays(locations, year) {
 function countMovesInYear(locations, year) {
   const start = `${year}-01-01`;
   const end = `${year}-12-31`;
-  return locations.filter((l) => l.start >= start && l.start <= end).length;
+  return locations.filter(
+    (l) =>
+      !isTransitCountry(l.country) && l.start >= start && l.start <= end
+  ).length;
 }
 
 function countryStatsInRange(locations, start, end) {
