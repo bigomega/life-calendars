@@ -269,6 +269,23 @@ main {
   font-variant-numeric: tabular-nums;
 }
 
+.year-donut {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  position: relative;
+  display: inline-block;
+}
+
+.year-donut::after {
+  content: "";
+  position: absolute;
+  inset: 5.5px;
+  border-radius: 50%;
+  background: var(--bg);
+}
+
 .year-complete {
   font-size: 18px;
   line-height: 1;

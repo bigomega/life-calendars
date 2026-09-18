@@ -604,6 +604,39 @@ function countryStatsInRange(locations, start, end) {
     .sort((a, b) => b.days - a.days || a.country.localeCompare(b.country));
 }
 
+function buildYearDonut(stats) {
+  const slices = stats.filter((s) => s.days > 0);
+  const total = slices.reduce((n, s) => n + s.days, 0);
+  if (!slices.length || total <= 0) return null;
+
+  let acc = 0;
+  const stops = slices.map((s, i) => {
+    const start = acc;
+    acc += (s.days / total) * 100;
+    const end = i === slices.length - 1 ? 100 : acc;
+    return `${s.color} ${start}% ${end}%`;
+  });
+
+  const pctLabel = (days) => {
+    const pct = (days / total) * 100;
+    if (pct > 0 && pct < 1) return "<1%";
+    return `${Math.round(pct)}%`;
+  };
+
+  const el = document.createElement("span");
+  el.className = "year-donut";
+  el.style.background = `conic-gradient(${stops.join(", ")})`;
+  el.setAttribute("role", "img");
+  el.setAttribute(
+    "aria-label",
+    slices.map((s) => `${s.country} ${pctLabel(s.days)}`).join(", "),
+  );
+  el.title = slices
+    .map((s) => `${s.country} ${pctLabel(s.days)} (${s.days}d)`)
+    .join("\n");
+  return el;
+}
+
 function staysForCountryInRange(locations, country, rangeStart, rangeEnd) {
   return locations
     .filter(
@@ -940,6 +973,8 @@ function renderYears(locations) {
         });
         row.appendChild(el);
       });
+      const donut = buildYearDonut(stats);
+      if (donut) row.prepend(donut);
       title.appendChild(row);
       if (missing > 0) {
         const miss = document.createElement("span");
