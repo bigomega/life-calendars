@@ -13,6 +13,186 @@
   ],
   "locations": [
     {
+      "id": "loc-v8r5y0q",
+      "person": "B",
+      "start": "2021-09-25",
+      "end": "2021-09-26",
+      "location": "Chennai",
+      "country": "India",
+      "comments": ""
+    },
+    {
+      "id": "loc-d72nn78",
+      "person": "B",
+      "start": "2021-09-27",
+      "end": "2021-10-02",
+      "location": "Pondicherry",
+      "country": "India",
+      "comments": ""
+    },
+    {
+      "id": "loc-b7arp8x",
+      "person": "B",
+      "start": "2021-10-03",
+      "end": "2021-10-14",
+      "location": "Chennai",
+      "country": "India",
+      "comments": ""
+    },
+    {
+      "id": "loc-9ok196n",
+      "person": "B",
+      "start": "2021-10-15",
+      "end": "2021-10-17",
+      "location": "Bangalore",
+      "country": "India",
+      "comments": "Court scenes"
+    },
+    {
+      "id": "loc-yerpjlo",
+      "person": "B",
+      "start": "2021-10-18",
+      "end": "2021-11-30",
+      "location": "Chennai",
+      "country": "India",
+      "comments": "Job search"
+    },
+    {
+      "id": "loc-02tw8cg",
+      "person": "B",
+      "start": "2021-12-01",
+      "end": "2021-12-01",
+      "location": "On road",
+      "country": "India",
+      "comments": "Chennai → Erode"
+    },
+    {
+      "id": "loc-xifo6gh",
+      "person": "B",
+      "start": "2021-12-02",
+      "end": "2021-12-09",
+      "location": "Erode",
+      "country": "India",
+      "comments": ""
+    },
+    {
+      "id": "loc-d4lmw6t",
+      "person": "B",
+      "start": "2021-12-10",
+      "end": "2021-12-10",
+      "location": "On road",
+      "country": "India",
+      "comments": "Erode → Bangalore"
+    },
+    {
+      "id": "loc-nahgo31",
+      "person": "B",
+      "start": "2021-12-11",
+      "end": "2021-12-11",
+      "location": "On road",
+      "country": "India",
+      "comments": "Bangalore → Sirsi"
+    },
+    {
+      "id": "loc-4n8tmu0",
+      "person": "B",
+      "start": "2021-12-12",
+      "end": "2021-12-12",
+      "location": "On road",
+      "country": "India",
+      "comments": "Sirsi → Goa"
+    },
+    {
+      "id": "loc-pb21ii7",
+      "person": "B",
+      "start": "2021-12-13",
+      "end": "2021-12-14",
+      "location": "Goa",
+      "country": "India",
+      "comments": ""
+    },
+    {
+      "id": "loc-y26gvof",
+      "person": "B",
+      "start": "2021-12-15",
+      "end": "2021-12-17",
+      "location": "On road",
+      "country": "India",
+      "comments": "Goa → Mumbai"
+    },
+    {
+      "id": "loc-kj7w7nf",
+      "person": "B",
+      "start": "2021-12-18",
+      "end": "2021-12-31",
+      "location": "Mumbai",
+      "country": "India",
+      "comments": ""
+    },
+    {
+      "id": "loc-1svx4wy",
+      "person": "B",
+      "start": "2022-01-01",
+      "end": "2022-01-02",
+      "location": "On road",
+      "country": "India",
+      "comments": "+ Indore pitstop"
+    },
+    {
+      "id": "loc-58weubt",
+      "person": "B",
+      "start": "2022-01-03",
+      "end": "2022-01-08",
+      "location": "Delhi",
+      "country": "India",
+      "comments": ""
+    },
+    {
+      "id": "loc-85ha0gg",
+      "person": "B",
+      "start": "2022-01-09",
+      "end": "2022-01-09",
+      "location": "On road",
+      "country": "India",
+      "comments": ""
+    },
+    {
+      "id": "loc-vv04gvi",
+      "person": "B",
+      "start": "2022-01-10",
+      "end": "2022-04-02",
+      "location": "Manali",
+      "country": "India",
+      "comments": ""
+    },
+    {
+      "id": "loc-lato1vc",
+      "person": "B",
+      "start": "2022-04-03",
+      "end": "2022-12-02",
+      "location": "Bir",
+      "country": "India",
+      "comments": ""
+    },
+    {
+      "id": "loc-ydxxade",
+      "person": "Both",
+      "start": "2022-12-03",
+      "end": "2022-12-03",
+      "location": "On road",
+      "country": "India",
+      "comments": ""
+    },
+    {
+      "id": "loc-dsf1t8b",
+      "person": "Both",
+      "start": "2022-12-04",
+      "end": "2023-03-31",
+      "location": "Srinagar",
+      "country": "India",
+      "comments": ""
+    },
+    {
       "id": "loc-lcfi475",
       "person": "Both",
       "start": "2023-04-01",
