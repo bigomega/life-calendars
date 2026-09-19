@@ -974,3 +974,170 @@ body.resizing-trip * {
   font-size: 12px;
   margin-top: 6px;
 }
+
+/* ---- mobile density experiment (this branch) ---- */
+
+.density-bar {
+  display: none;
+}
+
+@media (max-width: 620px) {
+  .density-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px 8px;
+    border-bottom: 1px solid var(--border);
+    background: var(--panel);
+  }
+
+  .density-label {
+    color: var(--text-dim);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-right: 2px;
+  }
+
+  .density-bar button {
+    padding: 4px 8px;
+    font-size: 11px;
+    border-radius: 999px;
+  }
+
+  .density-bar button[aria-pressed="true"] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #08131f;
+    font-weight: 600;
+  }
+
+  html[data-density="short"] .day-cell,
+  html[data-density="trim"] .day-cell,
+  html[data-density="chips"] .day-cell {
+    aspect-ratio: 7 / 5;
+  }
+
+  html[data-density="short"] .flag-bg,
+  html[data-density="trim"] .flag-bg,
+  html[data-density="chips"] .flag-bg {
+    font-size: 16px;
+    transform: scale(1.15);
+  }
+
+  html[data-density="trim"] .weekday-row {
+    display: none;
+  }
+
+  html[data-density="trim"] .month-card {
+    padding: 6px;
+  }
+
+  html[data-density="trim"] .month-header {
+    margin: 0 2px 4px;
+    gap: 2px;
+  }
+
+  html[data-density="trim"] .month-legend-item > span:not(.legend-swatch) {
+    display: none;
+  }
+
+  html[data-density="trim"] .month-legend-item .legend-swatch {
+    width: 8px;
+    height: 8px;
+  }
+
+  html[data-density="twin"] .months-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  html[data-density="twin"] .day-cell {
+    aspect-ratio: 1 / 0.82;
+    font-size: 9px;
+    padding: 1px 2px;
+  }
+
+  html[data-density="twin"] .month-card {
+    padding: 6px;
+  }
+
+  html[data-density="twin"] .weekday-row {
+    display: none;
+  }
+
+  html[data-density="twin"] .flag-bg {
+    font-size: 11px;
+    transform: scale(1.05);
+  }
+
+  html[data-density="twin"] .month-legend-item > span:not(.legend-swatch) {
+    display: none;
+  }
+
+  html[data-density="twin"] .month-card h3 {
+    font-size: 12px;
+  }
+
+  html[data-density="twin"] .trip-days {
+    font-size: 7px;
+  }
+
+  html[data-density="heatmap"] .day-cell {
+    aspect-ratio: auto;
+    height: 13px;
+    padding: 0;
+    border-radius: 2px;
+  }
+
+  html[data-density="heatmap"] .day-cell .num,
+  html[data-density="heatmap"] .trip-days,
+  html[data-density="heatmap"] .stack-strip,
+  html[data-density="heatmap"] .weekday-row {
+    display: none;
+  }
+
+  html[data-density="heatmap"] .flag-bg {
+    font-size: 9px;
+    transform: none;
+  }
+
+  html[data-density="heatmap"] .month-card {
+    padding: 6px 8px;
+  }
+
+  html[data-density="heatmap"] .month-header {
+    margin: 0 0 4px;
+    gap: 2px;
+  }
+
+  html[data-density="heatmap"] .day-grid {
+    gap: 1px;
+  }
+
+  html[data-density="heatmap"] .day-cell.today {
+    outline-width: 1px;
+    box-shadow: none;
+  }
+
+  html[data-density="heatmap"] .month-legend-item > span:not(.legend-swatch) {
+    display: none;
+  }
+
+  html[data-density="chips"] .year-countries .year-country {
+    display: none;
+  }
+
+  html[data-density="chips"] .year-days-to-go,
+  html[data-density="chips"] .year-missing,
+  html[data-density="chips"] .year-moves {
+    display: none;
+  }
+
+  html[data-density="chips"] .year-title {
+    font-size: 20px;
+    gap: 8px;
+    padding: 6px 4px 8px;
+  }
+}

@@ -1143,7 +1143,10 @@ function setCurrentView(year, month) {
   const sel = document.getElementById("year-select");
   if (sel && sel.value !== String(y)) sel.value = String(y);
   const hash = `#${y}-${pad2(m)}`;
-  if (location.hash !== hash) history.replaceState(null, "", hash);
+  const next = location.pathname + location.search + hash;
+  if (location.pathname + location.search + location.hash !== next) {
+    history.replaceState(null, "", next);
+  }
 }
 
 function setupScrollSpy() {
@@ -2094,6 +2097,47 @@ window.addEventListener("hashchange", () => {
   if (view) scrollToMonth(view.year, view.month, { smooth: true });
 });
 
+const DENSITY_MODES = [
+  "current",
+  "short",
+  "trim",
+  "twin",
+  "heatmap",
+  "chips",
+];
+
+function densityFromUrl() {
+  const q = new URLSearchParams(location.search).get("density");
+  return DENSITY_MODES.includes(q) ? q : "current";
+}
+
+function applyDensity(mode) {
+  const next = DENSITY_MODES.includes(mode) ? mode : "current";
+  document.documentElement.dataset.density = next;
+  document.querySelectorAll("#density-bar [data-density]").forEach((btn) => {
+    btn.setAttribute(
+      "aria-pressed",
+      btn.dataset.density === next ? "true" : "false",
+    );
+  });
+  const url = new URL(location.href);
+  if (next === "current") url.searchParams.delete("density");
+  else url.searchParams.set("density", next);
+  history.replaceState(null, "", url.pathname + url.search + url.hash);
+  syncStickyOffset();
+}
+
+function setupDensityBar() {
+  const bar = document.getElementById("density-bar");
+  if (!bar) return;
+  bar.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-density]");
+    if (!btn) return;
+    applyDensity(btn.dataset.density);
+  });
+  applyDensity(densityFromUrl());
+}
+
 (async function init() {
   loadSettings();
   await loadData();
@@ -2103,6 +2147,7 @@ window.addEventListener("hashchange", () => {
   setupLocationCombo();
   setupStickyOffset();
   setupDragToAdd();
+  setupDensityBar();
   const view = parseHashView() || defaultView();
   renderAll({ year: view.year, month: view.month });
 })();
