@@ -504,7 +504,7 @@
       "start": "2025-08-23",
       "end": "2025-08-23",
       "location": "",
-      "country": "International Transit",
+      "country": "Transit",
       "comments": "India → NYC"
     },
     {
@@ -522,7 +522,7 @@
       "start": "2025-09-12",
       "end": "2025-09-13",
       "location": "",
-      "country": "International Transit",
+      "country": "Transit",
       "comments": "India → Mexico"
     },
     {
@@ -540,7 +540,7 @@
       "start": "2025-10-26",
       "end": "2025-10-26",
       "location": "",
-      "country": "International Transit",
+      "country": "Transit",
       "comments": "NYC → Mexico"
     },
     {
@@ -612,7 +612,7 @@
       "start": "2026-02-01",
       "end": "2026-02-01",
       "location": "",
-      "country": "International Transit",
+      "country": "Transit",
       "comments": "Seattle → Dubai"
     },
     {
@@ -684,7 +684,7 @@
       "start": "2026-05-24",
       "end": "2026-05-24",
       "location": "",
-      "country": "International Transit",
+      "country": "Transit",
       "comments": "India → NYC"
     },
     {

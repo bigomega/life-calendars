@@ -19,11 +19,12 @@ const COUNTRY_HUES = {
   Georgia: 271,
   Turkey: 187,
   Kazakhstan: 328,
-  "International Transit": 204,
+  Transit: 204,
 };
 const LIGHTNESS_STEPS = [42, 56, 34, 66, 48, 60, 38, 70];
 
-const TRANSIT_COUNTRY = "International Transit";
+const TRANSIT_COUNTRY = "Transit";
+const TRANSIT_COUNTRY_ALIASES = new Set(["transit", "international transit"]);
 
 // Display name + ISO 3166-1 alpha-2. Flags come from the code; the dropdown
 // is this full list so a stay is never missing a country (Cyprus, etc.).
@@ -262,7 +263,11 @@ const COUNTRY_CODES = Object.fromEntries([
 ]);
 
 function isTransitCountry(country) {
-  return (country || "").trim().toLowerCase() === TRANSIT_COUNTRY.toLowerCase();
+  return TRANSIT_COUNTRY_ALIASES.has((country || "").trim().toLowerCase());
+}
+function canonicalCountry(country) {
+  const trimmed = (country || "").trim();
+  return isTransitCountry(trimmed) ? TRANSIT_COUNTRY : trimmed;
 }
 
 function countryFlag(country) {
@@ -310,7 +315,8 @@ let state = { people: [], locations: [] };
 let fileSnapshot = "";
 let colorMap = {}; // "Country||Location" -> hsl string
 let selectedPeople = new Set(["B", "M"]);
-let currentYear = null; // active/visible year, synced with #hash
+let currentYear = null; // active/visible year, synced with #YYYY-MM
+let currentMonth = null; // 1–12, synced with #YYYY-MM
 let yearEnd = YEAR_START;
 let scrollObserver = null;
 let dragState = null;
@@ -330,6 +336,9 @@ function todayIso() {
 }
 function realCurrentYear() {
   return new Date().getFullYear();
+}
+function realCurrentMonth() {
+  return new Date().getMonth() + 1;
 }
 function uid() {
   return "loc-" + Math.random().toString(36).slice(2, 9);
@@ -372,7 +381,7 @@ function normalizeLocations(locations) {
     .filter((l) => l && (!l.type || l.type === "stay") && !l.cancelled)
     .map((l) => {
       const location = (l.location || "").trim();
-      const country = (l.country || "").trim();
+      const country = canonicalCountry(l.country);
       return {
         id: l.id || uid(),
         person: l.person || "B",
@@ -533,9 +542,10 @@ function stayColor(loc) {
 }
 
 function countryHue(country) {
-  return COUNTRY_HUES[country] !== undefined
-    ? COUNTRY_HUES[country]
-    : hashHue(country);
+  const name = canonicalCountry(country);
+  return COUNTRY_HUES[name] !== undefined
+    ? COUNTRY_HUES[name]
+    : hashHue(name);
 }
 
 function countryColor(country) {
@@ -802,6 +812,9 @@ function buildMonthCard(year, month, locations) {
   const today = todayIso();
   const card = document.createElement("div");
   card.className = "month-card";
+  card.id = monthId(year, month);
+  card.dataset.year = String(year);
+  card.dataset.month = String(month);
   const ym = `${year}-${pad2(month)}`;
   if (ym === today.slice(0, 7)) {
     card.classList.add("current-month");
@@ -1035,7 +1048,7 @@ function renderAll(opts = {}) {
   populateYearJump();
   setupScrollSpy();
   if (opts.year !== undefined) {
-    scrollToYear(opts.year, { smooth: false });
+    scrollToMonth(opts.year, opts.month || 1, { smooth: false });
     return;
   }
   window.scrollTo({ top: savedScroll, behavior: "auto" });
@@ -1045,6 +1058,14 @@ function renderAll(opts = {}) {
 
 function clampYear(y) {
   return Math.min(Math.max(y, YEAR_START), yearEnd);
+}
+
+function clampMonth(m) {
+  return Math.min(Math.max(m, 1), 12);
+}
+
+function monthId(year, month) {
+  return `m${year}-${pad2(month)}`;
 }
 
 function stickyHeaderHeight() {
@@ -1075,23 +1096,40 @@ function setupStickyOffset() {
 // y=0, leaving its first row of days hidden (and unclickable) under the
 // sticky header.
 function scrollToYear(year, { smooth = false } = {}) {
+  scrollToMonth(year, 1, { smooth });
+}
+
+function scrollToMonth(year, month, { smooth = false } = {}) {
   const y = clampYear(year);
-  const el = document.getElementById("y" + y);
+  const m = clampMonth(month);
+  setCurrentView(y, m);
+  const el =
+    m === 1
+      ? document.getElementById("y" + y)
+      : document.getElementById(monthId(y, m));
   if (!el) return;
+  let offset = stickyHeaderHeight();
+  if (m !== 1) {
+    const title = document.querySelector(`#y${y} .year-title`);
+    if (title) offset += title.offsetHeight;
+  }
   const top =
-    el.getBoundingClientRect().top + window.scrollY - stickyHeaderHeight() - 8;
+    el.getBoundingClientRect().top + window.scrollY - offset - 8;
   window.scrollTo({
     top: Math.max(0, top),
     behavior: smooth ? "smooth" : "auto",
   });
-  setCurrentYear(y);
 }
 
-function setCurrentYear(y) {
+function setCurrentView(year, month) {
+  const y = clampYear(year);
+  const m = clampMonth(month);
   currentYear = y;
+  currentMonth = m;
   const sel = document.getElementById("year-select");
   if (sel && sel.value !== String(y)) sel.value = String(y);
-  history.replaceState(null, "", "#" + y);
+  const hash = `#${y}-${pad2(m)}`;
+  if (location.hash !== hash) history.replaceState(null, "", hash);
 }
 
 function setupScrollSpy() {
@@ -1112,7 +1150,10 @@ function setupScrollSpy() {
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          setCurrentYear(parseInt(entry.target.dataset.year, 10));
+          setCurrentView(
+            parseInt(entry.target.dataset.year, 10),
+            currentMonth || 1,
+          );
         }
       });
     },
@@ -1134,9 +1175,21 @@ function populateYearJump() {
   if (prevVal) sel.value = prevVal;
 }
 
-function parseHashYear() {
-  const m = location.hash.match(/^#(\d{4})$/);
-  return m ? parseInt(m[1], 10) : null;
+function parseHashView() {
+  const raw = (location.hash || "").replace(/^#/, "");
+  const match = raw.match(/^(\d{4})(?:-(\d{1,2}))?$/);
+  if (!match) return null;
+  const year = parseInt(match[1], 10);
+  const month = match[2] != null ? parseInt(match[2], 10) : 1;
+  if (!Number.isFinite(year)) return null;
+  return {
+    year,
+    month: Number.isFinite(month) && month >= 1 && month <= 12 ? month : 1,
+  };
+}
+
+function defaultView() {
+  return { year: realCurrentYear(), month: realCurrentMonth() };
 }
 
 function goToToday() {
@@ -1154,8 +1207,9 @@ function goToToday() {
     });
     cell.classList.add("flash");
     setTimeout(() => cell.classList.remove("flash"), 1200);
+    setCurrentView(realCurrentYear(), realCurrentMonth());
   } else {
-    scrollToYear(realCurrentYear(), { smooth: true });
+    scrollToMonth(realCurrentYear(), realCurrentMonth(), { smooth: true });
   }
 }
 
@@ -1684,7 +1738,7 @@ function openLocationModal(loc, prefillStart, prefillEnd) {
     ? loc.end
     : prefillEnd || prefillStart || "";
   document.getElementById("f-location").value = loc ? loc.location || "" : "";
-  populateCountrySelect(loc ? loc.country || "" : "");
+  populateCountrySelect(loc ? canonicalCountry(loc.country) : "");
   document.getElementById("f-comments").value = loc ? loc.comments || "" : "";
 
   title.textContent = loc ? "Edit Location" : "Add Location";
@@ -1716,7 +1770,9 @@ document.getElementById("location-form").addEventListener("submit", (e) => {
     return;
   }
 
-  const country = document.getElementById("f-country").value.trim();
+  const country = canonicalCountry(
+    document.getElementById("f-country").value,
+  );
   const location = isTransitCountry(country)
     ? ""
     : document.getElementById("f-location").value.trim();
@@ -1945,13 +2001,21 @@ function setupPersonChips() {
 function setupYearControls() {
   const sel = document.getElementById("year-select");
   sel.addEventListener("change", () =>
-    scrollToYear(parseInt(sel.value, 10), { smooth: true }),
+    scrollToMonth(parseInt(sel.value, 10), currentMonth || 1, { smooth: true }),
   );
   document.getElementById("year-prev").addEventListener("click", () => {
-    scrollToYear((currentYear || realCurrentYear()) - 1, { smooth: true });
+    scrollToMonth(
+      (currentYear || realCurrentYear()) - 1,
+      currentMonth || 1,
+      { smooth: true },
+    );
   });
   document.getElementById("year-next").addEventListener("click", () => {
-    scrollToYear((currentYear || realCurrentYear()) + 1, { smooth: true });
+    scrollToMonth(
+      (currentYear || realCurrentYear()) + 1,
+      currentMonth || 1,
+      { smooth: true },
+    );
   });
   document.getElementById("btn-today").addEventListener("click", goToToday);
   document.getElementById("btn-legend").addEventListener("click", () => {
@@ -1994,8 +2058,8 @@ document.addEventListener("keydown", (e) => {
 // ---------- boot ----------
 
 window.addEventListener("hashchange", () => {
-  const y = parseHashYear();
-  if (y) scrollToYear(y, { smooth: true });
+  const view = parseHashView();
+  if (view) scrollToMonth(view.year, view.month, { smooth: true });
 });
 
 (async function init() {
@@ -2007,6 +2071,6 @@ window.addEventListener("hashchange", () => {
   setupLocationCombo();
   setupStickyOffset();
   setupDragToAdd();
-  const initialYear = parseHashYear() || realCurrentYear();
-  renderAll({ year: initialYear });
+  const view = parseHashView() || defaultView();
+  renderAll({ year: view.year, month: view.month });
 })();
