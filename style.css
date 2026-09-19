@@ -247,9 +247,9 @@ main {
   top: var(--sticky-header-height, 0px);
   z-index: 10;
   display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px 14px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px 14px;
   font-size: 26px;
   font-weight: 700;
   margin: 0 0 12px;
@@ -257,6 +257,18 @@ main {
   background: var(--bg);
   border-top: 1px solid var(--border);
   color: var(--text);
+}
+
+.year-heading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  min-width: 0;
+}
+
+.year-label {
+  flex-shrink: 0;
 }
 
 .year-countries {
@@ -831,6 +843,66 @@ body.resizing-trip * {
   accent-color: var(--accent);
 }
 
+.setting-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.settings-section {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.settings-section h3 {
+  margin: 0 0 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+}
+
+.setting-seg {
+  border: 0;
+  margin: 0 0 12px;
+  padding: 0;
+}
+
+.setting-seg legend {
+  padding: 0;
+  margin-bottom: 6px;
+  color: var(--text);
+  font-size: 13px;
+}
+
+.seg {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.seg button {
+  padding: 5px 10px;
+  font-size: 12px;
+  border-radius: 999px;
+}
+
+.seg button[aria-pressed="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #08131f;
+  font-weight: 600;
+}
+
+html[data-year-chips="hide"] .year-country {
+  display: none;
+}
+
 .form-actions {
   display: flex;
   justify-content: space-between;
@@ -973,4 +1045,137 @@ body.resizing-trip * {
   color: var(--text-dim);
   font-size: 12px;
   margin-top: 6px;
+}
+
+@media (max-width: 620px) {
+  html[data-cell-w="compact"] .months-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  html[data-cell-w="compact"] .weekday-row,
+  html[data-cell-h="compact"] .weekday-row,
+  html[data-day-nums="none"] .weekday-row {
+    display: none;
+  }
+
+  html[data-cell-w="compact"] .month-legend-item > span:not(.legend-swatch),
+  html[data-cell-h="compact"] .month-legend-item > span:not(.legend-swatch) {
+    display: none;
+  }
+
+  html[data-cell-w="compact"] .month-card {
+    padding: 6px;
+  }
+
+  html[data-cell-w="compact"] .month-card h3 {
+    font-size: 12px;
+  }
+
+  html[data-cell-w="compact"] .day-cell {
+    font-size: 9px;
+    padding: 1px 2px;
+  }
+
+  html[data-cell-w="compact"][data-cell-h="normal"] .day-cell {
+    aspect-ratio: 1 / 0.82;
+  }
+
+  html[data-cell-w="compact"] .flag-bg {
+    font-size: 11px;
+    transform: scale(1.05);
+  }
+
+  html[data-cell-w="compact"] .trip-days {
+    font-size: 7px;
+  }
+
+  html[data-cell-h="compact"] .day-cell {
+    aspect-ratio: auto;
+    height: 13px;
+    padding: 0;
+    border-radius: 2px;
+  }
+
+  html[data-cell-h="compact"]:not([data-day-nums="none"]) .day-cell {
+    height: 22px;
+  }
+
+  html[data-cell-h="compact"] .trip-days,
+  html[data-cell-h="compact"] .stack-strip {
+    display: none;
+  }
+
+  html[data-cell-h="compact"] .flag-bg {
+    font-size: 9px;
+    transform: none;
+  }
+
+  html[data-cell-h="compact"] .month-card {
+    padding: 6px 8px;
+  }
+
+  html[data-cell-h="compact"] .month-header {
+    margin: 0 0 4px;
+    gap: 2px;
+  }
+
+  html[data-cell-h="compact"] .day-grid {
+    gap: 1px;
+  }
+
+  html[data-cell-h="compact"] .day-cell.today {
+    outline-width: 1px;
+    box-shadow: none;
+  }
+
+  html[data-day-nums="none"] .day-cell .num {
+    display: none;
+  }
+
+  html[data-day-nums="sun"] .day-cell:not(.dow-0) .num {
+    display: none;
+  }
+
+  html[data-day-nums="sat"] .day-cell:not(.dow-6) .num {
+    display: none;
+  }
+
+  html[data-chip-size="compact"] .year-title {
+    gap: 6px;
+    padding: 6px 4px 8px;
+  }
+
+  html[data-chip-size="compact"] .year-heading {
+    font-size: 20px;
+    gap: 8px;
+    flex-wrap: nowrap;
+  }
+
+  html[data-chip-size="compact"] .year-days-to-go,
+  html[data-chip-size="compact"] .year-moves {
+    font-size: 12px;
+  }
+
+  html[data-chip-size="compact"] .year-countries {
+    gap: 3px 6px;
+  }
+
+  html[data-chip-size="compact"] .year-country {
+    border-radius: 0;
+    border-top: none;
+    border-right: none;
+    border-bottom: none;
+    border-left-width: 10px;
+    padding: 1px 5px 1px 6px;
+    gap: 3px;
+  }
+
+  html[data-chip-size="compact"] .year-flag {
+    font-size: 14px;
+  }
+
+  html[data-chip-size="compact"] .year-country-days {
+    font-size: 11px;
+  }
 }

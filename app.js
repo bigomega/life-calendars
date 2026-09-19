@@ -504,15 +504,60 @@ function loadSettings() {
     // ignore corrupt settings
   }
   applyTripMidOpacity(settings.tripMidOpacity);
+  applyLayoutSettings();
 }
 
 function persistSettings() {
   settings.people = ["B", "M"].filter((p) => selectedPeople.has(p));
   settings.tripMidOpacity = clampTripMidOpacity(settings.tripMidOpacity);
+  const layout = layoutSettings();
+  settings.yearChips = layout.yearChips;
+  settings.dayNums = layout.dayNums;
+  settings.cellH = layout.cellH;
+  settings.cellW = layout.cellW;
+  settings.chipSize = layout.chipSize;
   localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
 }
 
 const PERSON_VALUES = new Set(["B", "M", "Both"]);
+const DAY_NUM_VALUES = new Set(["all", "sun", "sat", "none"]);
+const SIZE_VALUES = new Set(["normal", "compact"]);
+
+function layoutSettings() {
+  return {
+    yearChips: settings.yearChips === "hide" ? "hide" : "show",
+    dayNums: DAY_NUM_VALUES.has(settings.dayNums) ? settings.dayNums : "all",
+    cellH: SIZE_VALUES.has(settings.cellH) ? settings.cellH : "normal",
+    cellW: SIZE_VALUES.has(settings.cellW) ? settings.cellW : "normal",
+    chipSize: SIZE_VALUES.has(settings.chipSize) ? settings.chipSize : "normal",
+  };
+}
+
+function syncSeg(id, value) {
+  document.querySelectorAll(`#${id} [data-value]`).forEach((btn) => {
+    btn.setAttribute(
+      "aria-pressed",
+      btn.dataset.value === value ? "true" : "false",
+    );
+  });
+}
+
+function applyLayoutSettings() {
+  const s = layoutSettings();
+  const root = document.documentElement;
+  root.dataset.yearChips = s.yearChips;
+  root.dataset.dayNums = s.dayNums;
+  root.dataset.cellH = s.cellH;
+  root.dataset.cellW = s.cellW;
+  root.dataset.chipSize = s.chipSize;
+  const chips = document.getElementById("s-year-chips");
+  if (chips) chips.checked = s.yearChips === "show";
+  syncSeg("s-day-nums", s.dayNums);
+  syncSeg("s-cell-h", s.cellH);
+  syncSeg("s-cell-w", s.cellW);
+  syncSeg("s-chip-size", s.chipSize);
+  syncStickyOffset();
+}
 
 function lastAddPerson() {
   return PERSON_VALUES.has(settings.lastAddPerson)
@@ -898,6 +943,7 @@ function buildMonthCard(year, month, locations) {
     const cell = document.createElement("div");
     cell.className = "day-cell";
     cell.dataset.date = dateStr;
+    cell.classList.add("dow-" + ((firstDow + d - 1) % 7));
     if (dateStr === today) cell.classList.add("today");
     if (dayLocations.length) cell.classList.add("has-locations");
 
@@ -970,25 +1016,37 @@ function renderYears(locations) {
 
     const title = document.createElement("h2");
     title.className = "year-title";
+    const heading = document.createElement("div");
+    heading.className = "year-heading";
     const missing = countMissingDays(locations, y);
     if (missing === 0) {
       const check = document.createElement("span");
       check.className = "year-complete";
       check.textContent = "✅";
       check.setAttribute("aria-hidden", "true");
-      title.appendChild(check);
+      heading.appendChild(check);
     }
     const yearLabel = document.createElement("span");
+    yearLabel.className = "year-label";
     yearLabel.textContent = String(y);
-    title.appendChild(yearLabel);
+    heading.appendChild(yearLabel);
 
     if (y === realCurrentYear()) {
       const remaining = Math.max(0, isoDaysInclusive(todayIso(), `${y}-12-31`));
       const go = document.createElement("span");
       go.className = "year-days-to-go";
       go.textContent = `${remaining} day${remaining === 1 ? "" : "s"} to go`;
-      title.appendChild(go);
+      heading.appendChild(go);
     }
+
+    const moves = countMovesInYear(locations, y);
+    if (moves > 0) {
+      const moveEl = document.createElement("span");
+      moveEl.className = "year-moves";
+      moveEl.textContent = `${moves} move${moves === 1 ? "" : "s"}`;
+      heading.appendChild(moveEl);
+    }
+    title.appendChild(heading);
 
     const stats = countryStatsInRange(locations, `${y}-01-01`, `${y}-12-31`);
     if (stats.length) {
@@ -1026,19 +1084,12 @@ function renderYears(locations) {
       const donut = buildYearDonut(stats);
       if (donut) row.prepend(donut);
       title.appendChild(row);
-      if (missing > 0) {
-        const miss = document.createElement("span");
-        miss.className = "year-missing";
-        miss.textContent = `Missing ${missing} day${missing === 1 ? "" : "s"}`;
-        title.appendChild(miss);
-      }
     }
-    const moves = countMovesInYear(locations, y);
-    if (moves > 0) {
-      const moveEl = document.createElement("span");
-      moveEl.className = "year-moves";
-      moveEl.textContent = `${moves} move${moves === 1 ? "" : "s"}`;
-      title.appendChild(moveEl);
+    if (missing > 0) {
+      const miss = document.createElement("span");
+      miss.className = "year-missing";
+      miss.textContent = `Missing ${missing} day${missing === 1 ? "" : "s"}`;
+      title.appendChild(miss);
     }
     section.appendChild(title);
 
@@ -1143,7 +1194,10 @@ function setCurrentView(year, month) {
   const sel = document.getElementById("year-select");
   if (sel && sel.value !== String(y)) sel.value = String(y);
   const hash = `#${y}-${pad2(m)}`;
-  if (location.hash !== hash) history.replaceState(null, "", hash);
+  const next = location.pathname + location.search + hash;
+  if (location.pathname + location.search + location.hash !== next) {
+    history.replaceState(null, "", next);
+  }
 }
 
 function setupScrollSpy() {
@@ -1976,6 +2030,7 @@ document.getElementById("json-copy-btn").addEventListener("click", async () => {
 
 function openSettingsModal() {
   applyTripMidOpacity(settings.tripMidOpacity);
+  applyLayoutSettings();
   document.getElementById("settings-modal-overlay").classList.remove("hidden");
 }
 
@@ -1984,6 +2039,31 @@ function setupSettingsControls() {
   slider.addEventListener("input", () => {
     applyTripMidOpacity(slider.value);
     persistSettings();
+  });
+  document.getElementById("s-year-chips").addEventListener("change", (e) => {
+    settings.yearChips = e.target.checked ? "show" : "hide";
+    persistSettings();
+    applyLayoutSettings();
+  });
+  document.querySelectorAll(".setting-seg .seg").forEach((group) => {
+    group.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-value]");
+      if (!btn || !group.contains(btn)) return;
+      const key =
+        group.id === "s-day-nums"
+          ? "dayNums"
+          : group.id === "s-cell-h"
+            ? "cellH"
+            : group.id === "s-cell-w"
+              ? "cellW"
+              : group.id === "s-chip-size"
+                ? "chipSize"
+                : null;
+      if (!key) return;
+      settings[key] = btn.dataset.value;
+      persistSettings();
+      applyLayoutSettings();
+    });
   });
 }
 
