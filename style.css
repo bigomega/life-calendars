@@ -202,6 +202,29 @@ button[aria-pressed="true"] {
   color: var(--accent);
 }
 
+.controls-toggle {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.controls-toggle::after {
+  content: "▾";
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+.controls-bar.is-open .controls-toggle::after {
+  content: "▴";
+}
+
+.year-cluster {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .spacer {
   flex: 1;
 }
@@ -338,6 +361,49 @@ main {
 
   .controls-bar {
     padding: 8px 12px;
+    gap: 8px;
+  }
+
+  .controls-toggle {
+    display: inline-flex;
+    order: 1;
+  }
+
+  .year-cluster {
+    display: contents;
+  }
+
+  #btn-today {
+    order: 2;
+    margin-left: auto;
+  }
+
+  #people-group,
+  #year-nav-group,
+  #btn-legend,
+  .spacer,
+  #actions-group {
+    display: none;
+  }
+
+  .controls-bar.is-open #people-group,
+  .controls-bar.is-open #actions-group {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    order: 10;
+  }
+
+  .controls-bar.is-open #year-nav-group {
+    display: flex;
+    flex-wrap: wrap;
+    order: 10;
+    flex: 1 1 auto;
+  }
+
+  .controls-bar.is-open #btn-legend {
+    display: inline-flex;
+    order: 10;
   }
 
   main {

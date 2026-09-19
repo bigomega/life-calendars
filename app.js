@@ -512,6 +512,20 @@ function persistSettings() {
   localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
 }
 
+const PERSON_VALUES = new Set(["B", "M", "Both"]);
+
+function lastAddPerson() {
+  return PERSON_VALUES.has(settings.lastAddPerson)
+    ? settings.lastAddPerson
+    : "Both";
+}
+
+function persistLastAddPerson(person) {
+  if (!PERSON_VALUES.has(person)) return;
+  settings.lastAddPerson = person;
+  persistSettings();
+}
+
 // ---------- color map ----------
 
 function rebuildColorMap() {
@@ -1730,7 +1744,9 @@ function openLocationModal(loc, prefillStart, prefillEnd) {
   const deleteBtn = document.getElementById("f-delete");
 
   document.getElementById("f-id").value = loc ? loc.id : "";
-  document.getElementById("f-person").value = loc ? loc.person : "Both";
+  document.getElementById("f-person").value = loc
+    ? loc.person || "B"
+    : lastAddPerson();
   document.getElementById("f-start").value = loc
     ? loc.start
     : prefillStart || "";
@@ -1791,7 +1807,10 @@ document.getElementById("location-form").addEventListener("submit", (e) => {
 
   const idx = state.locations.findIndex((x) => x.id === id);
   if (idx >= 0) state.locations[idx] = loc;
-  else state.locations.push(loc);
+  else {
+    state.locations.push(loc);
+    persistLastAddPerson(loc.person);
+  }
 
   persist();
   renderAll();
@@ -1803,6 +1822,10 @@ document.getElementById("location-form").addEventListener("submit", (e) => {
 document
   .getElementById("f-country")
   .addEventListener("change", updateLocationModalFlag);
+document.getElementById("f-person").addEventListener("change", () => {
+  if (document.getElementById("f-id").value) return;
+  persistLastAddPerson(document.getElementById("f-person").value);
+});
 document
   .getElementById("f-cancel")
   .addEventListener("click", closeLocationModal);
@@ -2025,6 +2048,15 @@ function setupYearControls() {
     panel.classList.toggle("hidden", !opening);
     btn.setAttribute("aria-pressed", opening ? "true" : "false");
   });
+  const bar = document.querySelector(".controls-bar");
+  const toggle = document.getElementById("btn-controls");
+  if (bar && toggle) {
+    toggle.addEventListener("click", () => {
+      const open = bar.classList.toggle("is-open");
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      syncStickyOffset();
+    });
+  }
 }
 
 // ---------- reset ----------

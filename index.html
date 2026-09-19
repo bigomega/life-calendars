@@ -56,7 +56,17 @@
       </header>
 
       <div class="controls-bar">
-        <div class="control-group">
+        <button
+          type="button"
+          id="btn-controls"
+          class="controls-toggle"
+          aria-expanded="false"
+          aria-controls="people-group year-nav-group btn-legend actions-group"
+        >
+          Controls
+        </button>
+
+        <div class="control-group" id="people-group">
           <span class="title">People</span>
           <label class="person-chip" id="chip-B">
             <input type="checkbox" value="B" checked /> Bharath ♂
@@ -66,11 +76,13 @@
           </label>
         </div>
 
-        <div class="control-group">
-          <span class="title">Year</span>
-          <button id="year-prev">◀</button>
-          <select id="year-select"></select>
-          <button id="year-next">▶</button>
+        <div class="year-cluster">
+          <div class="control-group" id="year-nav-group">
+            <span class="title">Year</span>
+            <button id="year-prev">◀</button>
+            <select id="year-select"></select>
+            <button id="year-next">▶</button>
+          </div>
           <button id="btn-today">Today</button>
           <button
             id="btn-legend"
@@ -83,7 +95,7 @@
 
         <div class="spacer"></div>
 
-        <div class="control-group">
+        <div class="control-group" id="actions-group">
           <button id="btn-add-location" class="primary">+ Add</button>
           <button id="btn-manage-locations" class="btn-with-icon">
             <svg
