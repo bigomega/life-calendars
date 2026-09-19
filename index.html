@@ -139,32 +139,6 @@
       </div>
 
       <div class="legend-panel hidden" id="legend-panel"></div>
-      <div
-        class="density-bar"
-        id="density-bar"
-        role="radiogroup"
-        aria-label="Mobile density experiment"
-      >
-        <span class="density-label">Density</span>
-        <button type="button" data-density="current" aria-pressed="true">
-          Now
-        </button>
-        <button type="button" data-density="short" aria-pressed="false">
-          Short
-        </button>
-        <button type="button" data-density="trim" aria-pressed="false">
-          Trim
-        </button>
-        <button type="button" data-density="twin" aria-pressed="false">
-          Twin
-        </button>
-        <button type="button" data-density="heatmap" aria-pressed="false">
-          Heat
-        </button>
-        <button type="button" data-density="chips" aria-pressed="false">
-          Chips
-        </button>
-      </div>
     </div>
 
     <main>
@@ -317,6 +291,44 @@
             value="32"
           />
         </div>
+        <label class="setting-check">
+          <input type="checkbox" id="s-year-chips" checked />
+          Year country chips
+        </label>
+
+        <section class="settings-section" aria-labelledby="settings-mobile">
+          <h3 id="settings-mobile">Mobile</h3>
+          <fieldset class="setting-seg">
+            <legend>Day numbers</legend>
+            <div class="seg" id="s-day-nums" role="radiogroup">
+              <button type="button" data-value="all">Every day</button>
+              <button type="button" data-value="sun">Sundays</button>
+              <button type="button" data-value="sat">Saturdays</button>
+              <button type="button" data-value="none">None</button>
+            </div>
+          </fieldset>
+          <fieldset class="setting-seg">
+            <legend>Height</legend>
+            <div class="seg" id="s-cell-h" role="radiogroup">
+              <button type="button" data-value="normal">Normal</button>
+              <button type="button" data-value="compact">Compact</button>
+            </div>
+          </fieldset>
+          <fieldset class="setting-seg">
+            <legend>Width</legend>
+            <div class="seg" id="s-cell-w" role="radiogroup">
+              <button type="button" data-value="normal">Normal</button>
+              <button type="button" data-value="compact">Compact</button>
+            </div>
+          </fieldset>
+          <fieldset class="setting-seg">
+            <legend>Chips</legend>
+            <div class="seg" id="s-chip-size" role="radiogroup">
+              <button type="button" data-value="normal">Normal</button>
+              <button type="button" data-value="compact">Compact</button>
+            </div>
+          </fieldset>
+        </section>
         <div class="form-actions">
           <button
             type="button"
