@@ -43,14 +43,22 @@ hue, so e.g. Mumbai and Delhi are both reddish but visually distinct.
 
 The page is fully editable in the browser:
 
-- **+ Add Event** / click a colored day / **Manage Events** → edit or delete
+- **+ Add** / click a colored day / **Manage** → edit or delete
 - Edits are saved to `localStorage` so they survive a page refresh
 - **Reset** discards local edits and reloads from `data.json`
-- **Copy JSON** shows the current full dataset (pretty-printed, sorted by
-  date) and copies it to your clipboard — paste it over `data.json` to open
-  a PR with your changes
+- **Save** opens a prefilled GitHub issue. The dataset is gzip-compressed and
+  base64url-encoded (`v1.…`) so it fits in the issue URL. An allowlisted
+  GitHub Action (`bigomega`; add another login with `ALLOWED_ACTORS`, e.g.
+  Mariana later) checks the opener and payload, writes `data.json` on
+  `gh-pages` using `GITHUB_TOKEN`, then closes and redacts the issue. No
+  personal access token is used in the browser. The unsaved banner stays
+  until the published `data.json` matches the saved snapshot (or you Reset).
 
-There is no backend: nothing is written back to the repo automatically.
+`issues` workflows only run from the repository **default branch**. Keep
+`.github/workflows/apply-calendar-save.yml` and
+`.github/scripts/apply-calendar-save.mjs` on that branch (or make `gh-pages`
+the default). The Action checks out only the trusted apply script and never
+interpolates issue contents into a shell.
 
 ## Deployment
 

@@ -41,10 +41,10 @@
   <body>
     <div class="sticky-top">
       <div id="unsaved-banner" class="unsaved-banner hidden" role="status">
-        <span
-          >Unsaved changes — not written to <code>data.json</code> yet.</span
+        <span id="unsaved-banner-text"
+          >Unsaved changes — not published to GitHub Pages yet.</span
         >
-        <button type="button" id="unsaved-copy">Copy JSON</button>
+        <button type="button" id="btn-save-banner">Save</button>
       </div>
       <header class="app-header">
         <div class="header-row">
@@ -112,7 +112,7 @@
             </svg>
             Manage
           </button>
-          <button id="btn-copy-json">Copy JSON</button>
+          <button type="button" id="btn-save" class="primary">Save</button>
           <button
             id="btn-settings"
             class="icon-btn"
@@ -240,31 +240,6 @@
           <div></div>
           <div class="right">
             <button type="button" id="manage-close">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Copy JSON modal -->
-    <div class="overlay hidden" id="json-modal-overlay">
-      <div class="modal json-modal" style="width: min(680px, 94vw)">
-        <h2>Current data.json</h2>
-        <p class="hint">
-          Copy this and paste it over <code>data.json</code> in the repo to open
-          a PR with your changes, or
-          <a id="json-edit-link" href="#" target="_blank" rel="noopener"
-            >open data.json on GitHub</a
-          >
-          and paste it there — GitHub will offer to start a PR for you.
-        </p>
-        <textarea id="json-output" readonly></textarea>
-        <div class="form-actions">
-          <div></div>
-          <div class="right">
-            <button type="button" id="json-copy-btn" class="primary">
-              Copy to clipboard
-            </button>
-            <button type="button" id="json-close">Close</button>
           </div>
         </div>
       </div>

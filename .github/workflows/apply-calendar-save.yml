@@ -1,0 +1,42 @@
+# Apply in-browser Save payloads from GitHub issues.
+# `issues` events only run this file from the repository default branch
+# (GITHUB_SHA / GITHUB_REF = default). Copy this workflow + script there
+# if the default is not gh-pages, or switch the default to gh-pages.
+name: Apply calendar save
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: read
+
+concurrency:
+  group: calendar-save
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    if: github.event.issue.title == 'life-calendars-save'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+    steps:
+      - name: Checkout trusted apply script
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+          sparse-checkout: |
+            .github/scripts/apply-calendar-save.mjs
+          sparse-checkout-cone-mode: false
+
+      - name: Apply payload
+        env:
+          # Comma-separated GitHub usernames. Add Mariana's login later.
+          ALLOWED_ACTORS: bigomega
+          TARGET_BRANCH: gh-pages
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node .github/scripts/apply-calendar-save.mjs

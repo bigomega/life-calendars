@@ -1,15 +1,17 @@
 /* Life Calendars — Location Calendar
- * No backend. Data lives in data.json (source of truth for PRs), with a
- * localStorage overlay for in-browser edits.
+ * Data lives in data.json on GitHub Pages, with a localStorage overlay for
+ * in-browser edits. Save opens a prefilled GitHub issue; an allowlisted
+ * Action writes data.json. No personal token in the browser.
  */
 
 const STORAGE_KEY = "life-calendar-data-v1";
 const SETTINGS_KEY = "life-calendar-settings-v1";
 const YEAR_START = 2009;
 
-// Where "Copy JSON" points people to open a PR from.
 const GITHUB_REPO = "bigomega/life-calendars";
-const GITHUB_EDIT_BRANCH = "gh-pages";
+const GITHUB_DATA_BRANCH = "gh-pages";
+const SAVE_ISSUE_TITLE = "life-calendars-save";
+const SAVE_URL_MAX = 7200;
 
 const COUNTRY_HUES = {
   India: 14,
@@ -427,10 +429,182 @@ function hasUnsavedChanges() {
   return canonicalData(state) !== fileSnapshot;
 }
 
+function exportCalendar() {
+  return {
+    people: (state.people || []).map((p) => ({
+      id: p.id,
+      name: p.name,
+      icon: p.icon,
+    })),
+    locations: [...(state.locations || [])]
+      .map((l) => ({
+        id: l.id,
+        person: l.person || "B",
+        start: l.start,
+        end: l.end,
+        location: l.location || "",
+        country: l.country || "",
+        comments: l.comments || "",
+      }))
+      .sort((a, b) => a.start.localeCompare(b.start) || (a.id || "").localeCompare(b.id || "")),
+  };
+}
+
+function bytesToBase64Url(u8) {
+  let bin = "";
+  const step = 0x8000;
+  for (let i = 0; i < u8.length; i += step) {
+    bin += String.fromCharCode.apply(null, u8.subarray(i, i + step));
+  }
+  return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+}
+
+async function gzipBytes(bytes) {
+  if (typeof CompressionStream !== "function") {
+    throw new Error("This browser cannot compress Save payloads.");
+  }
+  const stream = new Blob([bytes]).stream().pipeThrough(new CompressionStream("gzip"));
+  const buf = await new Response(stream).arrayBuffer();
+  return new Uint8Array(buf);
+}
+
+async function encodeSavePayload(data) {
+  const json = JSON.stringify(data);
+  const gz = await gzipBytes(new TextEncoder().encode(json));
+  return "v1." + bytesToBase64Url(gz);
+}
+
+function saveIssueUrl(payload) {
+  const body = `<!-- life-calendars-save v1 -->\n\n${payload}\n`;
+  return (
+    `https://github.com/${GITHUB_REPO}/issues/new?title=` +
+    encodeURIComponent(SAVE_ISSUE_TITLE) +
+    "&body=" +
+    encodeURIComponent(body)
+  );
+}
+
+let saveWatchTimer = null;
+
+function stopSaveWatch() {
+  if (saveWatchTimer) {
+    clearTimeout(saveWatchTimer);
+    saveWatchTimer = null;
+  }
+}
+
 function updateUnsavedBanner() {
   const el = document.getElementById("unsaved-banner");
   if (!el) return;
-  el.classList.toggle("hidden", !hasUnsavedChanges());
+  const dirty = hasUnsavedChanges();
+  const pending =
+    dirty &&
+    settings.pendingSaveCanonical &&
+    settings.pendingSaveCanonical === canonicalData(state);
+  const text = document.getElementById("unsaved-banner-text");
+  if (text) {
+    text.textContent = pending
+      ? "Waiting for GitHub Pages to publish this save…"
+      : "Unsaved changes — not published to GitHub Pages yet.";
+  }
+  el.classList.toggle("is-pending", !!pending);
+  el.classList.toggle("hidden", !dirty);
+}
+
+function markCleanFromPublished(canonical) {
+  fileSnapshot = canonical;
+  if (settings.pendingSaveCanonical) {
+    delete settings.pendingSaveCanonical;
+    persistSettings();
+  }
+  stopSaveWatch();
+  updateUnsavedBanner();
+}
+
+async function publishedMatches(expected) {
+  const res = await fetch("./data.json?watch=" + Date.now(), {
+    cache: "no-store",
+  });
+  if (!res.ok) return false;
+  const raw = await res.json();
+  const published = {
+    people: raw.people && raw.people.length ? raw.people : [],
+    locations: normalizeLocations(raw.locations),
+  };
+  return canonicalData(published) === expected;
+}
+
+function watchPublishedSave(expected, until) {
+  stopSaveWatch();
+  const deadline = until || Date.now() + 180000;
+  const tick = async () => {
+    if (canonicalData(state) !== expected) {
+      stopSaveWatch();
+      return;
+    }
+    try {
+      if (await publishedMatches(expected)) {
+        markCleanFromPublished(expected);
+        showToast("Published to GitHub Pages");
+        return;
+      }
+    } catch (e) {
+      // keep waiting
+    }
+    if (Date.now() >= deadline) {
+      stopSaveWatch();
+      showToast("Save opened on GitHub. This banner clears after Pages updates.");
+      return;
+    }
+    saveWatchTimer = setTimeout(tick, 4000);
+  };
+  saveWatchTimer = setTimeout(tick, 2500);
+}
+
+function resumePendingSaveWatch() {
+  const expected = settings.pendingSaveCanonical;
+  if (!expected) return;
+  if (canonicalData(state) !== expected) {
+    delete settings.pendingSaveCanonical;
+    persistSettings();
+    return;
+  }
+  if (canonicalData(state) === fileSnapshot) {
+    delete settings.pendingSaveCanonical;
+    persistSettings();
+    updateUnsavedBanner();
+    return;
+  }
+  updateUnsavedBanner();
+  watchPublishedSave(expected);
+}
+
+async function startGithubSave() {
+  if (!hasUnsavedChanges()) {
+    showToast("Nothing to save");
+    return;
+  }
+  let payload;
+  try {
+    payload = await encodeSavePayload(exportCalendar());
+  } catch (e) {
+    showToast(e && e.message ? e.message : "Could not encode save");
+    return;
+  }
+  const url = saveIssueUrl(payload);
+  if (url.length > SAVE_URL_MAX) {
+    showToast("Save payload is too large for a GitHub issue URL");
+    return;
+  }
+  const expected = canonicalData(state);
+  settings.pendingSaveCanonical = expected;
+  persistSettings();
+  updateUnsavedBanner();
+  const opened = window.open(url, "_blank", "noopener,noreferrer");
+  if (!opened) {
+    showToast("Allow pop-ups to open the GitHub save issue");
+  }
+  watchPublishedSave(expected);
 }
 
 async function loadData() {
@@ -1982,49 +2156,12 @@ document
     if (e.target.id === "manage-modal-overlay") closeManageModal();
   });
 
-// ---------- copy JSON ----------
+// ---------- save to GitHub ----------
 
-function openJsonModal() {
-  const sorted = {
-    people: state.people,
-    locations: [...state.locations].sort((a, b) =>
-      a.start.localeCompare(b.start),
-    ),
-  };
-  document.getElementById("json-output").value = JSON.stringify(
-    sorted,
-    null,
-    2,
-  );
-  const editLink = document.getElementById("json-edit-link");
-  editLink.href = `https://github.com/${GITHUB_REPO}/edit/${GITHUB_EDIT_BRANCH}/data.json`;
-  document.getElementById("json-modal-overlay").classList.remove("hidden");
-}
+document.getElementById("btn-save").addEventListener("click", startGithubSave);
 document
-  .getElementById("btn-copy-json")
-  .addEventListener("click", openJsonModal);
-document
-  .getElementById("unsaved-copy")
-  .addEventListener("click", openJsonModal);
-document.getElementById("json-close").addEventListener("click", () => {
-  document.getElementById("json-modal-overlay").classList.add("hidden");
-});
-document.getElementById("json-modal-overlay").addEventListener("click", (e) => {
-  if (e.target.id === "json-modal-overlay")
-    document.getElementById("json-modal-overlay").classList.add("hidden");
-});
-document.getElementById("json-copy-btn").addEventListener("click", async () => {
-  const text = document.getElementById("json-output").value;
-  try {
-    await navigator.clipboard.writeText(text);
-    showToast("Copied to clipboard");
-  } catch (e) {
-    const ta = document.getElementById("json-output");
-    ta.select();
-    document.execCommand("copy");
-    showToast("Copied to clipboard");
-  }
-});
+  .getElementById("btn-save-banner")
+  .addEventListener("click", startGithubSave);
 
 // ---------- settings ----------
 
@@ -2143,6 +2280,11 @@ function setupYearControls() {
 
 document.getElementById("btn-reset").addEventListener("click", async () => {
   if (!confirm("Discard local edits and reload data from data.json?")) return;
+  stopSaveWatch();
+  if (settings.pendingSaveCanonical) {
+    delete settings.pendingSaveCanonical;
+    persistSettings();
+  }
   localStorage.removeItem(STORAGE_KEY);
   await loadData();
   renderAll();
@@ -2161,7 +2303,6 @@ document.addEventListener("keydown", (e) => {
   }
   closeLocationModal();
   closeManageModal();
-  document.getElementById("json-modal-overlay").classList.add("hidden");
   closeSettingsModal();
   closeDayPopover();
   closeCountryTooltip();
@@ -2177,6 +2318,7 @@ window.addEventListener("hashchange", () => {
 (async function init() {
   loadSettings();
   await loadData();
+  resumePendingSaveWatch();
   setupPersonChips();
   setupYearControls();
   setupSettingsControls();
