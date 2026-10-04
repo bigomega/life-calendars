@@ -718,10 +718,19 @@
       "id": "loc-6qorlsu",
       "person": "B",
       "start": "2026-09-21",
-      "end": "2026-10-04",
+      "end": "2026-10-03",
       "location": "New York",
       "country": "USA",
       "comments": ""
+    },
+    {
+      "id": "loc-heohl9a",
+      "person": "B",
+      "start": "2026-10-04",
+      "end": "2026-10-04",
+      "location": "",
+      "country": "Transit",
+      "comments": "NYC → MEX"
     },
     {
       "id": "loc-cb0575n",
