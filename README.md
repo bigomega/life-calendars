@@ -54,18 +54,15 @@ The page is fully editable in the browser:
   personal access token is used in the browser. The unsaved banner stays
   until the published `data.json` matches the saved snapshot (or you Reset).
 
-`issues` workflows only run from the repository **default branch**. Keep
-`.github/workflows/apply-calendar-save.yml` and
-`.github/scripts/apply-calendar-save.mjs` on that branch (or make `gh-pages`
-the default). The Action checks out only the trusted apply script and never
-interpolates issue contents into a shell.
+`issues` workflows only run from the repository **default branch**, which is
+`gh-pages`. Pages and Save therefore share one branch. The Action checks
+out only the trusted apply script and never interpolates issue contents
+into a shell.
 
 ## Deployment
 
-The site has no build step, so the `gh-pages` branch is just a copy of
-these static files. GitHub Pages must be pointed at it once, in the repo's
-**Settings → Pages → Build and deployment → Source: Deploy from a branch →
-Branch: `gh-pages` / `(root)`**.
+The site has no build step. GitHub Pages is **Deploy from a branch →
+`gh-pages` / `(root)`**, and `gh-pages` is the repository default so the
+Save workflow on this branch can run.
 
-To publish an update: merge your change into the branch this repo deploys
-from, then re-sync `gh-pages` with the latest files and push it.
+To publish an update: merge into `gh-pages`.

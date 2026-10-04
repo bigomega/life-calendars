@@ -1,7 +1,7 @@
 # Apply in-browser Save payloads from GitHub issues.
 # `issues` events only run this file from the repository default branch
-# (GITHUB_SHA / GITHUB_REF = default). Copy this workflow + script there
-# if the default is not gh-pages, or switch the default to gh-pages.
+# (GITHUB_SHA / GITHUB_REF = default). With default = gh-pages, Pages and
+# this workflow share one branch; TARGET_BRANCH stays gh-pages.
 name: Apply calendar save
 
 on:
