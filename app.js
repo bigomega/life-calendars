@@ -584,6 +584,7 @@ async function startGithubSave() {
     showToast("Nothing to save");
     return;
   }
+  persist();
   let payload;
   try {
     payload = await encodeSavePayload(exportCalendar());
@@ -637,6 +638,7 @@ async function loadData() {
 }
 
 function persist() {
+  state.locations = normalizeLocations(state.locations);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   updateUnsavedBanner();
 }
