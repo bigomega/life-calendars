@@ -35,8 +35,8 @@ jobs:
 
       - name: Apply payload
         env:
-          # Comma-separated GitHub usernames. Add Mariana's login later.
-          ALLOWED_ACTORS: bigomega
+          # Comma-separated GitHub usernames (matched case-insensitively).
+          ALLOWED_ACTORS: bigomega,Euterpixel
           TARGET_BRANCH: gh-pages
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node .github/scripts/apply-calendar-save.mjs

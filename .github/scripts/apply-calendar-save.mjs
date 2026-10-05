@@ -20,7 +20,7 @@ const MAX_PEOPLE = 20;
 const MAX_STR = { id: 48, name: 80, icon: 8, location: 120, country: 80, comments: 500 };
 
 export function allowedActors() {
-  return String(process.env.ALLOWED_ACTORS || "bigomega")
+  return String(process.env.ALLOWED_ACTORS || "bigomega,Euterpixel")
     .split(",")
     .map((s) => s.trim().toLowerCase())
     .filter(Boolean);
@@ -400,9 +400,15 @@ async function selfTest() {
     "&body=" +
     encodeURIComponent(issueBody(liveToken));
   assert(liveUrl.length < 7200, "live url " + liveUrl.length);
+
+  process.env.ALLOWED_ACTORS = "bigomega,Euterpixel";
   assert(isAllowedActor("bigomega"), "allow bigomega");
-  assert(isAllowedActor("BigOmega"), "allow case");
+  assert(isAllowedActor("BigOmega"), "allow bigomega case");
+  assert(isAllowedActor("Euterpixel"), "allow Euterpixel");
+  assert(isAllowedActor("euterpixel"), "allow euterpixel");
+  assert(isAllowedActor("EUTERPIXEL"), "allow EUTERPIXEL");
   assert(!isAllowedActor("octocat"), "deny other");
+  assert(!isAllowedActor("euterpixelx"), "deny near-miss");
   assert(!isAllowedActor(""), "deny empty");
 
   try {
@@ -414,7 +420,7 @@ async function selfTest() {
 
   process.env.ALLOWED_ACTORS = "bigomega,wife-login";
   assert(isAllowedActor("wife-login"), "extend allowlist");
-  delete process.env.ALLOWED_ACTORS;
+  process.env.ALLOWED_ACTORS = "bigomega,Euterpixel";
 
   const prev = {
     token: process.env.GITHUB_TOKEN,
@@ -425,7 +431,7 @@ async function selfTest() {
   process.env.GITHUB_TOKEN = "test-token";
   process.env.GITHUB_REPOSITORY = "bigomega/life-calendars";
   process.env.TARGET_BRANCH = "gh-pages";
-  delete process.env.ALLOWED_ACTORS;
+  process.env.ALLOWED_ACTORS = "bigomega,Euterpixel";
 
   const liveContent = prettyCalendar(live);
   const liveB64 = Buffer.from(liveContent, "utf8").toString("base64");
@@ -451,6 +457,14 @@ async function selfTest() {
   });
 
   await withMockGithub(async () => jsonResponse({}), async (calls) => {
+    const result = await applyFromEvent(
+      issueEvent({ user: { login: "NotAllowed" }, body: issueBody(liveToken) }),
+    );
+    assert(result.ok === false && result.reason === "actor", "deny mixed-case other");
+    assert(!calls.some((c) => c.method === "PUT"), "deny mixed-case no put");
+  });
+
+  await withMockGithub(async () => jsonResponse({}), async (calls) => {
     const result = await applyFromEvent(issueEvent({ body: "no payload here" }));
     assert(result.ok === false && result.reason === "missing", "missing payload");
     assert(!calls.some((c) => c.method === "PUT"), "missing no put");
@@ -467,6 +481,40 @@ async function selfTest() {
     const result = await applyFromEvent(issueEvent({ body: issueBody(liveToken) }));
     assert(result.ok && result.unchanged, "unchanged");
     assert(!calls.some((c) => c.method === "PUT"), "unchanged no put");
+  });
+
+  await withMockGithub(async (url, method) => {
+    if (method === "GET" && url.includes("/contents/data.json")) {
+      return jsonResponse({ sha: "sha-1", content: liveB64 });
+    }
+    if (method === "PATCH") return jsonResponse({});
+    return jsonResponse({ message: "unexpected" }, 500);
+  }, async (calls) => {
+    const result = await applyFromEvent(
+      issueEvent({
+        user: { login: "Euterpixel" },
+        body: issueBody(liveToken),
+      }),
+    );
+    assert(result.ok && result.unchanged, "euterpixel allowed");
+    assert(!calls.some((c) => c.method === "PUT"), "euterpixel unchanged no put");
+  });
+
+  await withMockGithub(async (url, method) => {
+    if (method === "GET" && url.includes("/contents/data.json")) {
+      return jsonResponse({ sha: "sha-1", content: liveB64 });
+    }
+    if (method === "PATCH") return jsonResponse({});
+    return jsonResponse({ message: "unexpected" }, 500);
+  }, async (calls) => {
+    const result = await applyFromEvent(
+      issueEvent({
+        user: { login: "eUtErPiXeL" },
+        body: issueBody(liveToken),
+      }),
+    );
+    assert(result.ok && result.unchanged, "euterpixel mixed case allowed");
+    assert(calls.some((c) => c.method === "PATCH"), "euterpixel mixed case redacts");
   });
 
   const changed = sanitizeCalendar({

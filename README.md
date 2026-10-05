@@ -48,8 +48,8 @@ The page is fully editable in the browser:
 - **Reset** discards local edits and reloads from `data.json`
 - **Save** opens a prefilled GitHub issue. The dataset is gzip-compressed and
   base64url-encoded (`v1.…`) so it fits in the issue URL. An allowlisted
-  GitHub Action (`bigomega`; add another login with `ALLOWED_ACTORS`, e.g.
-  Mariana later) checks the opener and payload, writes `data.json` on
+  GitHub Action (`bigomega`, `Euterpixel`; add logins with `ALLOWED_ACTORS`)
+  checks the opener and payload, writes `data.json` on
   `gh-pages` using `GITHUB_TOKEN`, then closes and redacts the issue. No
   personal access token is used in the browser. The unsaved banner stays
   until the published `data.json` matches the saved snapshot (or you Reset).
