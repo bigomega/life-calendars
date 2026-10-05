@@ -1063,8 +1063,8 @@ html[data-year-chips="hide"] .year-country {
     display: none;
   }
 
-  html[data-cell-w="compact"] .month-legend-item > span:not(.legend-swatch),
-  html[data-cell-h="compact"] .month-legend-item > span:not(.legend-swatch) {
+  html[data-cell-w="compact"] .month-legend-item>span:not(.legend-swatch),
+  html[data-cell-h="compact"] .month-legend-item>span:not(.legend-swatch) {
     display: none;
   }
 
@@ -1170,8 +1170,8 @@ html[data-year-chips="hide"] .year-country {
     border-top: none;
     border-right: none;
     border-bottom: none;
-    border-left-width: 10px;
-    padding: 1px 5px 1px 6px;
+    border-left-width: 4px;
+    padding: 0px 2px 0px 2px;
     gap: 3px;
   }
 
