@@ -43,21 +43,26 @@ hue, so e.g. Mumbai and Delhi are both reddish but visually distinct.
 
 The page is fully editable in the browser:
 
-- **+ Add Event** / click a colored day / **Manage Events** → edit or delete
+- **+ Add** / click a colored day / **Manage** → edit or delete
 - Edits are saved to `localStorage` so they survive a page refresh
 - **Reset** discards local edits and reloads from `data.json`
-- **Copy JSON** shows the current full dataset (pretty-printed, sorted by
-  date) and copies it to your clipboard — paste it over `data.json` to open
-  a PR with your changes
+- **Save** opens a prefilled GitHub issue. The dataset is gzip-compressed and
+  base64url-encoded (`v1.…`) so it fits in the issue URL. An allowlisted
+  GitHub Action (`bigomega`; add another login with `ALLOWED_ACTORS`, e.g.
+  Mariana later) checks the opener and payload, writes `data.json` on
+  `gh-pages` using `GITHUB_TOKEN`, then closes and redacts the issue. No
+  personal access token is used in the browser. The unsaved banner stays
+  until the published `data.json` matches the saved snapshot (or you Reset).
 
-There is no backend: nothing is written back to the repo automatically.
+`issues` workflows only run from the repository **default branch**, which is
+`gh-pages`. Pages and Save therefore share one branch. The Action checks
+out only the trusted apply script and never interpolates issue contents
+into a shell.
 
 ## Deployment
 
-The site has no build step, so the `gh-pages` branch is just a copy of
-these static files. GitHub Pages must be pointed at it once, in the repo's
-**Settings → Pages → Build and deployment → Source: Deploy from a branch →
-Branch: `gh-pages` / `(root)`**.
+The site has no build step. GitHub Pages is **Deploy from a branch →
+`gh-pages` / `(root)`**, and `gh-pages` is the repository default so the
+Save workflow on this branch can run.
 
-To publish an update: merge your change into the branch this repo deploys
-from, then re-sync `gh-pages` with the latest files and push it.
+To publish an update: merge into `gh-pages`.

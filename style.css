@@ -57,6 +57,18 @@ body {
   color: #2a1a00;
 }
 
+.unsaved-banner.is-pending {
+  background: #1a3040;
+  color: #9ecbff;
+  border-bottom-color: #3d6a90;
+}
+
+.unsaved-banner.is-pending button {
+  background: #9ecbff;
+  border-color: #9ecbff;
+  color: #0b1a24;
+}
+
 header.app-header {
   padding: 8px 24px 0;
   border-bottom: none;
@@ -1031,14 +1043,6 @@ html[data-year-chips="hide"] .year-country {
   font-weight: 600;
   z-index: 200;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-}
-
-.json-modal textarea {
-  width: 100%;
-  height: 320px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 11.5px;
-  white-space: pre;
 }
 
 .hint {
