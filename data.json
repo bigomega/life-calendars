@@ -751,15 +751,6 @@
       "comments": "visiting Ari"
     },
     {
-      "id": "loc-rbmb0if",
-      "person": "M",
-      "start": "2027-01-17",
-      "end": "2027-02-13",
-      "location": "Bir",
-      "country": "India",
-      "comments": ""
-    },
-    {
       "id": "loc-n88sqwz",
       "person": "B",
       "start": "2027-01-17",
@@ -769,12 +760,30 @@
       "comments": "Undecided"
     },
     {
+      "id": "loc-rbmb0if",
+      "person": "M",
+      "start": "2027-01-17",
+      "end": "2027-02-13",
+      "location": "Bir",
+      "country": "India",
+      "comments": ""
+    },
+    {
       "id": "loc-3fwbjzw",
       "person": "Both",
       "start": "2027-02-14",
       "end": "2027-03-20",
       "location": "Gudauri",
       "country": "Georgia",
+      "comments": ""
+    },
+    {
+      "id": "loc-x7gkksn",
+      "person": "B",
+      "start": "2027-03-31",
+      "end": "2027-03-31",
+      "location": "Almaty",
+      "country": "Kazakhstan",
       "comments": ""
     }
   ]
