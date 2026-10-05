@@ -67,13 +67,14 @@
         </button>
 
         <div class="control-group" id="people-group">
-          <span class="title">People</span>
-          <label class="person-chip" id="chip-B">
-            <input type="checkbox" value="B" checked /> Bharath ♂
-          </label>
-          <label class="person-chip" id="chip-M">
-            <input type="checkbox" value="M" checked /> Mariana ♀
-          </label>
+          <span class="title people-title" title="People" aria-label="People"
+            >👥</span
+          >
+          <select id="people-filter" aria-label="Filter by people">
+            <option value="B">Bharath</option>
+            <option value="M">Mariana</option>
+            <option value="Both" selected>Family (both)</option>
+          </select>
         </div>
 
         <div class="year-cluster">
@@ -198,7 +199,7 @@
             <select id="f-person">
               <option value="B">Bharath</option>
               <option value="M">Mariana</option>
-              <option value="Both" selected>Both</option>
+              <option value="Both" selected>Family (both)</option>
             </select>
           </div>
 

@@ -645,7 +645,20 @@ function persist() {
 
 function applyPeopleFilter(ids) {
   const valid = ["B", "M"].filter((p) => ids.includes(p));
-  selectedPeople = new Set(valid);
+  selectedPeople = new Set(valid.length ? valid : ["B", "M"]);
+}
+
+function currentPeopleSelection() {
+  if (selectedPeople.size === 1 && selectedPeople.has("B")) return "B";
+  if (selectedPeople.size === 1 && selectedPeople.has("M")) return "M";
+  return "Both";
+}
+
+function selectPeople(value) {
+  selectedPeople =
+    value === "B" || value === "M"
+      ? new Set([value])
+      : new Set(["B", "M"]);
 }
 
 const DEFAULT_TRIP_MID_OPACITY = 32;
@@ -695,7 +708,6 @@ function persistSettings() {
   localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
 }
 
-const PERSON_VALUES = new Set(["B", "M", "Both"]);
 const DAY_NUM_VALUES = new Set(["all", "sun", "sat", "none"]);
 const SIZE_VALUES = new Set(["normal", "compact"]);
 
@@ -733,18 +745,6 @@ function applyLayoutSettings() {
   syncSeg("s-cell-w", s.cellW);
   syncSeg("s-chip-size", s.chipSize);
   syncStickyOffset();
-}
-
-function lastAddPerson() {
-  return PERSON_VALUES.has(settings.lastAddPerson)
-    ? settings.lastAddPerson
-    : "Both";
-}
-
-function persistLastAddPerson(person) {
-  if (!PERSON_VALUES.has(person)) return;
-  settings.lastAddPerson = person;
-  persistSettings();
 }
 
 // ---------- color map ----------
@@ -1976,7 +1976,7 @@ function openLocationModal(loc, prefillStart, prefillEnd) {
   document.getElementById("f-id").value = loc ? loc.id : "";
   document.getElementById("f-person").value = loc
     ? loc.person || "B"
-    : lastAddPerson();
+    : currentPeopleSelection();
   document.getElementById("f-start").value = loc
     ? loc.start
     : prefillStart || "";
@@ -2037,10 +2037,7 @@ document.getElementById("location-form").addEventListener("submit", (e) => {
 
   const idx = state.locations.findIndex((x) => x.id === id);
   if (idx >= 0) state.locations[idx] = loc;
-  else {
-    state.locations.push(loc);
-    persistLastAddPerson(loc.person);
-  }
+  else state.locations.push(loc);
 
   persist();
   renderAll();
@@ -2052,10 +2049,6 @@ document.getElementById("location-form").addEventListener("submit", (e) => {
 document
   .getElementById("f-country")
   .addEventListener("change", updateLocationModalFlag);
-document.getElementById("f-person").addEventListener("change", () => {
-  if (document.getElementById("f-id").value) return;
-  persistLastAddPerson(document.getElementById("f-person").value);
-});
 document
   .getElementById("f-cancel")
   .addEventListener("click", closeLocationModal);
@@ -2224,19 +2217,13 @@ document
 
 // ---------- filters ----------
 
-function setupPersonChips() {
-  ["B", "M"].forEach((p) => {
-    const chip = document.getElementById("chip-" + p);
-    const checkbox = chip.querySelector("input");
-    checkbox.checked = selectedPeople.has(p);
-    checkbox.addEventListener("change", () => {
-      if (checkbox.checked) selectedPeople.add(p);
-      else selectedPeople.delete(p);
-      chip.classList.toggle("checked", checkbox.checked);
-      persistSettings();
-      renderAll();
-    });
-    chip.classList.toggle("checked", checkbox.checked);
+function setupPeopleFilter() {
+  const filter = document.getElementById("people-filter");
+  filter.value = currentPeopleSelection();
+  filter.addEventListener("change", () => {
+    selectPeople(filter.value);
+    persistSettings();
+    renderAll();
   });
 }
 
@@ -2321,7 +2308,7 @@ window.addEventListener("hashchange", () => {
   loadSettings();
   await loadData();
   resumePendingSaveWatch();
-  setupPersonChips();
+  setupPeopleFilter();
   setupYearControls();
   setupSettingsControls();
   setupLocationCombo();

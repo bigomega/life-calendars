@@ -139,7 +139,7 @@ header.app-header h1 {
   gap: 8px;
 }
 
-.control-group label.title {
+.control-group .title {
   color: var(--text-dim);
   font-size: 12px;
   text-transform: uppercase;
@@ -147,26 +147,10 @@ header.app-header h1 {
   margin-right: 4px;
 }
 
-.person-chip {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  border-radius: 20px;
-  border: 1px solid var(--border);
-  cursor: pointer;
-  font-size: 13px;
-  user-select: none;
-  background: var(--panel-2);
-}
-
-.person-chip input {
-  accent-color: var(--accent);
-}
-
-.person-chip.checked {
-  border-color: var(--accent);
-  color: var(--accent);
+.control-group .people-title {
+  font-size: 16px;
+  line-height: 1;
+  margin-right: 0;
 }
 
 select,
