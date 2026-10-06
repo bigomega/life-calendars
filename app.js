@@ -1025,8 +1025,8 @@ function setActiveTab(tab, opts = {}) {
     requestAnimationFrame(() => {
       if (spiral.savedScrollY > 40) {
         window.scrollTo({ top: spiral.savedScrollY, behavior: "auto" });
-      } else if (currentYear) {
-        scrollToMonth(currentYear, currentMonth || 1, { smooth: false });
+      } else {
+        scrollToMonth(realCurrentYear(), realCurrentMonth(), { smooth: false });
       }
       syncStickyOffset();
     });

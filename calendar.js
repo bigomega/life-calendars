@@ -401,7 +401,7 @@ function setupScrollSpy() {
   scrollObserver = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
+        if (entry.isIntersecting && document.body.dataset.tab !== "spiral") {
           setCurrentView(
             parseInt(entry.target.dataset.year, 10),
             currentMonth || 1,
