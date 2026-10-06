@@ -38,7 +38,7 @@
     />
     <link rel="stylesheet" href="style.css" />
   </head>
-  <body>
+  <body data-tab="location">
     <div class="sticky-top">
       <div id="unsaved-banner" class="unsaved-banner hidden" role="status">
         <span id="unsaved-banner-text"
@@ -51,6 +51,7 @@
           <h1>Life Calendars</h1>
           <div class="tabs">
             <button class="tab-btn active" data-tab="location">location</button>
+            <button class="tab-btn" data-tab="spiral">spiral</button>
           </div>
         </div>
       </header>
@@ -85,6 +86,7 @@
             <button id="year-next">▶</button>
           </div>
           <button id="btn-today">Today</button>
+          <button id="btn-spiral-full" type="button">Full</button>
           <button
             id="btn-legend"
             aria-pressed="false"
@@ -144,6 +146,13 @@
 
     <main>
       <div id="years-container"></div>
+      <div id="spiral-view" aria-label="Year spiral">
+        <canvas id="spiral-canvas"></canvas>
+        <div id="spiral-hud" class="day-popover spiral-hud hidden"></div>
+        <p class="spiral-hint">
+          Drag to orbit · Scroll to zoom · Shift-drag to slide years
+        </p>
+      </div>
     </main>
 
     <!-- Add / Edit location modal -->
