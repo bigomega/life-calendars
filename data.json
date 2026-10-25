@@ -745,6 +745,24 @@
       "id": "loc-cb0575n",
       "person": "Both",
       "start": "2026-10-05",
+      "end": "2026-10-24",
+      "location": "Mexico City",
+      "country": "Mexico",
+      "comments": ""
+    },
+    {
+      "id": "loc-jz2i4g4",
+      "person": "Both",
+      "start": "2026-10-25",
+      "end": "2026-10-31",
+      "location": "New York",
+      "country": "USA",
+      "comments": "Launch party"
+    },
+    {
+      "id": "loc-kj7xow1",
+      "person": "Both",
+      "start": "2026-11-01",
       "end": "2026-12-19",
       "location": "Mexico City",
       "country": "Mexico",
